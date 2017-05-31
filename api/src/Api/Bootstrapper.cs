@@ -17,7 +17,7 @@ namespace Foundatio.Skeleton.Api {
             //container.Register<MessageBusConnection>();
             //container.RegisterSingleton<IConnectionMapping, ConnectionMapping>();
             //container.RegisterSingleton<MessageBusBroker>();
-
+            
             var resolver = new SimpleInjectorSignalRDependencyResolver(container);
             container.RegisterSingleton<IDependencyResolver>(resolver);
             container.RegisterSingleton<IConnectionManager>(() => new ConnectionManager(resolver));

@@ -23,6 +23,8 @@ using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Domain.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories.Configuration;
+using Foundatio.Skeleton.Repositories.Repositories;
+using System.Data.Entity;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -34,10 +36,15 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<IDependencyResolver>(() => new SimpleInjectorDependencyContainer(container));
             container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
-            
+
+            container.AppendToCollection(typeof(IModelBuilder), typeof(UserType));
+
+            container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
+            container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
             //container.RegisterSingleton<AppElasticConfiguration>();
             //container.RegisterSingleton<IIndexType<Migration>>(() => container.GetInstance<AppElasticConfiguration>().Organizations.MigrationType);
             //container.RegisterSingleton<IElasticClient>(() => container.GetInstance<AppElasticConfiguration>().Client);
+
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
 

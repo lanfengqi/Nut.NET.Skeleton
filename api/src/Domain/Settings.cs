@@ -55,8 +55,6 @@ namespace Foundatio.Skeleton.Domain {
 
         public bool EnableRedis { get; private set; }
 
-        public string ElasticSearchConnectionString { get; set; }
-
         public string Version { get; private set; }
 
         public string InformationalVersion { get; private set; }
@@ -141,6 +139,7 @@ namespace Foundatio.Skeleton.Domain {
 
         public bool EnableApplyDataSourceResources { get; set; }
 
+
         public override void Initialize() {
             EnableSsl = GetBool("EnableSsl", false);
             EnableIndexConfiguration = GetBool("EnableIndexConfiguration", true);
@@ -224,7 +223,7 @@ namespace Foundatio.Skeleton.Domain {
                 PublicS3StorageFolder = PublicS3StorageFolder.TrimEnd('/');
             EnableS3Storage = GetBool("EnableS3Storage", !String.IsNullOrEmpty(PrivateS3StorageConnectionString));
 
-            ElasticSearchConnectionString = GetConnectionString("ElasticSearchConnectionString", "http://localhost:9200");
+            //DatabaseConnectionString = GetConnectionString("DatabaseConnectionString", "http://localhost:9200");
 
             try {
                 var versionInfo = FileVersionInfo.GetVersionInfo(typeof(Settings).Assembly.Location);

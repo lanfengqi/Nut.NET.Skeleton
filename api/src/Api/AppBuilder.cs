@@ -51,7 +51,6 @@ namespace Foundatio.Skeleton.Api {
             config.Formatters.JsonFormatter.SerializerSettings = JsonHelper.DefaultSerializerSettings;
 
             SetupRoutes(config);
-            //Config.EnableSystemDiagnosticsTracing();
 
             config.Filters.Add(new FluentValidationExceptionHandler());
             config.Filters.Add(new UnauthorizedAccessExceptionHandler());
@@ -59,7 +58,7 @@ namespace Foundatio.Skeleton.Api {
             container.RegisterSingleton(app);
             container.RegisterSingleton(config);
 
-            //VerifyContainer(container);
+            VerifyContainer(container);
 
             config.MessageHandlers.Add(container.GetInstance<XHttpMethodOverrideDelegatingHandler>());
             config.MessageHandlers.Add(container.GetInstance<EncodingDelegatingHandler>());
@@ -89,8 +88,8 @@ namespace Foundatio.Skeleton.Api {
             //SetupSignalR(app, container);
             SetupSwagger(config);
 
-            var context = new OwinContext(app.Properties);
-            var token = context.Get<CancellationToken>("host.OnAppDisposing");
+            //var context = new OwinContext(app.Properties);
+            //var token = context.Get<CancellationToken>("host.OnAppDisposing");
 
             //CreateSampleDataAsync(container).GetAwaiter().GetResult();
 

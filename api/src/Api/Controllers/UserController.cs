@@ -20,7 +20,7 @@ using System.Web.Http;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/users")]
-    [Authorize(Roles = AuthorizationRoles.User)]
+    //[Authorize(Roles = AuthorizationRoles.User)]
     public class UserController : RepositoryApiController<IUserRepository, User, ViewUser, User, UpdateUser> {
         private readonly IPublicFileStorage _publicFileStorage;
         private readonly IMessagePublisher _messagePublisher;
@@ -35,24 +35,24 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _messagePublisher = messagePublisher;
         }
 
-        //[SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewCurrentUser))]
-        //[HttpGet]
-        //[Route("me")]
-        //public async Task<IHttpActionResult> GetCurrentUser() {
-        //    var currentUser = await GetModel(CurrentUser.Id);
-        //    if (currentUser == null)
-        //        return NotFound();
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewCurrentUser))]
+        [HttpGet]
+        [Route("me")]
+        public async Task<IHttpActionResult> GetCurrentUser() {
 
-        //    var viewUser = new ViewCurrentUser(currentUser, GetUserRoles(), GetSelectedOrganizationId());
-        //    var orgs = (await _organizationRepository.GetByIdsAsync(viewUser.Memberships.Select(m => m.OrganizationId).ToArray(), useCache: true));
-        //    foreach (var m in viewUser.Memberships) {
-        //        var org = orgs.FirstOrDefault(o => o.Id == m.OrganizationId);
-        //        if (org != null)
-        //            m.OrganizationName = org.Name;
-        //    }
+            //if (CurrentUser == null)
+            //    return NotFound();
 
-        //    return Ok(viewUser);
-        //}
+            var currentUser = await _repository.GetByIdAsync("3552");
+            if (currentUser == null)
+                return NotFound();
+            
+         
+
+            return Ok(new {
+                Name = "Admin"
+            });
+        }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
         [HttpGet]
@@ -247,42 +247,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             return StatusCode(HttpStatusCode.NoContent);
         }
-
-        [HttpPost]
-        [Route("{id:objectid}/data/{key:minlength(1)}")]
-        public async Task<IHttpActionResult> SetDataValue(string id, string key, [NakedBody]string value) {
-            if (String.IsNullOrWhiteSpace(value))
-                return BadRequest();
-
-            var user = await GetModel(id);
-            if (user == null)
-                return NotFound();
-
-            if (user.Data == null)
-                user.Data = new DataDictionary();
-
-            user.Data[key] = value;
-            await _repository.SaveAsync(user);
-
-            return Ok();
-        }
-
-        [HttpDelete]
-        [Route("{id:objectid}/data/{key:minlength(1)}")]
-        public async Task<IHttpActionResult> DeleteDataValue(string id, string key) {
-            var user = await GetModel(id);
-            if (user == null)
-                return NotFound();
-
-            if (user.Data == null || !user.Data.ContainsKey(key))
-                return NotFound();
-
-            user.Data.Remove(key);
-            await _repository.SaveAsync(user);
-
-            return Ok();
-        }
-
+    
         private async Task<bool> IsEmailAddressAvailableInternal(string email) {
             if (String.IsNullOrWhiteSpace(email))
                 return false;
