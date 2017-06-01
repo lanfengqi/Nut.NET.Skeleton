@@ -160,7 +160,6 @@
     <Compile Include="Serialization\JsonHelper.cs" />
     <Compile Include="Utility\AssemblyDetail.cs" />
     <Compile Include="Utility\IConnectionMapping.cs" />
-    <Compile Include="Utility\OAuthUtility.cs" />
     <Compile Include="Utility\IPublicFileStorage.cs" />
     <Compile Include="Dependency\DefaultDependencyResolver.cs" />
     <Compile Include="Dependency\DependencyResolverExtensions.cs" />
@@ -182,6 +181,7 @@
     <Compile Include="Extensions\LogBuilderExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Utility\OAuthUtility.cs" />
     <Compile Include="Utility\ObjectId.cs" />
     <Compile Include="Utility\PathHelper.cs" />
     <Compile Include="Utility\SettingsBase.cs" />

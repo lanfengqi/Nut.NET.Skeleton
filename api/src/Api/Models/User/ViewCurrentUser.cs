@@ -24,7 +24,6 @@ namespace Foundatio.Skeleton.Api.Models
 
             Hash = HMACSHA256HashString(user.Id);
             HasLocalPassword = !String.IsNullOrWhiteSpace(user.Password);
-            OAuthAccounts = user.OAuthAccounts;
             Data = user.Data;
             CreatedUtc = user.CreatedUtc;
             UpdatedUtc = user.UpdatedUtc;
@@ -35,7 +34,7 @@ namespace Foundatio.Skeleton.Api.Models
         public ICollection<string> Roles { get; set; }
         public string Hash { get; set; }
         public bool HasLocalPassword { get; set; }
-        public ICollection<OAuthAccount> OAuthAccounts { get; set; }
+
         public string CurrentOrganizationId { get; set; }
         public new ICollection<ViewMembership> Memberships { get; set; }
 

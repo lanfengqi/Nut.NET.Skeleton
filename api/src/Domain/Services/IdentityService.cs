@@ -26,10 +26,10 @@ namespace Foundatio.Skeleton.Domain.Services {
                 new Claim(OrganizationIdClaim, token.OrganizationId)
             };
 
-            if (token.Scopes.Count > 0)
-                claims.AddRange(token.Scopes.Select(scope => new Claim(ClaimTypes.Role, scope)));
-            else
-                claims.Add(new Claim(ClaimTypes.Role, AuthorizationRoles.Client));
+            //if (token.Scopes.Count > 0)
+            //    claims.AddRange(token.Scopes.Select(scope => new Claim(ClaimTypes.Role, scope)));
+            //else
+            //    claims.Add(new Claim(ClaimTypes.Role, AuthorizationRoles.Client));
 
             return new ClaimsIdentity(claims, TokenAuthenticationType);
         }

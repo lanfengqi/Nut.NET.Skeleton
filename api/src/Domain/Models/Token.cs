@@ -1,12 +1,11 @@
 ﻿using Foundatio.Skeleton.Core.Collections;
-using System;
-using System.Collections.Generic;
 using Foundatio.Skeleton.Repositories.Model;
+using System;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public class Token : IOwnedByOrganizationWithIdentity, IHaveDates {
         public Token() {
-            Scopes = new HashSet<string>();
+            //Scopes = new HashSet<string>();
             Data = new DataDictionary();
         }
 
@@ -18,9 +17,18 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string Refresh { get; set; }
 
-        public TokenType Type { get; set; }
+        public int TypeId { get; set; }
 
-        public HashSet<string> Scopes { get; set; }
+        public TokenType Type {
+            get {
+                return (TokenType)this.TypeId;
+            }
+            set {
+                this.TypeId = (int)value;
+            }
+        }
+
+        //public HashSet<string> Scopes { get; set; }
 
         public DateTime? ExpiresUtc { get; set; }
 
@@ -35,7 +43,7 @@ namespace Foundatio.Skeleton.Domain.Models {
     }
 
     public enum TokenType {
-        Authentication,
-        Access
+        Authentication = 0,
+        Access = 1
     }
 }

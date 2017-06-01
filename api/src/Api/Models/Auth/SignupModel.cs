@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Foundatio.Skeleton.Api.Models {
     public class SignupModel {

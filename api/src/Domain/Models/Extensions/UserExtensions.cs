@@ -6,36 +6,7 @@ using Foundatio.Skeleton.Core.Extensions;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public static class UserExtensions {
-        public static void AddOAuthAccount(this User user, string providerName, string providerUserId, string username, SettingsDictionary data = null) {
-            // check to see if we already have an oauth account on the user..  no need to add it again, right?
-            //if (user.OAuthAccounts.Any(o => o.Provider == providerName.ToLowerInvariant() && o.ProviderUserId == providerUserId && o.Username == username))
-            //{
-            //    // bail
-            //}
-
-            var account = new OAuthAccount {
-                Provider = providerName.ToLowerInvariant(),
-                ProviderUserId = providerUserId,
-                Username = username
-            };
-
-            if (data != null)
-                account.ExtraData.Apply(data);
-
-            user.OAuthAccounts.Add(account);
-        }
-
-        public static bool RemoveOAuthAccount(this User user, string providerName, string providerUserId) {
-            if (user.OAuthAccounts.Count <= 1 && String.IsNullOrEmpty(user.Password))
-                return false;
-
-            var account = user.OAuthAccounts.FirstOrDefault(o => o.Provider == providerName.ToLowerInvariant() && o.ProviderUserId == providerUserId);
-            if (account == null)
-                return true;
-
-            return user.OAuthAccounts.Remove(account);
-        }
-
+       
         public static void CreateVerifyEmailAddressToken(this User user) {
             if (user == null)
                 return;

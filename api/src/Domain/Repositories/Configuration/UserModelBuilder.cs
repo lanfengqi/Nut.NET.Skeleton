@@ -3,7 +3,7 @@ using Foundatio.Skeleton.Repositories.Configuration;
 using System.Data.Entity;
 
 namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
-    public sealed class UserType : ModelBuilderBase {
+    public sealed class UserModelBuilder : ModelBuilderBase {
 
         public override void Configure(DbModelBuilder modelBuilder) {
 
@@ -14,7 +14,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
 
             modelBuilder.Entity<User>().Ignore(emp => emp.Data);
             modelBuilder.Entity<User>().Ignore(emp => emp.Memberships);
-            modelBuilder.Entity<User>().Ignore(emp => emp.OAuthAccounts);
             modelBuilder.Entity<User>().Ignore(emp => emp.Roles);
         }
 

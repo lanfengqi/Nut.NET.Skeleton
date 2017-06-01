@@ -37,7 +37,8 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IDependencyResolver>(() => new SimpleInjectorDependencyContainer(container));
             container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
 
-            container.AppendToCollection(typeof(IModelBuilder), typeof(UserType));
+            container.AppendToCollection(typeof(IModelBuilder), typeof(OrganizationModelBuilder));
+            container.AppendToCollection(typeof(IModelBuilder), typeof(UserModelBuilder));
 
             container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
             container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
