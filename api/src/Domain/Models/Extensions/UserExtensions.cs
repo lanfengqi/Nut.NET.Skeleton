@@ -61,12 +61,8 @@ namespace Foundatio.Skeleton.Domain.Models {
         }
 
         public static bool IsAdmin(this User user, string organizationId) {
-            var memberships = user.GetMembershipsWithAdminRole();
-            return memberships != null && memberships.Any(m => m.OrganizationId.Equals(organizationId));
-        }
-
-        public static IEnumerable<Membership> GetMembershipsWithAdminRole(this User user) {
-            return user?.Memberships?.Where(m => m.Roles.Any(r => r == AuthorizationRoles.Admin));
+            var userOrganizationId = user.OrganizationId;
+            return userOrganizationId.Equals(organizationId);
         }
 
         public static bool AddedMembershipRole(this User user, string organizationId, string role) {
@@ -78,18 +74,8 @@ namespace Foundatio.Skeleton.Domain.Models {
             if (roles.Contains(AuthorizationRoles.GlobalAdmin))
                 return false;
 
-            var membership = user.Memberships.FirstOrDefault(m => m.OrganizationId == organizationId);
-            if (membership == null) {
-                membership = new Membership {
-                    OrganizationId = organizationId,
-                    Roles = roles,
-                };
-                user.Memberships.Add(membership);
-                return true;
-            }
-
-            if (roles.Any(r => !membership.Roles.Contains(r, StringComparer.OrdinalIgnoreCase))) {
-                membership.Roles = membership.Roles.Union(roles, StringComparer.OrdinalIgnoreCase).ToList();
+            if(user.OrganizationId == organizationId) {
+                user.Roles.AddRange(roles);
                 return true;
             }
 

@@ -13,7 +13,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             modelBuilder.Entity<User>().Property(emp => emp.EmailAddress).HasMaxLength(500);
 
             modelBuilder.Entity<User>().Ignore(emp => emp.Data);
-            modelBuilder.Entity<User>().Ignore(emp => emp.Memberships);
             modelBuilder.Entity<User>().Ignore(emp => emp.Roles);
         }
 

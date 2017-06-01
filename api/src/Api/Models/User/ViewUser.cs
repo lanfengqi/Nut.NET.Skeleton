@@ -14,8 +14,6 @@ namespace Foundatio.Skeleton.Api.Models {
         public bool IsActive { get; set; }
         public string ProfileImagePath { get; set; }
         public bool IsGlobalAdmin { get; set; }
-
-        public ICollection<Membership> Memberships { get; set; }
         public DataDictionary Data { get; set; }
         public DateTime CreatedUtc { get; set; }
         public DateTime UpdatedUtc { get; set; }

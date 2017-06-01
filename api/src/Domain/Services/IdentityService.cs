@@ -38,16 +38,15 @@ namespace Foundatio.Skeleton.Domain.Services {
             if (user == null)
                 return WindowsIdentity.GetAnonymous();
 
-            var membership = user.Memberships.FirstOrDefault(m => m.OrganizationId == selectedOrganizationId);
-            if (membership == null && !string.IsNullOrEmpty(selectedOrganizationId) && user.IsGlobalAdmin())
-                membership = new Membership { OrganizationId = selectedOrganizationId, Roles = { AuthorizationRoles.Admin } };
-            else if (membership == null)
-                membership = user.Memberships.FirstOrDefault();
+            string currentOrganizationId = string.Empty;
+            if (user.OrganizationId == selectedOrganizationId) {
+                currentOrganizationId = user.OrganizationId;
+            }
 
-            return CreateUserIdentity(user.EmailAddress, user.Id, user.Roles, membership);
+            return CreateUserIdentity(user.EmailAddress, user.Id, user.Roles, currentOrganizationId);
         }
 
-        public static ClaimsIdentity CreateUserIdentity(string emailAddress, string userId, ICollection<string> roles, Membership membership) {
+        public static ClaimsIdentity CreateUserIdentity(string emailAddress, string userId, ICollection<string> roles, string organizationId) {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, emailAddress),
@@ -56,9 +55,9 @@ namespace Foundatio.Skeleton.Domain.Services {
 
             var userRoles = new HashSet<string>(roles);
 
-            if (!String.IsNullOrEmpty(membership?.OrganizationId)) {
-                claims.Add(new Claim(OrganizationIdClaim, membership.OrganizationId));
-                userRoles.AddRange(membership.Roles);
+            if (!String.IsNullOrEmpty(organizationId)) {
+                claims.Add(new Claim("organizationId",organizationId));
+                userRoles.Add(AuthorizationRoles.Admin);
             }
 
             if (userRoles.Any()) {

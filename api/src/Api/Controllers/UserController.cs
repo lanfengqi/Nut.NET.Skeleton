@@ -27,7 +27,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         public UserController(
             ILoggerFactory loggerFactory,
-            IUserRepository userRepository,          
+            IUserRepository userRepository,
             IPublicFileStorage publicFileStorage,
             IMapper mapper,
             IMessagePublisher messagePublisher) : base(loggerFactory, userRepository, mapper) {
@@ -46,8 +46,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             var currentUser = await _repository.GetByIdAsync("3552");
             if (currentUser == null)
                 return NotFound();
-            
-         
 
             return Ok(new {
                 Name = "Admin"
@@ -102,14 +100,9 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return NotFound();
 
             var organizationId = GetSelectedOrganizationId();
-            var membership = user.Memberships.FirstOrDefault(m => m.OrganizationId.Equals(organizationId));
-            if (membership != null) {
-                ////  todo:  need to revisit whether to hard delete the user if this is the only remaining membership
-                //if (user.Memberships.Count == 1)
-                //    return await base.DeleteAsync(id);
 
-                user.Memberships.Remove(membership);
-                await _repository.SaveAsync(user);
+            if (user.OrganizationId == organizationId) {
+                await _repository.RemoveAsync(user.Id);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -203,13 +196,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return NotFound();
 
             var organizationId = GetSelectedOrganizationId();
-            var membership = user.Memberships.FirstOrDefault(m => m.OrganizationId.Equals(organizationId));
-            if (membership != null) {
-                if (membership.Roles.Contains(AuthorizationRoles.Admin)) {
-                    membership.Roles.Remove(AuthorizationRoles.Admin);
-                    await _repository.SaveAsync(user);
 
-                }
+            if(organizationId == user.OrganizationId) {
+                user.Roles.Remove(AuthorizationRoles.Admin);
+                await _repository.SaveAsync(user);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -247,7 +237,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             return StatusCode(HttpStatusCode.NoContent);
         }
-    
+
         private async Task<bool> IsEmailAddressAvailableInternal(string email) {
             if (String.IsNullOrWhiteSpace(email))
                 return false;

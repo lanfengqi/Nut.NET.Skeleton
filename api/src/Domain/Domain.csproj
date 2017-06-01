@@ -181,6 +181,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Configuration\OrganizationModelBuilder.cs" />
+    <Compile Include="Repositories\Configuration\TokenModelBuilder.cs" />
     <Compile Include="Repositories\Configuration\UserModelBuilder.cs" />
     <Compile Include="Repositories\Interfaces\IOrganizationRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />

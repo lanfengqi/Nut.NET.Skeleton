@@ -46,7 +46,8 @@ namespace Foundatio.Skeleton.Domain.Repositories {
                 CreatedBy = userId,
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
-                TypeId = (int)Models.TokenType.Access
+                TypeId = (int)Models.TokenType.Access,
+                ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
             };
 
             await SaveAsync(token);

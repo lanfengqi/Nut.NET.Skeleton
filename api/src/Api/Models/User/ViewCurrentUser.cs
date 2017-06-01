@@ -11,7 +11,6 @@ namespace Foundatio.Skeleton.Api.Models
     public class ViewCurrentUser : ViewUser {
         public ViewCurrentUser(User user, string[] roles, string currentOrganizationId) {
             Id = user.Id;
-            Memberships = user.Memberships.Select(m => new ViewMembership(m)).ToList();
             FullName = user.FullName;
             EmailAddress = user.EmailAddress;
             EmailNotificationsEnabled = user.EmailNotificationsEnabled;
@@ -36,7 +35,6 @@ namespace Foundatio.Skeleton.Api.Models
         public bool HasLocalPassword { get; set; }
 
         public string CurrentOrganizationId { get; set; }
-        public new ICollection<ViewMembership> Memberships { get; set; }
 
         private string HMACSHA256HashString(string value) {
             if (!Settings.Current.EnableIntercom)
@@ -55,14 +53,5 @@ namespace Foundatio.Skeleton.Api.Models
                 return builder.ToString();
             }
         }
-    }
-
-    public class ViewMembership : Membership {
-        public ViewMembership(Membership membership) {
-            OrganizationId = membership.OrganizationId;
-            Roles = membership.Roles;
-        }
-
-        public string OrganizationName { get; set; }
     }
 }

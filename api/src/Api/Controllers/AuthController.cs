@@ -32,8 +32,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly ITokenRepository _tokenRepository;
         private readonly ILogger _logger;
 
-        private static bool _isFirstUserChecked;
-        private const string _invalidPasswordMessage = "The Password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IOrganizationRepository orgRepository,
            ITokenRepository tokenRepository) {
@@ -72,12 +70,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return Unauthorized();
             }
 
-            if (user.Memberships.Count == 0)
-                return BadRequest("You must belong to at least one organization.");
-
-            var organizationId = user.Memberships.First().OrganizationId;
-
-            return Ok(new TokenResponseModel { Token = await GetToken(user, organizationId) });
+            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
         }
 
         private async Task<string> GetToken(User user, string organizationId) {

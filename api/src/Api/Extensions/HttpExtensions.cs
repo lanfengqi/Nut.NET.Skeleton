@@ -46,7 +46,7 @@ namespace Foundatio.Skeleton.Api.Extensions {
         }
 
         public static bool CanAccessOrganization(this HttpRequestMessage message, string organizationId) {
-            if (message.GetUser().Memberships.Contains(m => m.OrganizationId == organizationId))
+            if (message.GetUser().OrganizationId == organizationId)
                 return true;
 
             return message.IsGlobalAdmin();

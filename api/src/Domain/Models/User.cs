@@ -39,10 +39,7 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime CreatedUtc { get; set; }
         public DateTime UpdatedUtc { get; set; }
 
-        /// <summary>
-        /// The organizations that the user has access to.
-        /// </summary>
-        public ICollection<Membership> Memberships { get; set; }
+        public string OrganizationId { get; set; }
 
         /// <summary>
         /// General user role (type of user)
@@ -52,18 +49,9 @@ namespace Foundatio.Skeleton.Domain.Models {
         public User() {
             EmailNotificationsEnabled = true;
             IsActive = true;
-            Memberships = new Collection<Membership>();
             Roles = new Collection<string>();
             Data = new DataDictionary();
         }
     }
 
-    public class Membership {
-        public Membership() {
-            Roles = new List<string>();
-        }
-
-        public string OrganizationId { get; set; }
-        public ICollection<string> Roles { get; set; }
-    }
 }

@@ -39,6 +39,7 @@ namespace Foundatio.Skeleton.Domain {
 
             container.AppendToCollection(typeof(IModelBuilder), typeof(OrganizationModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(UserModelBuilder));
+            container.AppendToCollection(typeof(IModelBuilder), typeof(TokenModelBuilder));
 
             container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
             container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
@@ -80,10 +81,10 @@ namespace Foundatio.Skeleton.Domain {
 
             container.Register(typeof(IValidator<>), new[] { typeof(Bootstrapper).Assembly }, Lifestyle.Singleton);
 
-            //container.RegisterSingleton<IOrganizationRepository, OrganizationRepository>();
+            container.RegisterSingleton<IOrganizationRepository, OrganizationRepository>();
             container.RegisterSingleton<IUserRepository, UserRepository>();
             //container.RegisterSingleton<INotificationRepository, NotificationRepository>();
-            //container.RegisterSingleton<ITokenRepository, TokenRepository>();
+            container.RegisterSingleton<ITokenRepository, TokenRepository>();
             //container.RegisterSingleton<ILogRepository, LogRepository>();
             //container.RegisterSingleton<IMigrationRepository, MigrationRepository>();
             //container.RegisterSingleton<IIndexType<Migration>>(() => container.GetInstance<AppElasticConfiguration>().Organizations.MigrationType);
