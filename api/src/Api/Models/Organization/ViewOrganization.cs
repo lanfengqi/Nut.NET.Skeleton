@@ -9,7 +9,6 @@ namespace Foundatio.Skeleton.Api.Models {
         public string Id { get; set; }
         public string Name { get; set; }
         public bool IsVerified { get; set; }
-        public ICollection<Invite> Invites { get; set; }
         public DataDictionary Data { get; set; }
         public DateTime CreatedUtc { get; set; }
         public long Version { get; set; }

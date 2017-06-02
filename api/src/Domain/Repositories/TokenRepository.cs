@@ -50,7 +50,7 @@ namespace Foundatio.Skeleton.Domain.Repositories {
                 ExpiresUtc = DateTime.UtcNow.AddMinutes(30)
             };
 
-            await SaveAsync(token);
+            await AddAsync(token);
 
             return token;
         }

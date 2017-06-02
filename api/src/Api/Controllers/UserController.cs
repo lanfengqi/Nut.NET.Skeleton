@@ -178,6 +178,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             var organizationId = GetSelectedOrganizationId();
             if (user.AddedAdminMembershipRoles(organizationId)) {
+
+
                 await _repository.SaveAsync(user);
 
             }
@@ -199,7 +201,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             if(organizationId == user.OrganizationId) {
                 user.Roles.Remove(AuthorizationRoles.Admin);
-                await _repository.SaveAsync(user);
+                await _repository.AddAsync(user);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -215,7 +217,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return NotFound();
 
             if (user.AddedGlobalAdminRole()) {
-                await _repository.SaveAsync(user);
+                await _repository.AddAsync(user);
             }
 
             return Ok();
@@ -232,7 +234,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             if (user.Roles.Contains(AuthorizationRoles.GlobalAdmin)) {
                 user.Roles.Remove(AuthorizationRoles.GlobalAdmin);
-                await _repository.SaveAsync(user);
+                await _repository.AddAsync(user);
             }
 
             return StatusCode(HttpStatusCode.NoContent);

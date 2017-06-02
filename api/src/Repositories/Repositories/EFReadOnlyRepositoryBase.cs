@@ -46,7 +46,9 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
             result.PageSize = pageSize;
             result.PageIndex = pageIndex;
-            result.AddRange(await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync());
+
+            query = query.OrderBy(x => x.Id);
+            result.AddRange(await query.Skip((pageIndex -1) * pageSize).Take(pageSize).ToListAsync());
 
             return result;
         }
@@ -76,9 +78,12 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
             string cacheKey = string.Format("Ef.Cache.Id.{0}", id);
 
-            if (useCache && await _cacheClient.ExistsAsync(cacheKey)) {
-                var cachedValue = await _cacheClient.GetAsync<T>(cacheKey);
-                return cachedValue.Value;
+            if (useCache) {
+                var isExist = await _cacheClient.ExistsAsync(cacheKey);
+                if (isExist) {
+                    var cachedValue = await _cacheClient.GetAsync<T>(cacheKey);
+                    return cachedValue.Value;
+                }
             }
 
             var query = _context.Set<T>().Where(x => x.Id == id);

@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Foundatio.Skeleton.Domain.Repositories;
 using System.Threading.Tasks;
-using Foundatio.Skeleton.Domain.Repositories;
-using Foundatio.Skeleton.Core.Extensions;
 
-namespace Foundatio.Skeleton.Domain.Models
-{
+namespace Foundatio.Skeleton.Domain.Models {
     public class TokenHelper
     {
         private readonly ITokenRepository _tokenRepository;
@@ -15,7 +12,7 @@ namespace Foundatio.Skeleton.Domain.Models
 
         public async Task<bool> ValidateToken(string tokenId)
         {
-            var token = await _tokenRepository.GetByIdAsync(tokenId).AnyContext();
+            var token = await _tokenRepository.GetByIdAsync(tokenId);
             return (token != null);
         }
     }

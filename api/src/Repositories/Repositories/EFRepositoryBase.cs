@@ -17,16 +17,16 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
         }
 
 
-        public async Task<T> SaveAsync(T document) {
+        public async Task<T> AddAsync(T document) {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
 
-            await SaveAsync(new[] { document });
+            await AddAsync(new[] { document });
 
             return document;
         }
 
-        public async Task SaveAsync(IEnumerable<T> documents) {
+        public async Task AddAsync(IEnumerable<T> documents) {
 
             var docs = documents?.ToList();
             if (docs == null || docs.Any(d => d == null))
@@ -45,7 +45,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
             await _context.SaveChangesAsync();
         }
 
-        public async Task PatchAsync(T document) {
+        public async Task<T> SaveAsync(T document) {
 
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
@@ -53,6 +53,24 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
             var doc = _context.Entry(document);
             doc.State = System.Data.Entity.EntityState.Modified;
 
+            await _context.SaveChangesAsync();
+
+            return document;
+        }
+
+        public async Task SaveAsync(IEnumerable<T> documents) {
+
+            var docs = documents?.ToList();
+            if (docs == null || docs.Any(d => d == null))
+                throw new ArgumentNullException(nameof(documents));
+
+            if (docs.Count == 0)
+                return;
+
+            foreach (var doc in docs) {
+                var document = _context.Entry(doc);
+                document.State = System.Data.Entity.EntityState.Modified;
+            }
             await _context.SaveChangesAsync();
         }
 

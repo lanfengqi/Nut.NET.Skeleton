@@ -36,10 +36,10 @@ namespace Foundatio.Skeleton.Api {
                 //CreateMap<Notification, ViewNotification>();
                 //CreateMap<NewNotification, Notification>();
 
-                //CreateMap<Organization, ViewOrganization>();
-                //CreateMap<Organization, NewOrganization>();
-                //CreateMap<NewOrganization, Organization>();
-                //CreateMap<ViewOrganization, NewOrganization>();
+                CreateMap<Organization, ViewOrganization>();
+                CreateMap<Organization, NewOrganization>();
+                CreateMap<NewOrganization, Organization>();
+                CreateMap<ViewOrganization, NewOrganization>();
 
                 //CreateMap<Token, ViewToken>();
                 //CreateMap<NewToken, Token>().ForMember(m => m.Type, m => m.Ignore());

@@ -57,7 +57,7 @@ namespace Foundatio.Skeleton.Domain.Services {
 
             if (!String.IsNullOrEmpty(organizationId)) {
                 claims.Add(new Claim("organizationId",organizationId));
-                userRoles.Add(AuthorizationRoles.Admin);
+                userRoles.Add(AuthorizationRoles.GlobalAdmin);
             }
 
             if (userRoles.Any()) {

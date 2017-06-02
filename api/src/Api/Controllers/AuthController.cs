@@ -87,12 +87,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return BadRequest("The Email address is already!");
 
             user = new Domain.Models.User {
+                CreatedUtc = DateTime.UtcNow,
+                UpdatedUtc = DateTime.UtcNow,
                 IsActive = true,
                 FullName = model.Name ?? model.Email,
                 EmailAddress = model.Email,
-                IsEmailAddressVerified = false
+                IsEmailAddressVerified = false,
+                EmailNotificationsEnabled = false,
+                Id = Guid.NewGuid().ToString(),
             };
             user.CreateVerifyEmailAddressToken();
+            user.ResetPasswordResetToken();
 
             await AddGlobaAdminRoleIfFirstUser(user);
 
@@ -120,18 +125,96 @@ namespace Foundatio.Skeleton.Api.Controllers {
                         Version = 1,
                         Name = model.OrganizationName
                     };
-                    await _organizationRepository.SaveAsync(organization);
+                    await _organizationRepository.AddAsync(organization);
                     user.OrganizationId = organization.Id;
                 } else {
                     user.OrganizationId = organization.Id;
                 }
             }
-            await _userRepository.SaveAsync(user);
+            await _userRepository.AddAsync(user);
 
             return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
         }
 
 
+        [HttpPost]
+        [Route("change-pasword")]
+        [Authorize(Roles = AuthorizationRoles.User)]
+        public async Task<IHttpActionResult> ChangePasword(ChangePasswordModel model) {
+            if (model == null || !IsValidPassword(model.Password))
+                return BadRequest(_invalidPasswordMessage);
+
+            if (!String.IsNullOrWhiteSpace(CurrentUser.Password)) {
+                if (String.IsNullOrWhiteSpace(model.CurrentPassword))
+                    return BadRequest("The current password is incorrect.");
+
+                string encodedPassword = model.CurrentPassword.ToSaltedHash(CurrentUser.Salt);
+                if (!String.Equals(encodedPassword, CurrentUser.Password))
+                    return BadRequest("The current password is incorrect.");
+            }
+
+            await ChangePassword(CurrentUser, model.Password);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("forgot-password")]
+        public async Task<IHttpActionResult> ForgotPassword(string emailAddress) {
+            var email = new Email { Address = emailAddress };
+            var validator = new Domain.Validators.EmailValidator();
+            if (!validator.TryValidate(email))
+                return BadRequest("Please specify a valid Email address");
+
+            var user = await _userRepository.GetByEmailAddressAsync(email.Address);
+            if (user != null) {
+
+                if(user.PasswordResetTokenCreated < DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))) {
+                    user.PasswordResetToken = StringUtils.GetNewToken();
+                    user.PasswordResetTokenCreated = DateTime.UtcNow;
+                } else {
+                    user.PasswordResetTokenCreated = DateTime.UtcNow;
+                }
+
+                await _userRepository.SaveAsync(user);
+            }
+            return Ok();
+        }
+
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
+        [HttpPost]
+        [Route("reset-pasword")]
+        [Authorize(Roles = AuthorizationRoles.User)]
+        public async Task<IHttpActionResult> ResetPasword(ResetPasswordModel model) {
+            if (String.IsNullOrEmpty(model?.PasswordResetToken))
+                return BadRequest("Invalid password reset token.");
+
+            var user = await _userRepository.GetByPasswordResetTokenAsync(model.PasswordResetToken);
+            if (user == null)
+                return BadRequest("Invalid password reset token.");
+
+            if(!user.HasValidPasswordResetTokenExpiration())
+                return BadRequest("Password Reset Token has expired.");
+
+            if (!IsValidPassword(model.Password))
+                return BadRequest(_invalidPasswordMessage);
+
+            user.MarkEmailAddressVerified();
+
+            await ChangePassword(user, model.Password);
+
+            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
+        }
+
+        private Task ChangePassword(User user,string password) {
+            if (String.IsNullOrWhiteSpace(user.Salt))
+                user.Salt = StringUtils.GetRandomString(16);
+
+            user.Password = password.ToSaltedHash(user.Salt);
+            user.ResetPasswordResetToken();
+
+            return _userRepository.SaveAsync(user);
+        }
 
         private async Task AddGlobaAdminRoleIfFirstUser(User user) {
             if (_isFirstUserChecked)

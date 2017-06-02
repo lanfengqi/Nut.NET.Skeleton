@@ -165,6 +165,8 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Extensions\CryptoExtensions.cs" />
+    <Compile Include="Models\Email.cs" />
+    <Compile Include="Models\TokenHelper.cs" />
     <Compile Include="Models\TokenResult.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Models\Helpers\StorageHelper.cs" />
@@ -191,6 +193,7 @@
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\OrganizationValidator.cs" />
     <Compile Include="Validators\TokenValidator.cs" />
     <Compile Include="Validators\UserValidator.cs" />

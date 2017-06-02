@@ -91,7 +91,7 @@ namespace Foundatio.Skeleton.Api.Security {
             if (String.IsNullOrEmpty(token))
                 return await BaseSendAsync(request, cancellationToken);
 
-            var tokenRecord = await _tokenRepository.GetByIdAsync(token, true);
+            var tokenRecord = await _tokenRepository.GetByIdAsync(token);
             if (tokenRecord == null)
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
@@ -99,7 +99,7 @@ namespace Foundatio.Skeleton.Api.Security {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
             if (!String.IsNullOrEmpty(tokenRecord.UserId)) {
-                var user = await _userRepository.GetByIdAsync(tokenRecord.UserId, true);
+                var user = await _userRepository.GetByIdAsync(tokenRecord.UserId);
                 if (user == null)
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
@@ -116,7 +116,7 @@ namespace Foundatio.Skeleton.Api.Security {
             request.SetUser(user);
 
             string selectedOrganizationId = organizationId ?? request.GetSelectedOrganizationId();
-            var organization = await _organizationRepository.GetByIdAsync(selectedOrganizationId, true);
+            var organization = await _organizationRepository.GetByIdAsync(selectedOrganizationId);
             if (organization != null)
                 request.SetOrganization(organization);
         }
@@ -125,7 +125,7 @@ namespace Foundatio.Skeleton.Api.Security {
             request.GetRequestContext().Principal = new ClaimsPrincipal(token.ToIdentity());
 
             string selectedOrganizationId = token.OrganizationId ?? request.GetSelectedOrganizationId();
-            var organization = await _organizationRepository.GetByIdAsync(selectedOrganizationId, true);
+            var organization = await _organizationRepository.GetByIdAsync(selectedOrganizationId);
             if (organization != null)
                 request.SetOrganization(organization);
         }

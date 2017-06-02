@@ -67,7 +67,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         protected virtual Task<TModel> AddModelAsync(TModel value) {
-            return _repository.SaveAsync(value);
+            return _repository.AddAsync(value);
         }
 
         protected virtual Task<TModel> AfterAddAsync(TModel value) {
@@ -349,7 +349,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         protected virtual async Task DeleteModelAsync(TModel value) {
             if (_supportsSoftDeletes) {
                 ((ISupportSoftDeletes)value).IsDeleted = true;
-                await _repository.SaveAsync(value);
+                await _repository.AddAsync(value);
             } else
                 await _repository.RemoveAsync(value);
         }
@@ -357,7 +357,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         protected virtual async Task DeleteModelsAsync(ICollection<TModel> values) {
             if (_supportsSoftDeletes) {
                 values.Cast<ISupportSoftDeletes>().ForEach(v => v.IsDeleted = true);
-                await _repository.SaveAsync(values);
+                await _repository.AddAsync(values);
             } else
                 await _repository.RemoveAsync(values);
         }
@@ -367,7 +367,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return;
 
             ((ISupportSoftDeletes)value).IsDeleted = false;
-            await _repository.SaveAsync(value);
+            await _repository.AddAsync(value);
         }
 
         protected virtual async Task UndeleteModelsAsync(ICollection<TModel> values) {
@@ -375,7 +375,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return;
 
             values.Cast<ISupportSoftDeletes>().ForEach(v => v.IsDeleted = false);
-            await _repository.SaveAsync(values);
+            await _repository.AddAsync(values);
         }
 
         protected virtual Task<TModel> AfterDeleteAsync(TModel value) {
