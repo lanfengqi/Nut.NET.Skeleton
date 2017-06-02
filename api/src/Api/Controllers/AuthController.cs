@@ -1,28 +1,15 @@
-﻿using System;
-using System.Linq;
+﻿using Foundatio.Logging;
+using Foundatio.Skeleton.Api.Models;
+using Foundatio.Skeleton.Api.Models.Auth;
+using Foundatio.Skeleton.Core.Extensions;
+using Foundatio.Skeleton.Domain;
+using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Repositories;
+using Swashbuckle.Swagger.Annotations;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using Exceptionless;
-using Exceptionless.DateTimeExtensions;
-using FluentValidation;
-using Foundatio.Skeleton.Api.Extensions;
-using Foundatio.Skeleton.Core.Extensions;
-using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Domain.Repositories;
-using Foundatio.Skeleton.Domain.Services;
-using Foundatio.Logging;
-using Foundatio.Skeleton.Api.Models;
-using Foundatio.Skeleton.Api.Models.Auth;
-using Foundatio.Skeleton.Api.Utility;
-using Foundatio.Skeleton.Domain;
-using OAuth2.Client;
-using OAuth2.Client.Impl;
-using OAuth2.Configuration;
-using OAuth2.Infrastructure;
-using OAuth2.Models;
-using Swashbuckle.Swagger.Annotations;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/auth")]
@@ -32,6 +19,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly ITokenRepository _tokenRepository;
         private readonly ILogger _logger;
 
+        private static bool _isFirstUserChecked;
+        private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IOrganizationRepository orgRepository,
            ITokenRepository tokenRepository) {
@@ -73,9 +62,98 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
         }
 
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
+        [HttpPost]
+        [Route("signup")]
+        public async Task<IHttpActionResult> SignUp(SignupModel model) {
+            if (!Settings.Current.EnableAccountCreation)
+                return BadRequest("Sorry,this is not accepting new accountsa at this time.");
+
+            if (string.IsNullOrWhiteSpace(model?.Email))
+                return BadRequest("Email address is required.");
+
+            if (string.IsNullOrWhiteSpace(model?.Password))
+                return BadRequest("Email address is required.");
+
+            User user;
+
+            try {
+                user = await _userRepository.GetByEmailAddressAsync(model.Email);
+            } catch {
+                return BadRequest("An error occured.");
+            }
+
+            if (user != null)
+                return BadRequest("The Email address is already!");
+
+            user = new Domain.Models.User {
+                IsActive = true,
+                FullName = model.Name ?? model.Email,
+                EmailAddress = model.Email,
+                IsEmailAddressVerified = false
+            };
+            user.CreateVerifyEmailAddressToken();
+
+            await AddGlobaAdminRoleIfFirstUser(user);
+
+            if (!IsValidPassword(model.Password))
+                return BadRequest(_invalidPasswordMessage);
+
+            user.Salt = StringUtils.GetRandomString(16);
+            user.Password = model.Password.ToSaltedHash(user.Salt);
+
+            if (!String.IsNullOrWhiteSpace(model.OrganizationName)) {
+                Organization organization;
+
+                try {
+                    organization = await _organizationRepository.GetByNameAsync(model.OrganizationName);
+                } catch {
+                    return BadRequest("An error occured.");
+                }
+
+                if (organization == null) {
+                    organization = new Organization {
+                        CreatedUtc = DateTime.UtcNow,
+                        UpdatedUtc = DateTime.UtcNow,
+                        Id = Guid.NewGuid().ToString(),
+                        IsVerified = true,
+                        Version = 1,
+                        Name = model.OrganizationName
+                    };
+                    await _organizationRepository.SaveAsync(organization);
+                    user.OrganizationId = organization.Id;
+                } else {
+                    user.OrganizationId = organization.Id;
+                }
+            }
+            await _userRepository.SaveAsync(user);
+
+            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
+        }
+
+
+
+        private async Task AddGlobaAdminRoleIfFirstUser(User user) {
+            if (_isFirstUserChecked)
+                return;
+
+            bool isFirstUser = await _userRepository.CountAsync() == 0;
+            if (isFirstUser)
+                user.AddGlobalAdminRole();
+
+            _isFirstUserChecked = true;
+        }
+
         private async Task<string> GetToken(User user, string organizationId) {
             var token = await _tokenRepository.GetOrCreateUserToken(user.Id, organizationId);
             return token.Id;
+        }
+
+        public static bool IsValidPassword(string password) {
+            if (string.IsNullOrWhiteSpace(password))
+                return false;
+
+            return password.Length >= 8;
         }
     }
 }
