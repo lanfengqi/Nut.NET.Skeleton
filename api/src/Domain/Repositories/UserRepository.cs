@@ -1,4 +1,5 @@
-﻿using Foundatio.Skeleton.Domain.Models;
+﻿using Foundatio.Caching;
+using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories.Repositories;
 using System;
 using System.Linq;
@@ -8,8 +9,8 @@ namespace Foundatio.Skeleton.Domain.Repositories {
     public class UserRepository : EFRepositoryBase<User>, IUserRepository {
 
 
-        public UserRepository(IEFRepositoryContext efRepositoryContext)
-            : base(efRepositoryContext, null, null) {
+        public UserRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient)
+            : base(efRepositoryContext, cacheClient, null) {
         }
 
         public async Task<User> GetByEmailAddressAsync(string emailAddress) {

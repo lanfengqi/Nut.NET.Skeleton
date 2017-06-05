@@ -1,17 +1,18 @@
-﻿using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Repositories.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
+﻿using Foundatio.Caching;
 using Foundatio.Skeleton.Core.Extensions;
+using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Repositories.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class TokenRepository : EFRepositoryBase<Token>, ITokenRepository {
 
 
-        public TokenRepository(IEFRepositoryContext efRepositoryContext)
-            : base(efRepositoryContext, null, null) {
+        public TokenRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient)
+            : base(efRepositoryContext, cacheClient, null) {
         }
 
 

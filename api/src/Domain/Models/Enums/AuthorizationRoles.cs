@@ -8,6 +8,7 @@ namespace Foundatio.Skeleton.Domain.Models
         public const string User = "user";
         public const string Admin = "admin";
         public const string GlobalAdmin = "global";
+
         public static readonly string[] AllScopes = { Client, User, Admin, GlobalAdmin };
 
         public static readonly string[] ClientScope = { Client };
