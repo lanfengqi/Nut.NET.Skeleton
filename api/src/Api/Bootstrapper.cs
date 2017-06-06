@@ -41,6 +41,9 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<NewOrganization, Organization>();
                 CreateMap<ViewOrganization, NewOrganization>();
 
+                CreateMap<Role, ViewRole>();
+                CreateMap<ViewRole, Role>();
+
                 //CreateMap<Token, ViewToken>();
                 //CreateMap<NewToken, Token>().ForMember(m => m.Type, m => m.Ignore());
 
