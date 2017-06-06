@@ -25,6 +25,7 @@ using Foundatio.Skeleton.Domain.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories.Repositories;
 using System.Data.Entity;
+using Foundatio.Skeleton.Domain.Services;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -101,7 +102,7 @@ namespace Foundatio.Skeleton.Domain {
             //}
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
-            //container.RegisterSingleton<SampleDataService>();
+            container.RegisterSingleton<FirstInsatllService>();
 
             //if (Settings.Current.EnableIndexConfiguration)
             //    container.AddStartupAction(() => {

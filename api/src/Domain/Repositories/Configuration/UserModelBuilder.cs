@@ -13,7 +13,14 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             modelBuilder.Entity<User>().Property(emp => emp.EmailAddress).HasMaxLength(500);
 
             modelBuilder.Entity<User>().Ignore(emp => emp.Data);
-            modelBuilder.Entity<User>().Ignore(emp => emp.Roles);
+
+            modelBuilder.Entity<User>().HasMany(p => p.Roles)
+                .WithMany()
+                .Map(m => {
+                    m.ToTable("user_roles");
+                    m.MapLeftKey("UserId");
+                    m.MapRightKey("RoleId");
+                });
         }
 
     }

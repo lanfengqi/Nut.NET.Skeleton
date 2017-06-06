@@ -99,7 +99,7 @@ namespace Foundatio.Skeleton.Api.Security {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
             if (!String.IsNullOrEmpty(tokenRecord.UserId)) {
-                var user = await _userRepository.GetByIdAsync(tokenRecord.UserId, true);
+                var user = await _userRepository.GetByIdAsync(tokenRecord.UserId);
                 if (user == null)
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 

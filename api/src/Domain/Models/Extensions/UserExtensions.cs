@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Foundatio.Skeleton.Core.Collections;
 using Foundatio.Skeleton.Core.Extensions;
+using Foundatio.Skeleton.Domain.Repositories;
+using System.Threading.Tasks;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public static class UserExtensions {
-       
+
         public static void CreateVerifyEmailAddressToken(this User user) {
             if (user == null)
                 return;
@@ -57,7 +59,7 @@ namespace Foundatio.Skeleton.Domain.Models {
         }
 
         public static bool IsGlobalAdmin(this User user) {
-            return user.Roles.Contains(AuthorizationRoles.GlobalAdmin);
+            return user.Roles.Any(x => x.SystemName == AuthorizationRoles.GlobalAdmin);
         }
 
         public static bool IsAdmin(this User user, string organizationId) {
@@ -65,16 +67,18 @@ namespace Foundatio.Skeleton.Domain.Models {
             return userOrganizationId.Equals(organizationId);
         }
 
-        public static bool AddedMembershipRole(this User user, string organizationId, string role) {
+        public static async Task<bool> AddedMembershipRole(this User user, IRoleRepository roleRepository, string organizationId, string role) {
             var roles = AuthorizationRoles.GetScope(role);
-            return user.AddedMembershipRoles(organizationId, roles);
+            var roleList = await roleRepository.GetBySystemNamesAsync(roles);
+
+            return user.AddedMembershipRoles(organizationId, roleList.ToList());
         }
 
-        public static bool AddedMembershipRoles(this User user, string organizationId, ICollection<string> roles) {
-            if (roles.Contains(AuthorizationRoles.GlobalAdmin))
+        public static bool AddedMembershipRoles(this User user, string organizationId, ICollection<Role> roles) {
+            if (roles.Any(x => x.SystemName == AuthorizationRoles.GlobalAdmin))
                 return false;
 
-            if(user.OrganizationId == organizationId) {
+            if (user.OrganizationId == organizationId) {
                 user.Roles.AddRange(roles);
                 return true;
             }
@@ -82,24 +86,27 @@ namespace Foundatio.Skeleton.Domain.Models {
             return false;
         }
 
-        public static void AddAdminMembership(this User user, string organizationId) {
-            user.AddedAdminMembershipRoles(organizationId);
-        }
+        //public static void AddAdminMembership(this User user, string organizationId) {
+        //    user.AddedAdminMembershipRoles(organizationId);
+        //}
 
-        public static bool AddedAdminMembershipRoles(this User user, string organizationId) {
+        public static async Task<bool> AddedAdminMembershipRoles(this User user, IRoleRepository roleRepository, string organizationId) {
             var roles = AuthorizationRoles.AdminScope;
-            return user.AddedMembershipRoles(organizationId, roles);
+            var roleList = await roleRepository.GetBySystemNamesAsync(roles);
+            return user.AddedMembershipRoles(organizationId, roleList.ToList());
         }
 
-        public static void AddGlobalAdminRole(this User user) {
-            user.AddedGlobalAdminRole();
-        }
+        //public static void AddGlobalAdminRole(this User user) {
+        //    user.AddedGlobalAdminRole();
+        //}
 
-        public static bool AddedGlobalAdminRole(this User user) {
-            if (user.Roles.Contains(AuthorizationRoles.GlobalAdmin, StringComparer.OrdinalIgnoreCase))
+        public static async Task<bool> AddedGlobalAdminRole(this User user, IRoleRepository roleRepository) {
+            if (user.Roles.Any(x => x.SystemName == AuthorizationRoles.GlobalAdmin))
                 return false;
+            var role = await roleRepository.GetBySystemNameAsync(AuthorizationRoles.GlobalAdmin);
 
-            user.Roles.Add(AuthorizationRoles.GlobalAdmin);
+            user.Roles.Add(role);
+
             return true;
         }
     }

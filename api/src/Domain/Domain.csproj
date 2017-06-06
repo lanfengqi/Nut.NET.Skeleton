@@ -195,6 +195,7 @@
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\FirstInsatllService.cs" />
     <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Validators\EmailValidator.cs" />

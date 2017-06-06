@@ -44,12 +44,12 @@ namespace Foundatio.Skeleton.Domain.Models {
         /// <summary>
         /// General user role (type of user)
         /// </summary>
-        public ICollection<string> Roles { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
 
         public User() {
             EmailNotificationsEnabled = true;
             IsActive = true;
-            Roles = new Collection<string>();
+            Roles = new Collection<Role>();
             Data = new DataDictionary();
         }
     }

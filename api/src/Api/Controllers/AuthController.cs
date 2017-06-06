@@ -17,17 +17,19 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IUserRepository _userRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ITokenRepository _tokenRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly ILogger _logger;
 
         private static bool _isFirstUserChecked;
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IOrganizationRepository orgRepository,
-           ITokenRepository tokenRepository) {
+           ITokenRepository tokenRepository, IRoleRepository roleRepository) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
+            _roleRepository = roleRepository;
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 EmailAddress = model.Email,
                 IsEmailAddressVerified = false,
                 EmailNotificationsEnabled = false,
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString("N"),
             };
             user.CreateVerifyEmailAddressToken();
             user.ResetPasswordResetToken();
@@ -222,7 +224,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             bool isFirstUser = await _userRepository.CountAsync() == 0;
             if (isFirstUser)
-                user.AddGlobalAdminRole();
+               await user.AddedGlobalAdminRole(_roleRepository);
 
             _isFirstUserChecked = true;
         }

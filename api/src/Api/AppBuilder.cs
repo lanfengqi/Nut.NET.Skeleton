@@ -32,6 +32,7 @@ using Swashbuckle.Application;
 using Foundatio.Skeleton.Core.Utility;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
+using Foundatio.Skeleton.Domain.Services;
 //using Foundatio.Skeleton.Api.MessageBus;
 
 namespace Foundatio.Skeleton.Api {
@@ -91,7 +92,7 @@ namespace Foundatio.Skeleton.Api {
             //var context = new OwinContext(app.Properties);
             //var token = context.Get<CancellationToken>("host.OnAppDisposing");
 
-            //CreateSampleDataAsync(container).GetAwaiter().GetResult();
+            FirstInsatllDataAsync(container).GetAwaiter().GetResult();
 
             //RunJobs(container, app, token, loggerFactory, logger);
         }
@@ -167,17 +168,13 @@ namespace Foundatio.Skeleton.Api {
             });
         }
 
-        //private static async Task CreateSampleDataAsync(Container container) {
-        //    if (Settings.Current.AppMode != AppMode.Local)
-        //        return;
+        private static async Task FirstInsatllDataAsync(Container container) {
+            if (Settings.Current.AppMode != AppMode.Local)
+                return;
 
-        //    var userRepository = container.GetInstance<IUserRepository>();
-        //    if (await userRepository.CountAsync() != 0)
-        //        return;
-
-        //    var sampleDataService = container.GetInstance<SampleDataService>();
-        //    await sampleDataService.CreateTestDataAsync().AnyContext();
-        //}
+            var firstInstallService = container.GetInstance<FirstInsatllService>();
+            await firstInstallService.InstallData();
+        }
 
         public static Container CreateContainer(ILoggerFactory loggerFactory, ILogger logger, bool includeInsulation = true) {
             var container = new Container();

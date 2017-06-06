@@ -46,21 +46,21 @@ namespace Foundatio.Skeleton.Domain.Services {
             return CreateUserIdentity(user.EmailAddress, user.Id, user.Roles, currentOrganizationId);
         }
 
-        public static ClaimsIdentity CreateUserIdentity(string emailAddress, string userId, ICollection<string> roles, string organizationId) {
+        public static ClaimsIdentity CreateUserIdentity(string emailAddress, string userId, ICollection<Role> roles, string organizationId) {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, emailAddress),
                 new Claim(ClaimTypes.NameIdentifier, userId),
             };
 
-            var userRoles = new HashSet<string>(roles);
+            var userRoles = roles.Select(x => x.SystemName).ToList();
 
             if (!String.IsNullOrEmpty(organizationId)) {
-                claims.Add(new Claim("organizationId",organizationId));
-                userRoles.Add(AuthorizationRoles.GlobalAdmin);
+                claims.Add(new Claim("organizationId", organizationId));
             }
 
             if (userRoles.Any()) {
+
                 // add implied scopes
                 if (userRoles.Contains(AuthorizationRoles.GlobalAdmin))
                     userRoles.Add(AuthorizationRoles.User);

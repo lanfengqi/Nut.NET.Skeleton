@@ -24,32 +24,31 @@ namespace Foundatio.Skeleton.Api.Controllers {
     public class UserController : RepositoryApiController<IUserRepository, User, ViewUser, User, UpdateUser> {
         private readonly IPublicFileStorage _publicFileStorage;
         private readonly IMessagePublisher _messagePublisher;
+        private readonly IRoleRepository _roleRepository;
 
         public UserController(
             ILoggerFactory loggerFactory,
             IUserRepository userRepository,
+            IRoleRepository roleRepository,
             IPublicFileStorage publicFileStorage,
             IMapper mapper,
             IMessagePublisher messagePublisher) : base(loggerFactory, userRepository, mapper) {
             _publicFileStorage = publicFileStorage;
             _messagePublisher = messagePublisher;
+            _roleRepository = roleRepository;
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewCurrentUser))]
         [HttpGet]
         [Route("me")]
         public async Task<IHttpActionResult> GetCurrentUser() {
-
-            //if (CurrentUser == null)
-            //    return NotFound();
-
-            var currentUser = await _repository.GetByIdAsync("3552");
+            var currentUser = await GetModel(CurrentUser.Id, false);
             if (currentUser == null)
                 return NotFound();
 
-            return Ok(new {
-                Name = "Admin"
-            });
+            var viewUser = new ViewCurrentUser(currentUser, currentUser.Roles.Select(x => x.SystemName).ToArray(), currentUser.OrganizationId);
+
+            return Ok(viewUser);
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
@@ -177,9 +176,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return NotFound();
 
             var organizationId = GetSelectedOrganizationId();
-            if (user.AddedAdminMembershipRoles(organizationId)) {
-
-
+            if (await user.AddedAdminMembershipRoles(_roleRepository, organizationId)) {
                 await _repository.SaveAsync(user);
 
             }
@@ -199,9 +196,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             var organizationId = GetSelectedOrganizationId();
 
-            if(organizationId == user.OrganizationId) {
-                user.Roles.Remove(AuthorizationRoles.Admin);
-                await _repository.AddAsync(user);
+            if (organizationId == user.OrganizationId) {
+                var adminRole = await _roleRepository.GetBySystemNameAsync(AuthorizationRoles.Admin);
+                user.Roles.Remove(adminRole);
+                await _repository.SaveAsync(user);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -216,8 +214,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (user == null)
                 return NotFound();
 
-            if (user.AddedGlobalAdminRole()) {
-                await _repository.AddAsync(user);
+            if (await user.AddedGlobalAdminRole(_roleRepository)) {
+                await _repository.SaveAsync(user);
             }
 
             return Ok();
@@ -232,9 +230,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (user == null)
                 return NotFound();
 
-            if (user.Roles.Contains(AuthorizationRoles.GlobalAdmin)) {
-                user.Roles.Remove(AuthorizationRoles.GlobalAdmin);
-                await _repository.AddAsync(user);
+            if (user.Roles.Any(x => x.SystemName == AuthorizationRoles.GlobalAdmin)) {
+                var globalAdminRole = await _roleRepository.GetBySystemNameAsync(AuthorizationRoles.GlobalAdmin);
+                user.Roles.Remove(globalAdminRole);
+                await _repository.SaveAsync(user);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
