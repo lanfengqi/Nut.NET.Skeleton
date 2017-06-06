@@ -225,6 +225,7 @@
     <Compile Include="Controllers\Base\TimeInfo.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UtilityController.cs" />
     <Compile Include="Extensions\HttpActionContextExtensions.cs" />
@@ -238,6 +239,8 @@
     <Compile Include="Models\Auth\TokenResponseModel.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />
     <Compile Include="Models\Organization\ViewOrganization.cs" />
+    <Compile Include="Models\Token\NewToken.cs" />
+    <Compile Include="Models\Token\ViewToken.cs" />
     <Compile Include="Models\User\UpdateUser.cs" />
     <Compile Include="Models\User\ViewCurrentUser.cs" />
     <Compile Include="Models\User\ViewRole.cs" />

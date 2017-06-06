@@ -44,8 +44,8 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Role, ViewRole>();
                 CreateMap<ViewRole, Role>();
 
-                //CreateMap<Token, ViewToken>();
-                //CreateMap<NewToken, Token>().ForMember(m => m.Type, m => m.Ignore());
+                CreateMap<Token, ViewToken>();
+                CreateMap<NewToken, Token>().ForMember(m => m.Type, m => m.Ignore());
 
                 CreateMap<User, ViewUser>().AfterMap((u, vu) => vu.IsGlobalAdmin = u.IsGlobalAdmin());
                 CreateMap<User, UpdateUser>();
