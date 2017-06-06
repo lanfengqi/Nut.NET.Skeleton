@@ -156,18 +156,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return (page + 1) * limit >= MAXIMUM_SKIP;
         }
 
-        //public SystemFilterQuery GetSystemFilter(bool hasOrganizationFilter, bool supportsSoftDeletes) {
-        //    var result = new SystemFilterQuery();
-        //    if (supportsSoftDeletes)
-        //        result.IncludeSoftDeletes = false;
-
-        //    if (hasOrganizationFilter && Request.IsGlobalAdmin())
-        //        return result;
-
-        //    result.OrganizationIds.Add(Request.GetSelectedOrganizationId());
-        //    return result;
-        //}
-
         protected bool HasOrganizationFilter(string filter) {
             if (String.IsNullOrWhiteSpace(filter))
                 return false;

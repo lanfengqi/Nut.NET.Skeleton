@@ -17,7 +17,7 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             modelBuilder.Entity<User>().HasMany(p => p.Roles)
                 .WithMany()
                 .Map(m => {
-                    m.ToTable("user_roles");
+                    m.ToTable("user_roles_mapping");
                     m.MapLeftKey("UserId");
                     m.MapRightKey("RoleId");
                 });

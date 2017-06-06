@@ -58,14 +58,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.GetById(id);
         }
 
-        //[SwaggerResponse(HttpStatusCode.OK, Type = typeof(ICollection<ViewUser>))]
-        //[HttpGet]
-        //[Route]
-        //[RequireOrganization]
-        //public override Task<IHttpActionResult> Get(string f = null, string q = null, string sort = null, string offset = null, string mode = null, int page = 1, int limit = 10, string facet = null) {
-        //    return base.Get(f, q, sort, offset, mode, page, limit, facet);
-        //}
-
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
         [HttpPatch]
         [Route("{id:objectid}")]
@@ -127,43 +119,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             await UpdateModelAsync(user);
 
-            //if (!user.IsEmailAddressVerified)
-            //    await ResendVerificationEmail(id);
-
             return Ok(new { IsVerified = user.IsEmailAddressVerified });
         }
-
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[Route("verify-email-address")]
-        //public async Task<IHttpActionResult> Verify(string token) {
-        //    var user = await _repository.GetByVerifyEmailAddressTokenAsync(token);
-        //    if (user == null)
-        //        return NotFound();
-
-        //    if (!user.HasValidEmailAddressTokenExpiration())
-        //        return BadRequest("Verify Email Address Token has expired.");
-
-        //    user.MarkEmailAddressVerified();
-
-        //    await _repository.SaveAsync(user);
-
-        //    var admins = user.GetMembershipsWithAdminRole();
-        //    if (admins != null && admins.Any())
-        //        foreach (var membership in user.Memberships)
-        //            await _organizationService.TryMarkOrganizationAsVerifiedAsync(membership.OrganizationId);
-
-        //    ExceptionlessClient.Default.CreateFeatureUsage("Verify Email Address").AddObject(user).Submit();
-
-        //    if (user.Password == null) {
-        //        // TODO(derek): when we get last org in there, use that
-        //        var t = await _tokenRepository.GetOrCreateUserToken(user.Id, null);
-        //        return Ok(new TokenResponseModel { Token = t.Id });
-        //    }
-
-        //    return Ok();
-        //}
-
 
         [HttpPost]
         [Route("{id:objectid}/admin-role")]

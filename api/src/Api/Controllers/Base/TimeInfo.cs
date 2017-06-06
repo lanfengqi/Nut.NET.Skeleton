@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Exceptionless.DateTimeExtensions;
 
 namespace Foundatio.Skeleton.Api.Controllers {

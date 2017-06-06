@@ -65,63 +65,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             return models;
         }
-
-        //public virtual Task<IHttpActionResult> Get(string userFilter = null, string query = null, string sort = null, string offset = null, string mode = null, int page = 1, int limit = 10, string facet = null) {
-        //    return GetInternal(null, userFilter, query, sort, offset, mode, page, limit, facet);
-        //}
-
-        //public virtual async Task<IHttpActionResult> GetFacets(string facets, string userFilter = null, string query = null) {
-        //    var systemFilter = GetSystemFilter(HasOrganizationFilter(query), _supportsSoftDeletes);
-
-        //    var fo = AggregationOptions.Parse(facets);
-        //    var res = await _repository.GetAggregationsAsync(systemFilter, fo, userFilter);
-
-        //    return Ok(res);
-        //}
-
-        //public virtual async Task<IHttpActionResult> GetCount(string userFilter = null, string query = null, string facet = null) {
-        //    var systemFilter = GetSystemFilter(HasOrganizationFilter(query), _supportsSoftDeletes);
-
-        //    var fo = AggregationOptions.Parse(facet);
-        //    var res = await _repository.CountBySearchAsync(systemFilter, userFilter, fo);
-
-        //    return Ok(res);
-        //}
-
-        //public async Task<IHttpActionResult> GetInternal(SystemFilterQuery systemFilter = null, string userFilter = null, string query = null, string sort = null, string offset = null, string mode = null, int page = 1, int limit = 10, string facet = null) {
-        //    page = GetPage(page);
-        //    limit = GetLimit(limit);
-        //    var skip = GetSkip(page + 1, limit);
-        //    if (skip > MAXIMUM_SKIP)
-        //        return BadRequest("Cannot get requested page");
-
-        //    if (systemFilter == null)
-        //        systemFilter = GetSystemFilter(HasOrganizationFilter(query), _supportsSoftDeletes);
-
-        //    var fo = AggregationOptions.Parse(facet);
-
-        //    FindResults<TModel> results;
-        //    try {
-        //        results = await _repository.SearchAsync(systemFilter, userFilter, query, sort, new PagingOptions { Limit = limit, Page = page }, fo);
-        //    } catch (ApplicationException ex) {
-        //        ex.ToExceptionless().SetProperty("Search Filter", new { SystemFilter = systemFilter, UserFilter = query, Sort = sort, Offset = offset, Page = page, Limit = limit }).AddTags("Search").Submit();
-        //        return BadRequest("An error has occurred. Please check your search filter.");
-        //    }
-
-        //    if (!String.IsNullOrEmpty(mode) && String.Equals(mode, "summary", StringComparison.InvariantCultureIgnoreCase))
-        //        return OkWithResourceLinks(await MapCollection<TViewModel>(results.Documents, true), results.HasMore, page, results.Total);
-
-        //    var mappedModels = await MapCollection<TViewModel>(results.Documents, true);
-        //    var hasMore = results.HasMore && !NextPageExceedsSkipLimit(page, limit);
-
-        //    if (facet != null) {
-        //        var wrappedResult = new ResultWithFacets<TViewModel> { Results = mappedModels, Facets = results.Aggregations };
-        //        return OkWithResourceLinks(wrappedResult, hasMore, page, results.Total);
-        //    }
-
-        //    return OkWithResourceLinks(mappedModels, hasMore, page, results.Total);
-        //}
-
+        
         #endregion
 
         #region Mapping
