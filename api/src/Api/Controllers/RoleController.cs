@@ -36,7 +36,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             page = GetPage(page);
             limit = GetLimit(limit);
 
-            var organizations = await _repository.FindAsync(x => x.OrganizationId != "", new PagingOptions { Page = page, Limit = limit });
+            var organizations = await _repository.FindAsync(x => x.SystemName != "", new PagingOptions { Page = page, Limit = limit });
 
             return OkWithResourceLinks(organizations, organizations.TotalPages > page, page, organizations.TotalCount);
         }
@@ -65,6 +65,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
         public override Task<IHttpActionResult> DeleteAsync(string id) {
             return base.DeleteAsync(id);
         }
-        
+
     }
 }

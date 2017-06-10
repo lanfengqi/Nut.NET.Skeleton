@@ -38,6 +38,8 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IDependencyResolver>(() => new SimpleInjectorDependencyContainer(container));
             container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
 
+            container.RegisterSingleton<EFConfiguration>();
+
             container.AppendToCollection(typeof(IModelBuilder), typeof(OrganizationModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(UserModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(TokenModelBuilder));
@@ -104,11 +106,11 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();
 
-            //if (Settings.Current.EnableIndexConfiguration)
-            //    container.AddStartupAction(() => {
-            //        var config = container.GetInstance<AppElasticConfiguration>();
-            //        config.ConfigureIndexesAsync().GetAwaiter().GetResult();
-            //    });
+            ////if (Settings.Current.EnableIndexConfiguration)
+            container.AddStartupAction(() => {
+                var config = container.GetInstance<EFConfiguration>();
+                config.ConfigureDatabase();
+            });
 
             container.AppendToCollection(typeof(Profile), typeof(DomainMappings));
             container.RegisterSingleton<IMapper>(() => {

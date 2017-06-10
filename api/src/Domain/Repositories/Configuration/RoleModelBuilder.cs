@@ -12,7 +12,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
 
             modelBuilder.Entity<Role>().Property(emp => emp.Name).HasMaxLength(50);
             modelBuilder.Entity<Role>().Property(emp => emp.SystemName).HasMaxLength(500);
-            modelBuilder.Entity<Role>().Property(emp => emp.OrganizationId).HasMaxLength(50);
         }
     }
 }

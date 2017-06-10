@@ -77,7 +77,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
         public async Task<T> GetByIdAsync(string id, bool useCache = false, TimeSpan? expiresIn = null) {
 
             string cacheKey = string.Format("Ef.Cache.Id.{0}", id);
-
+            //Bug?? EF 
             if (useCache) {
                 var isExist = await _cacheClient.ExistsAsync(cacheKey);
                 if (isExist) {
@@ -103,7 +103,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
             if (!HasIdentity)
                 throw new NotSupportedException("Model type must implement IIdentity.");
-
+            //Bug?? EF 
             string cacheKey = string.Format("Ef.Cache.Ids.{0}", idList.GetHashCode());
 
             if (useCache && await _cacheClient.ExistsAsync(cacheKey)) {

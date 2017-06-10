@@ -12,7 +12,5 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime CreatedUtc { get; set; }
 
         public DateTime UpdatedUtc { get; set; }
-
-        public string OrganizationId { get; set; }
     }
 }
