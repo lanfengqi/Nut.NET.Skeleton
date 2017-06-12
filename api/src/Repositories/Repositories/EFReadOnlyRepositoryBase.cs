@@ -22,6 +22,8 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
         }
 
         public async Task<IReadOnlyCollection<T>> FindAsync(Expression<Func<T, bool>> specification) {
+            if (specification == null)
+                throw new ArgumentNullException("specification");
 
             var query = _context.Set<T>().Where(specification);
 
@@ -29,6 +31,8 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
         }
 
         public async Task<PagedList<T>> FindAsync(Expression<Func<T, bool>> specification, IPagingOptions paging = null) {
+            if (specification == null)
+                throw new ArgumentNullException("specification");
 
             var query = _context.Set<T>().Where(specification);
 
@@ -48,7 +52,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
             result.PageIndex = pageIndex;
 
             query = query.OrderBy(x => x.Id);
-            result.AddRange(await query.Skip((pageIndex -1) * pageSize).Take(pageSize).ToListAsync());
+            result.AddRange(await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync());
 
             return result;
         }
@@ -65,14 +69,14 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
         public async Task<long> CountAsync(Expression<Func<T, bool>> specification) {
             if (specification == null)
-                return 0;
+                throw new ArgumentNullException("specification");
 
             var query = _context.Set<T>().Where(specification);
             return await query.CountAsync();
         }
 
         public async Task<long> CountAsync() {
-            return await this.CountAsync(null);
+            return await this.CountAsync(x => x.Id != null);
         }
         public async Task<T> GetByIdAsync(string id, bool useCache = false, TimeSpan? expiresIn = null) {
 
@@ -121,7 +125,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
 
         public async Task<IReadOnlyCollection<T>> GetAllAsync(IPagingOptions paging = null) {
-            return await this.FindAsync(null, paging);
+            return await this.FindAsync(x => x.Id != null, paging);
         }
 
 

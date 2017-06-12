@@ -16,7 +16,7 @@ namespace Foundatio.Skeleton.Repositories.Configuration {
 
             var customCommands = new List<string>();
             //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/Install/Sysytem.Default.sql"), false));
+            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/Install/MySql.Indexes.sql"), false));
 
             var initializer = new CreateTablesIfNotExist<EFDbContext>(tablesToValidate, customCommands.ToArray());
             Database.SetInitializer(initializer);

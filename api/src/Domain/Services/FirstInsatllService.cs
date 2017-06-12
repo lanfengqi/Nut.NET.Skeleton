@@ -1,5 +1,8 @@
-﻿using Foundatio.Skeleton.Domain.Repositories;
+﻿using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Repositories;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Foundatio.Skeleton.Domain.Services {
     public class FirstInsatllService {
@@ -22,7 +25,47 @@ namespace Foundatio.Skeleton.Domain.Services {
             if (await _userRepository.CountAsync() != 0)
                 return;
 
+            await CreateRoleAsync();
 
+        }
+
+        public async Task CreateRoleAsync() {
+            var roles = new List<Role>();
+
+            roles.Add(new Role() {
+                CreatedUtc = DateTime.UtcNow,
+                UpdatedUtc = DateTime.UtcNow,
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "超级管理员",
+                SystemName = AuthorizationRoles.GlobalAdmin
+            });
+
+            roles.Add(new Role() {
+                CreatedUtc = DateTime.UtcNow,
+                UpdatedUtc = DateTime.UtcNow,
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "管理员",
+                SystemName = AuthorizationRoles.Admin
+            });
+
+            roles.Add(new Role() {
+                CreatedUtc = DateTime.UtcNow,
+                UpdatedUtc = DateTime.UtcNow,
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "用户",
+                SystemName = AuthorizationRoles.User
+            });
+
+            roles.Add(new Role() {
+                CreatedUtc = DateTime.UtcNow,
+                UpdatedUtc = DateTime.UtcNow,
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "游客",
+                SystemName = AuthorizationRoles.Client
+            });
+
+
+            await _roleRepository.AddAsync(roles);
         }
 
     }
