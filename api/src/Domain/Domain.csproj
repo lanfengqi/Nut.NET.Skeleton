@@ -166,6 +166,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Extensions\CryptoExtensions.cs" />
     <Compile Include="Models\Email.cs" />
+    <Compile Include="Models\Messaging\EntityChanged.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\TokenHelper.cs" />
     <Compile Include="Models\TokenResult.cs" />
@@ -218,7 +219,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Messaging\" />
     <Folder Include="Models\WorkItems\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

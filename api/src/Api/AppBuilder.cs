@@ -33,6 +33,7 @@ using Foundatio.Skeleton.Core.Utility;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Foundatio.Skeleton.Domain.Services;
+using Foundatio.Skeleton.Api.MessageBus;
 //using Foundatio.Skeleton.Api.MessageBus;
 
 namespace Foundatio.Skeleton.Api {
@@ -86,7 +87,7 @@ namespace Foundatio.Skeleton.Api {
             }
 
             app.UseWebApi(config);
-            //SetupSignalR(app, container);
+            SetupSignalR(app, container);
             SetupSwagger(config);
 
             //var context = new OwinContext(app.Properties);
@@ -150,9 +151,9 @@ namespace Foundatio.Skeleton.Api {
             if (!Settings.Current.EnableSignalR)
                 return;
 
-            //var resolver = container.GetInstance<IDependencyResolver>();
-            //app.MapSignalR<MessageBusConnection>("/api/v1/push", new ConnectionConfiguration { Resolver = resolver });
-            //container.GetInstance<MessageBusBroker>().Start();
+            var resolver = container.GetInstance<IDependencyResolver>();
+            app.MapSignalR<MessageBusConnection>("/api/v1/push", new ConnectionConfiguration { Resolver = resolver });
+            container.GetInstance<MessageBusBroker>().Start();
         }
 
         private static void SetupSwagger(HttpConfiguration config) {

@@ -1,5 +1,4 @@
-﻿using System;
-using Foundatio.Repositories.Models;
+﻿using Foundatio.Skeleton.Repositories.Model;
 
 namespace Foundatio.Skeleton.Domain.Models.Messaging {
     public class AppEntityChanged : EntityChanged {

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Foundatio.Caching;
 using Foundatio.Logging;
+using Foundatio.Skeleton.Api.MessageBus;
 using Foundatio.Skeleton.Api.Models;
+using Foundatio.Skeleton.Api.Security;
 using Foundatio.Skeleton.Api.Utility;
+using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Models;
 using Microsoft.AspNet.SignalR;
@@ -14,20 +17,20 @@ using System;
 namespace Foundatio.Skeleton.Api {
     public class Bootstrapper {
         public static void RegisterServices(Container container, ILoggerFactory loggerFactory) {
-            //container.Register<MessageBusConnection>();
-            //container.RegisterSingleton<IConnectionMapping, ConnectionMapping>();
-            //container.RegisterSingleton<MessageBusBroker>();
-            
+            container.Register<MessageBusConnection>();
+            container.RegisterSingleton<IConnectionMapping, ConnectionMapping>();
+            container.RegisterSingleton<MessageBusBroker>();
+
             var resolver = new SimpleInjectorSignalRDependencyResolver(container);
             container.RegisterSingleton<IDependencyResolver>(resolver);
             container.RegisterSingleton<IConnectionManager>(() => new ConnectionManager(resolver));
 
-            //container.RegisterSingleton<IUserIdProvider, MessageBus.PrincipalUserIdProvider>();
+            container.RegisterSingleton<IUserIdProvider, MessageBus.PrincipalUserIdProvider>();
             container.RegisterSingleton<ThrottlingHandler>(() => new ThrottlingHandler(container.GetInstance<ICacheClient>(), userIdentifier => Settings.Current.ApiThrottleLimit, TimeSpan.FromMinutes(15)));
             container.RegisterSingleton<XHttpMethodOverrideDelegatingHandler>();
             container.RegisterSingleton<EncodingDelegatingHandler>();
-            //container.RegisterSingleton<AuthMessageHandler>();
- 
+            container.RegisterSingleton<AuthMessageHandler>();
+
             container.AppendToCollection(typeof(Profile), typeof(ApiMappings));
         }
 
@@ -44,8 +47,8 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Role, ViewRole>();
                 CreateMap<ViewRole, Role>();
 
-                CreateMap<Token, ViewToken>();
-                CreateMap<NewToken, Token>().ForMember(m => m.Type, m => m.Ignore());
+                CreateMap<Domain.Models.Token, ViewToken>();
+                CreateMap<NewToken, Domain.Models.Token>().ForMember(m => m.Type, m => m.Ignore());
 
                 CreateMap<User, ViewUser>().AfterMap((u, vu) => vu.IsGlobalAdmin = u.IsGlobalAdmin());
                 CreateMap<User, UpdateUser>();

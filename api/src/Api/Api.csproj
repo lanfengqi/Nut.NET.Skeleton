@@ -232,6 +232,10 @@
     <Compile Include="Extensions\HttpExtensions.cs" />
     <Compile Include="Controllers\Base\EntitySelection.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="MessageBus\ConnectionMap.cs" />
+    <Compile Include="MessageBus\MessageBusBroker.cs" />
+    <Compile Include="MessageBus\MessageBusConnection.cs" />
+    <Compile Include="MessageBus\PrincipalUserIdProvider.cs" />
     <Compile Include="Models\Auth\ChangePasswordModel.cs" />
     <Compile Include="Models\Auth\LoginModel.cs" />
     <Compile Include="Models\Auth\ResetPasswordModel.cs" />
@@ -308,9 +312,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MessageBus\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

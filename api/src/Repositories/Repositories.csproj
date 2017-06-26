@@ -83,6 +83,7 @@
     <Compile Include="Configuration\ModelBuilderBase.cs" />
     <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Model\EntityChanged.cs" />
     <Compile Include="Model\IHaveDates.cs" />
     <Compile Include="Model\IIdentity.cs" />
     <Compile Include="Model\IPagingOptions.cs" />

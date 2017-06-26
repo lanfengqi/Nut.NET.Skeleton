@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { Button, Row, Form, Input } from 'antd'
@@ -55,10 +55,6 @@ const Login = ({
           <Button type="primary" size="large" onClick={handleOk} loading={loginLoading}>
             Sign in
           </Button>
-          <p>
-            <span>Username：guest</span>
-            <span>Password：guest</span>
-          </p>
         </Row>
 
       </form>
