@@ -55,13 +55,13 @@ namespace Foundatio.Skeleton.Api.Controllers {
             }
 
             if (user == null || !user.IsActive)
-                return Unauthorized();
+                return BadRequest("user is not exist.Or use is active.");
 
             if (!user.IsValidPassword(model.Password)) {
-                return Unauthorized();
+                return BadRequest("Password Error.");
             }
 
-            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
+            return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
@@ -135,7 +135,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             }
             await _userRepository.AddAsync(user);
 
-            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
+            return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 
 
@@ -171,7 +171,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             var user = await _userRepository.GetByEmailAddressAsync(email.Address);
             if (user != null) {
 
-                if(user.PasswordResetTokenCreated < DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))) {
+                if (user.PasswordResetTokenCreated < DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))) {
                     user.PasswordResetToken = StringUtils.GetNewToken();
                     user.PasswordResetTokenCreated = DateTime.UtcNow;
                 } else {
@@ -195,7 +195,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (user == null)
                 return BadRequest("Invalid password reset token.");
 
-            if(!user.HasValidPasswordResetTokenExpiration())
+            if (!user.HasValidPasswordResetTokenExpiration())
                 return BadRequest("Password Reset Token has expired.");
 
             if (!IsValidPassword(model.Password))
@@ -205,10 +205,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             await ChangePassword(user, model.Password);
 
-            return Ok(new TokenResponseModel { Token = await GetToken(user, user.OrganizationId) });
+            return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 
-        private Task ChangePassword(User user,string password) {
+        private Task ChangePassword(User user, string password) {
             if (String.IsNullOrWhiteSpace(user.Salt))
                 user.Salt = StringUtils.GetRandomString(16);
 
@@ -224,13 +224,13 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             bool isFirstUser = await _userRepository.CountAsync() == 0;
             if (isFirstUser)
-               await user.AddedGlobalAdminRole(_roleRepository);
+                await user.AddedGlobalAdminRole(_roleRepository);
 
             _isFirstUserChecked = true;
         }
 
-        private async Task<string> GetToken(User user, string organizationId) {
-            var token = await _tokenRepository.GetOrCreateUserToken(user.Id, organizationId);
+        private async Task<string> GetToken(User user) {
+            var token = await _tokenRepository.GetOrCreateUserToken(user.Id, user.OrganizationId);
             return token.Id;
         }
 

@@ -67,34 +67,6 @@ namespace Foundatio.Skeleton.Domain {
 
         public bool EnableAccountCreation { get; private set; }
 
-        public bool EnableAccountInvites { get; private set; }
-
-        public string GoogleAnalyticsId { get; private set; }
-
-        public string MicrosoftAppId { get; private set; }
-
-        public string MicrosoftAppSecret { get; private set; }
-
-        public string FacebookAppId { get; private set; }
-
-        public string FacebookAppSecret { get; private set; }
-
-        public string GitHubAppId { get; private set; }
-
-        public string GitHubAppSecret { get; private set; }
-
-        public string GoogleAppId { get; private set; }
-
-        public string GoogleAppSecret { get; private set; }
-
-        public string ClearbitToken { get; private set; }
-
-        public string TwitterAuthorizationToken { get; set; }
-
-        public bool EnableBilling => !String.IsNullOrEmpty(StripeApiKey);
-
-        public string StripeApiKey { get; private set; }
-
         public string GeocodeApiKey { get; private set; }
 
         public string StripePublishableApiKey { get; private set; }
@@ -123,27 +95,12 @@ namespace Foundatio.Skeleton.Domain {
 
         public bool EnableS3Storage { get; private set; }
 
-        public string MailUser { get; private set; }
-
-        public string MailPassword { get; private set; }
-
-        public string PassPhrase { get; private set; }
-
-        public int BulkBatchSize { get; private set; }
-
-        public bool DisablePullJobScheduler { get; set; }
-
-        public bool EnableGeocoding { get; set; }
-
-        public bool EnableIndexConfiguration { get; set; }
-
-        public bool EnableApplyDataSourceResources { get; set; }
+        public int TokenExpiressMinutes { get; set; }
 
 
         public override void Initialize() {
             EnableSsl = GetBool("EnableSsl", false);
-            EnableIndexConfiguration = GetBool("EnableIndexConfiguration", true);
-            EnableApplyDataSourceResources = GetBool("EnableApplyDataSourceResources", true);
+            TokenExpiressMinutes = GetInt("TokenExpiressMinutes", 30);
 
             if (AppScope == null)
                 AppScope = String.Empty;
@@ -179,29 +136,12 @@ namespace Foundatio.Skeleton.Domain {
             IntercomAppId = GetString("IntercomAppId");
             IntercomAppSecret = GetString("IntercomAppSecret");
             EnableAccountCreation = GetBool("EnableAccountCreation", true);
-            EnableAccountInvites = GetBool("EnableAccountInvites", true);
-            GoogleAppId = GetString("GoogleAppId");
-            GoogleAppSecret = GetString("GoogleAppSecret");
-            MicrosoftAppId = GetString("MicrosoftAppId");
-            MicrosoftAppSecret = GetString("MicrosoftAppSecret");
-            FacebookAppId = GetString("FacebookAppId");
-            FacebookAppSecret = GetString("FacebookAppSecret");
-            GitHubAppId = GetString("GitHubAppId");
-            GitHubAppSecret = GetString("GitHubAppSecret");
-            TwitterAuthorizationToken = GetString("TwitterAuthorizationToken", "AAAAAAAAAAAAAAAAAAAAAJfGewAAAAAA2W0TL6w2eO%2B7eJvzsM5e%2BDaSt3A%3DRVa0RVBzDwu3NhRz6cDWEaoT5t97fqjCFH2TgD2rcIUC6BPJkL");
-            ClearbitToken = GetString("ClearbitToken", "8eb88fc4c70a0635e70bdc776f7d68c1");
-            StripeApiKey = GetString("StripeApiKey");
-            GeocodeApiKey = GetString("GeocodeApiKey");
-            EnableGeocoding = GetBool("EnableGeocoding", !String.IsNullOrEmpty(GeocodeApiKey));
+           
             StripePublishableApiKey = GetString("StripePublishableApiKey");
             StorageFolder = GetString("StorageFolder", "|DataDirectory|\\storage");
             PublicStorageUrlPrefix = GetString("PublicStorageUrlPrefix", "http://localhost:51000/" + AppScopePrefix + "public");
             if (PublicStorageUrlPrefix.EndsWith("/"))
                 PublicStorageUrlPrefix = PublicStorageUrlPrefix.TrimEnd('/');
-            MailUser = GetString("MailUser");
-            MailPassword = GetString("MailPassword");
-            PassPhrase = GetString("PassPhrase");
-            BulkBatchSize = GetInt("BulkBatchSize", 1000);
 
             RedisConnectionString = GetConnectionString("RedisConnectionString");
             EnableRedis = GetBool("EnableRedis", !String.IsNullOrEmpty(RedisConnectionString));
@@ -222,8 +162,6 @@ namespace Foundatio.Skeleton.Domain {
             if (PublicS3StorageFolder.EndsWith("/"))
                 PublicS3StorageFolder = PublicS3StorageFolder.TrimEnd('/');
             EnableS3Storage = GetBool("EnableS3Storage", !String.IsNullOrEmpty(PrivateS3StorageConnectionString));
-
-            //DatabaseConnectionString = GetConnectionString("DatabaseConnectionString", "http://localhost:9200");
 
             try {
                 var versionInfo = FileVersionInfo.GetVersionInfo(typeof(Settings).Assembly.Location);
