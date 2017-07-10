@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 namespace Foundatio.Skeleton.Domain.Repositories {
     public interface IUserRepository : IRepository<User> {
-        Task<User> GetByEmailAddressAsync(string emailAddress);
-
-        Task<User> GetByPasswordResetTokenAsync(string token);
+        Task<User> GetByEmailAddressAsync(string emailAddress);  
     }
 }

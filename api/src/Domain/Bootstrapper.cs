@@ -42,15 +42,12 @@ namespace Foundatio.Skeleton.Domain {
 
             container.AppendToCollection(typeof(IModelBuilder), typeof(OrganizationModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(UserModelBuilder));
+            container.AppendToCollection(typeof(IModelBuilder), typeof(UserPasswordModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(TokenModelBuilder));
             container.AppendToCollection(typeof(IModelBuilder), typeof(RoleModelBuilder));
 
             container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
             container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
-            //container.RegisterSingleton<AppElasticConfiguration>();
-            //container.RegisterSingleton<IIndexType<Migration>>(() => container.GetInstance<AppElasticConfiguration>().Organizations.MigrationType);
-            //container.RegisterSingleton<IElasticClient>(() => container.GetInstance<AppElasticConfiguration>().Client);
-
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
 
@@ -58,7 +55,6 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IEnumerable<IQueueBehavior<WorkItemData>>>(() => new[] { new MetricsQueueBehavior<WorkItemData>(container.GetInstance<IMetricsClient>()) });
 
             var handlers = new WorkItemHandlers();
-            //handlers.Register<ReindexWorkItem>(container.GetInstance<ReindexWorkItemHandler>);
             container.RegisterSingleton(handlers);
 
             container.RegisterSingleton<IQueue<WorkItemData>>(() => new InMemoryQueue<WorkItemData>(behaviors: container.GetAllInstances<IQueueBehavior<WorkItemData>>(), workItemTimeout: TimeSpan.FromHours(1)));
@@ -88,14 +84,11 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IOrganizationRepository, OrganizationRepository>();
             container.RegisterSingleton<IRoleRepository, RoleRepository>();
             container.RegisterSingleton<IUserRepository, UserRepository>();
+            container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
             //container.RegisterSingleton<INotificationRepository, NotificationRepository>();
             container.RegisterSingleton<ITokenRepository, TokenRepository>();
             //container.RegisterSingleton<ILogRepository, LogRepository>();
             //container.RegisterSingleton<IMigrationRepository, MigrationRepository>();
-            //container.RegisterSingleton<IIndexType<Migration>>(() => container.GetInstance<AppElasticConfiguration>().Organizations.MigrationType);
-
-            //container.RegisterSingleton<IEmailGenerator>(() => new RazorEmailGenerator(@"Mail\Templates"));
-            //container.RegisterSingleton<ITemplatedMailService, TemplatedMailService>();
 
             //if (Settings.Current.AppMode == AppMode.Local) {
             //    container.RegisterSingleton<IMailSender>(() => new InMemoryMailSender());
@@ -106,7 +99,6 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();
 
-            ////if (Settings.Current.EnableIndexConfiguration)
             container.AddStartupAction(() => {
                 var config = container.GetInstance<EFConfiguration>();
                 config.ConfigureDatabase();
@@ -124,11 +116,6 @@ namespace Foundatio.Skeleton.Domain {
 
                 return config.CreateMapper();
             });
-
-            //var configuration = new EFConfiguration();
-            //configuration.AddModelBuilder(new UserType());
-
-            //container.RegisterSingleton(configuration);
         }
     }
 

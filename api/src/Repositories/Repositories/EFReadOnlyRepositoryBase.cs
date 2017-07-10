@@ -30,6 +30,7 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
             return await query.ToListAsync();
         }
 
+
         public async Task<PagedList<T>> FindAsync(Expression<Func<T, bool>> specification, IPagingOptions paging = null) {
             if (specification == null)
                 throw new ArgumentNullException("specification");

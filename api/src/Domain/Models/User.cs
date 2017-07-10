@@ -14,14 +14,6 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string EmailAddress { get; set; }
 
-        public string Password { get; set; }
-
-        public string Salt { get; set; }
-
-        public string PasswordResetToken { get; set; }
-
-        public DateTime PasswordResetTokenCreated { get; set; }
-
         public bool EmailNotificationsEnabled { get; set; }
 
         public bool IsActive { get; set; }

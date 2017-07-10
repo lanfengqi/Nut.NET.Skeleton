@@ -15,6 +15,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/auth")]
     public class AuthController : AppApiController {
         private readonly IUserRepository _userRepository;
+        private readonly IUserPasswordRepository _userPasswordRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ITokenRepository _tokenRepository;
         private readonly IRoleRepository _roleRepository;
@@ -23,10 +24,12 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private static bool _isFirstUserChecked;
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
-        public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IOrganizationRepository orgRepository,
+        public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
+            IOrganizationRepository orgRepository,
            ITokenRepository tokenRepository, IRoleRepository roleRepository) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
+            _userPasswordRepository = userPasswordRepository;
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
             _roleRepository = roleRepository;
@@ -57,7 +60,11 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (user == null || !user.IsActive)
                 return BadRequest("user is not exist.Or use is active.");
 
-            if (!user.IsValidPassword(model.Password)) {
+            var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
+            if (userPassword == null)
+                return BadRequest("user password is not exist.");
+
+            if (!userPassword.IsValidPassword(model.Password)) {
                 return BadRequest("Password Error.");
             }
 
@@ -99,15 +106,20 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 Id = Guid.NewGuid().ToString("N"),
             };
             user.CreateVerifyEmailAddressToken();
-            user.ResetPasswordResetToken();
+            var userPassword = new UserPassword {
+                Id = Guid.NewGuid().ToString("N"),
+                CreatedUtc = DateTime.UtcNow,
+                UserId = user.Id
+            };
+            userPassword.ResetPasswordResetToken();
 
             await AddGlobaAdminRoleIfFirstUser(user);
 
             if (!IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
-            user.Salt = StringUtils.GetRandomString(16);
-            user.Password = model.Password.ToSaltedHash(user.Salt);
+            userPassword.Salt = StringUtils.GetRandomString(16);
+            userPassword.Password = model.Password.ToSaltedHash(userPassword.Salt);
 
             if (!String.IsNullOrWhiteSpace(model.OrganizationName)) {
                 Organization organization;
@@ -134,6 +146,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 }
             }
             await _userRepository.AddAsync(user);
+            await _userPasswordRepository.AddAsync(userPassword);
 
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
@@ -146,16 +159,18 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (model == null || !IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
-            if (!String.IsNullOrWhiteSpace(CurrentUser.Password)) {
+            var userPassword = await _userPasswordRepository.GetByUserIdAsync(CurrentUser.Id);
+
+            if (!String.IsNullOrWhiteSpace(userPassword.Password)) {
                 if (String.IsNullOrWhiteSpace(model.CurrentPassword))
                     return BadRequest("The current password is incorrect.");
 
-                string encodedPassword = model.CurrentPassword.ToSaltedHash(CurrentUser.Salt);
-                if (!String.Equals(encodedPassword, CurrentUser.Password))
+                string encodedPassword = model.CurrentPassword.ToSaltedHash(userPassword.Salt);
+                if (!String.Equals(encodedPassword, userPassword.Password))
                     return BadRequest("The current password is incorrect.");
             }
 
-            await ChangePassword(CurrentUser, model.Password);
+            await ChangePassword(userPassword, model.Password);
 
             return Ok();
         }
@@ -170,15 +185,18 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             var user = await _userRepository.GetByEmailAddressAsync(email.Address);
             if (user != null) {
+                var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
+                if (userPassword != null) {
 
-                if (user.PasswordResetTokenCreated < DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))) {
-                    user.PasswordResetToken = StringUtils.GetNewToken();
-                    user.PasswordResetTokenCreated = DateTime.UtcNow;
-                } else {
-                    user.PasswordResetTokenCreated = DateTime.UtcNow;
+                    if (userPassword.PasswordResetTokenCreated < DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))) {
+                        userPassword.PasswordResetToken = StringUtils.GetNewToken();
+                        userPassword.PasswordResetTokenCreated = DateTime.UtcNow;
+                    } else {
+                        userPassword.PasswordResetTokenCreated = DateTime.UtcNow;
+                    }
+
+                    await _userPasswordRepository.SaveAsync(userPassword);
                 }
-
-                await _userRepository.SaveAsync(user);
             }
             return Ok();
         }
@@ -191,31 +209,31 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (String.IsNullOrEmpty(model?.PasswordResetToken))
                 return BadRequest("Invalid password reset token.");
 
-            var user = await _userRepository.GetByPasswordResetTokenAsync(model.PasswordResetToken);
-            if (user == null)
+            var userPassword = await _userPasswordRepository.GetByPasswordResetTokenAsync(model.PasswordResetToken);
+            if (userPassword == null)
                 return BadRequest("Invalid password reset token.");
 
-            if (!user.HasValidPasswordResetTokenExpiration())
+            if (!userPassword.HasValidPasswordResetTokenExpiration())
                 return BadRequest("Password Reset Token has expired.");
 
             if (!IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
-            user.MarkEmailAddressVerified();
+            userPassword.User.MarkEmailAddressVerified();
 
-            await ChangePassword(user, model.Password);
+            await ChangePassword(userPassword, model.Password);
 
-            return Ok(new TokenResponseModel { Token = await GetToken(user) });
+            return Ok(new TokenResponseModel { Token = await GetToken(userPassword.User) });
         }
 
-        private Task ChangePassword(User user, string password) {
-            if (String.IsNullOrWhiteSpace(user.Salt))
-                user.Salt = StringUtils.GetRandomString(16);
+        private Task ChangePassword(UserPassword userPassword, string password) {
+            if (String.IsNullOrWhiteSpace(userPassword.Salt))
+                userPassword.Salt = StringUtils.GetRandomString(16);
 
-            user.Password = password.ToSaltedHash(user.Salt);
-            user.ResetPasswordResetToken();
+            userPassword.Password = password.ToSaltedHash(userPassword.Salt);
+            userPassword.ResetPasswordResetToken();
 
-            return _userRepository.SaveAsync(user);
+            return _userPasswordRepository.SaveAsync(userPassword);
         }
 
         private async Task AddGlobaAdminRoleIfFirstUser(User user) {

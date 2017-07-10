@@ -37,7 +37,7 @@ namespace Foundatio.Skeleton.Domain.Repositories {
 
             var currentDateTime = DateTime.UtcNow;
 
-            var existingToken = (await GetByUserIdAsync(userId)).FirstOrDefault();
+            var existingToken = (await GetByUserIdAsync(userId))?.OrderByDescending(p => p.ExpiresUtc).FirstOrDefault();
             if (existingToken != null && existingToken.ExpiresUtc > currentDateTime)
                 return existingToken;
 

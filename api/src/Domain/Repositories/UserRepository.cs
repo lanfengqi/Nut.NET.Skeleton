@@ -22,13 +22,5 @@ namespace Foundatio.Skeleton.Domain.Repositories {
             var users = await this.FindAsync(x => x.EmailAddress.Equals(emailAddress));
             return users.FirstOrDefault();
         }
-
-        public async Task<User> GetByPasswordResetTokenAsync(string token) {
-            if (String.IsNullOrEmpty(token))
-                return null;
-
-            var users = await this.FindAsync(x => x.PasswordResetToken.Equals(token));
-            return users.FirstOrDefault();
-        }
     }
 }

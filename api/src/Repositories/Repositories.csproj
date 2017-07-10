@@ -99,6 +99,7 @@
     <Compile Include="Repositories\IEFRepository.cs" />
     <Compile Include="Repositories\IEFRepositoryContext.cs" />
     <Compile Include="Repositories\PagedList.cs" />
+    <Compile Include="SortOrder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

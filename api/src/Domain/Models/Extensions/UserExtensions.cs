@@ -34,28 +34,28 @@ namespace Foundatio.Skeleton.Domain.Models {
             user.VerifyEmailAddressTokenCreated = DateTime.MinValue;
         }
 
-        public static bool IsValidPassword(this User user, string password) {
-            if (string.IsNullOrEmpty(user.Salt) || string.IsNullOrEmpty(user.Password)) {
+        public static bool IsValidPassword(this UserPassword userPassword, string password) {
+            if (string.IsNullOrEmpty(userPassword.Salt) || string.IsNullOrEmpty(userPassword.Password)) {
                 return false;
             }
 
-            string encodedPassword = password.ToSaltedHash(user.Salt);
-            return string.Equals(encodedPassword, user.Password);
+            string encodedPassword = password.ToSaltedHash(userPassword.Salt);
+            return string.Equals(encodedPassword, userPassword.Password);
         }
 
-        public static void ResetPasswordResetToken(this User user) {
-            if (user == null)
+        public static void ResetPasswordResetToken(this UserPassword userPassword) {
+            if (userPassword == null)
                 return;
 
-            user.PasswordResetToken = null;
-            user.PasswordResetTokenCreated = DateTime.MinValue;
+            userPassword.PasswordResetToken = null;
+            userPassword.PasswordResetTokenCreated = DateTime.MinValue;
         }
 
-        public static bool HasValidPasswordResetTokenExpiration(this User user) {
-            if (user == null)
+        public static bool HasValidPasswordResetTokenExpiration(this UserPassword userPassword) {
+            if (userPassword == null)
                 return false;
 
-            return user.PasswordResetTokenCreated != DateTime.MinValue && user.PasswordResetTokenCreated < DateTime.UtcNow.AddHours(24);
+            return userPassword.PasswordResetTokenCreated != DateTime.MinValue && userPassword.PasswordResetTokenCreated < DateTime.UtcNow.AddHours(24);
         }
 
         public static bool IsGlobalAdmin(this User user) {

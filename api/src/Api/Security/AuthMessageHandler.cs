@@ -20,11 +20,14 @@ namespace Foundatio.Skeleton.Api.Security {
 
         private readonly ITokenRepository _tokenRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserPasswordRepository _userPasswordRepository;
         private readonly IOrganizationRepository _organizationRepository;
 
-        public AuthMessageHandler(ITokenRepository tokenRepository, IUserRepository userRepository, IOrganizationRepository organizationRepository) {
+        public AuthMessageHandler(ITokenRepository tokenRepository, IUserRepository userRepository,
+            IUserPasswordRepository userPasswordRepository, IOrganizationRepository organizationRepository) {
             _tokenRepository = tokenRepository;
             _userRepository = userRepository;
+            _userPasswordRepository = userPasswordRepository;
             _organizationRepository = organizationRepository;
         }
 
@@ -55,12 +58,15 @@ namespace Foundatio.Skeleton.Api.Security {
 
                         if (user == null || !user.IsActive)
                             return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-
-                        if (String.IsNullOrEmpty(user.Salt))
+                        var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
+                        if (userPassword == null)
                             return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
-                        string encodedPassword = authInfo.Password.ToSaltedHash(user.Salt);
-                        if (!String.Equals(encodedPassword, user.Password))
+                        if (String.IsNullOrEmpty(userPassword.Salt))
+                            return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+
+                        string encodedPassword = authInfo.Password.ToSaltedHash(userPassword.Salt);
+                        if (!String.Equals(encodedPassword, userPassword.Password))
                             return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
                         await SetupUserRequest(request, user);
