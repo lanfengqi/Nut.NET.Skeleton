@@ -1,6 +1,6 @@
 ﻿using Foundatio.Caching;
 using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Repositories.Repositories;
+using Foundatio.Skeleton.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

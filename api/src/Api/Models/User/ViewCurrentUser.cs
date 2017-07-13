@@ -31,7 +31,6 @@ namespace Foundatio.Skeleton.Api.Models
 
         public ICollection<string> Roles { get; set; }
         public string Hash { get; set; }
-        public bool HasLocalPassword { get; set; }
 
         public string CurrentOrganizationId { get; set; }
 

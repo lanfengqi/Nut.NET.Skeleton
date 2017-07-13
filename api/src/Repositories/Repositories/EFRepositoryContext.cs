@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Foundatio.Skeleton.Repositories.Repositories {
+namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryContext : IEFRepositoryContext {
 
         private readonly DbContext _dbContext;

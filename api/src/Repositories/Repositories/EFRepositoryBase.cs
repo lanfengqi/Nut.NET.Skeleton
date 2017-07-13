@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Foundatio.Skeleton.Repositories.Repositories {
+namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryBase<T> : EFReadOnlyRepositoryBase<T>, IEFRepository<T> where T : class, IIdentity, new() {
         protected readonly IValidator<T> _validator;
 

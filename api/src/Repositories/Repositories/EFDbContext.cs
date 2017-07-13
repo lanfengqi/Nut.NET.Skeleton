@@ -5,7 +5,7 @@ using System.Data.Entity;
 using SimpleInjector;
 using Foundatio.Skeleton.Core.Dependency;
 
-namespace Foundatio.Skeleton.Repositories.Repositories {
+namespace Foundatio.Skeleton.Repositories {
     public class EFDbContext : DbContext {
 
         private readonly IDependencyResolver _dependencyResolver;

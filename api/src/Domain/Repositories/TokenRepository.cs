@@ -1,7 +1,7 @@
 ﻿using Foundatio.Caching;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Repositories.Repositories;
+using Foundatio.Skeleton.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +29,14 @@ namespace Foundatio.Skeleton.Domain.Repositories {
             if (userId == string.Empty)
                 return null;
 
-            return await FindAsync(x => x.UserId == userId);
-
+            return await FindAsync(x => x.UserId == userId, o => o.ExpiresUtc, SortOrder.Descending);
         }
 
         public async Task<Token> GetOrCreateUserToken(string userId, string organizationId) {
 
             var currentDateTime = DateTime.UtcNow;
 
-            var existingToken = (await GetByUserIdAsync(userId))?.OrderByDescending(p => p.ExpiresUtc).FirstOrDefault();
+            var existingToken = (await GetByUserIdAsync(userId))?.FirstOrDefault();
             if (existingToken != null && existingToken.ExpiresUtc > currentDateTime)
                 return existingToken;
 

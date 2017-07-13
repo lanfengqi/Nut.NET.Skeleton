@@ -23,7 +23,7 @@ using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Domain.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories.Configuration;
-using Foundatio.Skeleton.Repositories.Repositories;
+using Foundatio.Skeleton.Repositories;
 using System.Data.Entity;
 using Foundatio.Skeleton.Domain.Services;
 

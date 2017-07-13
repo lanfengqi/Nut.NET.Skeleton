@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 
-namespace Foundatio.Skeleton.Repositories.Repositories {
+namespace Foundatio.Skeleton.Repositories {
     public interface IEFRepositoryContext {
 
         /// <summary>

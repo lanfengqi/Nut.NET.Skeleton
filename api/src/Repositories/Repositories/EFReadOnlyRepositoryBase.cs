@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Foundatio.Caching;
 
-namespace Foundatio.Skeleton.Repositories.Repositories {
+namespace Foundatio.Skeleton.Repositories {
     public class EFReadOnlyRepositoryBase<T> : IEFReadOnlyRepository<T> where T : class, IIdentity, new() {
         protected static readonly bool HasIdentity = typeof(IIdentity).IsAssignableFrom(typeof(T));
         protected static readonly string EntityTypeName = typeof(T).Name;
@@ -27,6 +27,26 @@ namespace Foundatio.Skeleton.Repositories.Repositories {
 
             var query = _context.Set<T>().Where(specification);
 
+            return await query.ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<T>> FindAsync<Property>(Expression<Func<T, bool>> specification, Expression<Func<T, Property>> orderByExpression, SortOrder sortOrder) {
+            if (specification == null)
+                throw new ArgumentNullException("specification");
+
+            var query = _context.Set<T>().Where(specification);
+            if (orderByExpression != null) {
+                switch (sortOrder) {
+                    case SortOrder.Ascending:
+                        query = query.OrderBy<T, Property>(orderByExpression);
+                        break;
+                    case SortOrder.Descending:
+                        query = query.OrderByDescending<T, Property>(orderByExpression);
+                        break;
+                    default:
+                        break;
+                }
+            }
             return await query.ToListAsync();
         }
 
