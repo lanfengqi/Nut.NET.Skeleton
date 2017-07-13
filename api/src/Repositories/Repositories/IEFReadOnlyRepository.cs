@@ -13,6 +13,8 @@ namespace Foundatio.Skeleton.Repositories {
 
         Task<PagedList<T>> FindAsync(Expression<Func<T, bool>> specification, IPagingOptions paging = null);
 
+        Task<PagedList<T>> FindAsync<Property>(Expression<Func<T, bool>> specification, Expression<Func<T, Property>> orderByExpression, SortOrder sortOrder, IPagingOptions paging = null);
+
         Task<bool> ExistsAsync(Expression<Func<T, bool>> specification);
 
         Task<long> CountAsync(Expression<Func<T, bool>> specification);

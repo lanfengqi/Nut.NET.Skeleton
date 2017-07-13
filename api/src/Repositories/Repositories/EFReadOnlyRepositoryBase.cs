@@ -78,6 +78,47 @@ namespace Foundatio.Skeleton.Repositories {
             return result;
         }
 
+        public async Task<PagedList<T>> FindAsync<Property>(Expression<Func<T, bool>> specification, Expression<Func<T, Property>> orderByExpression, SortOrder sortOrder, IPagingOptions paging = null) {
+
+            if (specification == null)
+                throw new ArgumentNullException("specification");
+
+            var query = _context.Set<T>().Where(specification);
+
+            var result = new PagedList<T>();
+
+            int pageIndex = paging.Page.HasValue ? paging.Page.Value : 1;
+            int pageSize = paging.Limit.HasValue ? paging.Limit.Value : 10;
+
+            int total = await query.CountAsync();
+            result.TotalCount = total;
+            result.TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                result.TotalPages++;
+
+            result.PageSize = pageSize;
+            result.PageIndex = pageIndex;
+
+            if (orderByExpression != null) {
+                switch (sortOrder) {
+                    case SortOrder.Ascending:
+                        query = query.OrderBy<T, Property>(orderByExpression);
+                        break;
+                    case SortOrder.Descending:
+                        query = query.OrderByDescending<T, Property>(orderByExpression);
+                        break;
+                    default:
+                        query = query.OrderBy(x => x.Id);
+                        break;
+                }
+            }
+
+            result.AddRange(await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync());
+
+            return result;
+        }
+
         public async Task<bool> ExistsAsync(Expression<Func<T, bool>> specification) {
             if (specification == null)
                 return false;
