@@ -8,6 +8,7 @@ using Foundatio.Skeleton.Core.Serialization;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Services;
+using Metrics;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -83,7 +84,7 @@ namespace Foundatio.Skeleton.Api {
             app.UseWebApi(config);
             SetupSignalR(app, container);
             SetupSwagger(config);
-
+            SetupMetric();
             //var context = new OwinContext(app.Properties);
             //var token = context.Get<CancellationToken>("host.OnAppDisposing");
 
@@ -161,6 +162,16 @@ namespace Foundatio.Skeleton.Api {
                 c.InjectStylesheet(typeof(AppBuilder).Assembly, "Foundatio.Skeleton.Api.Content.docs.css");
                 c.InjectJavaScript(typeof(AppBuilder).Assembly, "Foundatio.Skeleton.Api.Content.docs.js");
             });
+        }
+
+        private static void SetupMetric() {
+            if (Settings.Current.EnableMetricsReporting && !Settings.Current.EnableRedis)
+                Metric.Config
+                    .WithHttpEndpoint("http://localhost:61000/Metrics/")
+                    .WithAllCounters()
+                    .WithInternalMetrics()
+                    .WithReporting(config => config
+                        .WithConsoleReport(TimeSpan.FromSeconds(30)));
         }
 
         private static async Task FirstInsatllDataAsync(Container container) {

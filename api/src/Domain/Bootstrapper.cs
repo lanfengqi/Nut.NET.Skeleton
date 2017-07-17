@@ -36,7 +36,8 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterLogger(loggerFactory);
 
             container.RegisterSingleton<IDependencyResolver>(() => new SimpleInjectorDependencyContainer(container));
-            container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
+            container.RegisterSingleton<IMetricsClient>(() => new MetricsNETClient());
+            //container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
 
             container.RegisterSingleton<EFConfiguration>();
 
