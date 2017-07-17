@@ -1,4 +1,5 @@
 ﻿using Foundatio.Logging;
+using Foundatio.Metrics;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Models.Auth;
 using Foundatio.Skeleton.Core.Extensions;
@@ -19,13 +20,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ITokenRepository _tokenRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IMetricsClient _metricsClient;
         private readonly ILogger _logger;
 
         private static bool _isFirstUserChecked;
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
-            IOrganizationRepository orgRepository,
+            IOrganizationRepository orgRepository, IMetricsClient metricsClient,
            ITokenRepository tokenRepository, IRoleRepository roleRepository) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
@@ -33,6 +35,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
             _roleRepository = roleRepository;
+            _metricsClient = metricsClient;
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!userPassword.IsValidPassword(model.Password)) {
                 return BadRequest("Password Error.");
             }
-
+            await _metricsClient.CounterAsync("User Login");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 

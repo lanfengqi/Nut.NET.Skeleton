@@ -3,11 +3,13 @@ using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Security;
+using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
 using Swashbuckle.Swagger.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -107,6 +109,15 @@ namespace Foundatio.Skeleton.Api.Controllers {
             }
 
             return StatusCode(HttpStatusCode.BadRequest);
+        }
+
+        protected override Task<Domain.Models.Organization> AddModelAsync(Domain.Models.Organization value) {
+            value.Id = Guid.NewGuid().ToString("N");
+            value.CreatedUtc = value.UpdatedUtc = DateTime.UtcNow;
+            value.IsVerified = false;
+            value.Version = 1;
+
+            return base.AddModelAsync(value);
         }
     }
 }

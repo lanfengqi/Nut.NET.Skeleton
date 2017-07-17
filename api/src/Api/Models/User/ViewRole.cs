@@ -14,6 +14,5 @@ namespace Foundatio.Skeleton.Api.Models {
 
         public DateTime UpdatedUtc { get; set; }
 
-        public string OrganizationId { get; set; }
     }
 }
