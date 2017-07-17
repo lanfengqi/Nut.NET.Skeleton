@@ -71,6 +71,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return BadRequest("Password Error.");
             }
             await _metricsClient.CounterAsync("User Login");
+
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 
@@ -151,6 +152,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user);
             await _userPasswordRepository.AddAsync(userPassword);
 
+            await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 

@@ -173,7 +173,6 @@
     <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\TaskCompletionSourceExtensions.cs" />
     <Compile Include="Extensions\TaskFactoryExtensions.cs" />
-    <Compile Include="Extensions\MailerExtensions.cs" />
     <Compile Include="Extensions\ValidationExtensions.cs" />
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Extensions\CacheClientExtensions.cs" />
