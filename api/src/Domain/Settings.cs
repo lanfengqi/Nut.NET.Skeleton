@@ -97,6 +97,8 @@ namespace Foundatio.Skeleton.Domain {
 
         public int TokenExpiressMinutes { get; set; }
 
+        public string CurrentCulture { get; set; }
+
 
         public override void Initialize() {
             EnableSsl = GetBool("EnableSsl", false);
@@ -136,7 +138,7 @@ namespace Foundatio.Skeleton.Domain {
             IntercomAppId = GetString("IntercomAppId");
             IntercomAppSecret = GetString("IntercomAppSecret");
             EnableAccountCreation = GetBool("EnableAccountCreation", true);
-           
+
             StripePublishableApiKey = GetString("StripePublishableApiKey");
             StorageFolder = GetString("StorageFolder", "|DataDirectory|\\storage");
             PublicStorageUrlPrefix = GetString("PublicStorageUrlPrefix", "http://localhost:51000/" + AppScopePrefix + "public");
@@ -163,6 +165,8 @@ namespace Foundatio.Skeleton.Domain {
                 PublicS3StorageFolder = PublicS3StorageFolder.TrimEnd('/');
             EnableS3Storage = GetBool("EnableS3Storage", !String.IsNullOrEmpty(PrivateS3StorageConnectionString));
 
+
+            CurrentCulture = GetString("CurrentCulture") ?? "en-US";
             try {
                 var versionInfo = FileVersionInfo.GetVersionInfo(typeof(Settings).Assembly.Location);
                 Version = versionInfo.FileVersion;

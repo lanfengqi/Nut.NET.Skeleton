@@ -26,6 +26,8 @@ using Foundatio.Skeleton.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories;
 using System.Data.Entity;
 using Foundatio.Skeleton.Domain.Services;
+using Foundatio.Skeleton.Domain.Localization;
+using Foundatio.Skeleton.Domain.Localization.Services;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -65,6 +67,9 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IMessagePublisher>(container.GetInstance<IMessageBus>);
             container.RegisterSingleton<IMessageSubscriber>(container.GetInstance<IMessageBus>);
             container.RegisterSingleton<HttpMessageHandler, HttpClientHandler>();
+
+            container.RegisterSingleton<ILocalizedStringManager, LocalizedStringManager>();
+            container.RegisterSingleton<IText, Text>();
 
             if (!String.IsNullOrEmpty(Settings.Current.StorageFolder)) {
                 try {

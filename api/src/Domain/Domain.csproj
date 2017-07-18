@@ -151,6 +151,7 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
@@ -171,6 +172,12 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Extensions\CryptoExtensions.cs" />
+    <Compile Include="Localization\IText.cs" />
+    <Compile Include="Localization\LocalizedString.cs" />
+    <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\LocalizedStringManager.cs" />
+    <Compile Include="Localization\Text.cs" />
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\Messaging\EntityChanged.cs" />
     <Compile Include="Models\Role.cs" />
