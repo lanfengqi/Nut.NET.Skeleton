@@ -4,6 +4,7 @@ using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Models.Auth;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain;
+using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Swashbuckle.Swagger.Annotations;
@@ -48,7 +49,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("login")]
         public async Task<IHttpActionResult> Login(LoginModel model) {
             if (String.IsNullOrWhiteSpace(model?.Email))
-                return BadRequest("Email Address is required.");
+                return BadRequest((await T("Email Address is required.")).Text);
 
             if (String.IsNullOrWhiteSpace(model.Password))
                 return BadRequest("Password is required.");

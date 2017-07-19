@@ -11,6 +11,7 @@ using Foundatio.Skeleton.Api.Utility.Results;
 using Foundatio.Skeleton.Api.Extensions;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Services;
+using Foundatio.Skeleton.Domain.Localization;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RequireHttpsExceptLocal]
@@ -22,7 +23,11 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         public AppApiController() {
             AllowedTimeRangeFields = new List<string>();
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected TimeSpan GetOffset(string offset) {
             double offsetInMinutes;

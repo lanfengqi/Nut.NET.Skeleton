@@ -28,6 +28,7 @@ using System.Data.Entity;
 using Foundatio.Skeleton.Domain.Services;
 using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Localization.Services;
+using System.Threading.Tasks;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -70,6 +71,7 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<ILocalizedStringManager, LocalizedStringManager>();
             container.RegisterSingleton<IText, Text>();
+          
 
             if (!String.IsNullOrEmpty(Settings.Current.StorageFolder)) {
                 try {
@@ -124,6 +126,9 @@ namespace Foundatio.Skeleton.Domain {
             });
         }
     }
+
+
+
 
     public class DomainMappings : Profile {
         protected override void Configure() {

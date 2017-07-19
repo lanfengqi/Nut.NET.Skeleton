@@ -1,4 +1,5 @@
 ﻿using Foundatio.Logging;
+using Foundatio.Skeleton.Api.Controllers;
 using Foundatio.Skeleton.Api.MessageBus;
 using Foundatio.Skeleton.Api.Security;
 using Foundatio.Skeleton.Api.Serialization;
@@ -7,6 +8,7 @@ using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.Serialization;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain;
+using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Services;
 using Metrics;
 using Microsoft.AspNet.SignalR;
@@ -27,7 +29,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Cors;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -57,6 +58,7 @@ namespace Foundatio.Skeleton.Api {
             container.RegisterSingleton<JsonSerializer>(JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new SignalRContractResolver() }));
             container.RegisterSingleton(app);
             container.RegisterSingleton(config);
+            container.RegisterInitializer<AppApiController>(c => c.T = container.GetInstance<IText>().Get);
 
             VerifyContainer(container);
 
@@ -222,6 +224,8 @@ namespace Foundatio.Skeleton.Api {
 
                 bootstrapperType.GetMethod("RegisterServices", BindingFlags.Public | BindingFlags.Static).Invoke(null, new object[] { container, loggerFactory });
             }
+
+        
 
             return container;
         }

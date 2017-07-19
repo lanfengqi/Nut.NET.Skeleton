@@ -175,6 +175,7 @@
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\NullLocalizer.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Localization\Services\LocalizedStringManager.cs" />
     <Compile Include="Localization\Text.cs" />
