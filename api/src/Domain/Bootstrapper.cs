@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using Foundatio.Caching;
 using Foundatio.Jobs;
@@ -12,23 +7,25 @@ using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Metrics;
 using Foundatio.Queues;
-using Foundatio.Storage;
-using SimpleInjector;
-using SimpleInjector.Advanced;
-
 using Foundatio.Skeleton.Core.Dependency;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.Queues.Models;
 using Foundatio.Skeleton.Core.Utility;
-using Foundatio.Skeleton.Domain.Repositories;
-using Foundatio.Skeleton.Domain.Repositories.Configuration;
-using Foundatio.Skeleton.Repositories.Configuration;
-using Foundatio.Skeleton.Repositories;
-using System.Data.Entity;
-using Foundatio.Skeleton.Domain.Services;
 using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Localization.Services;
-using System.Threading.Tasks;
+using Foundatio.Skeleton.Domain.Repositories;
+using Foundatio.Skeleton.Domain.Repositories.Configuration;
+using Foundatio.Skeleton.Domain.Services;
+using Foundatio.Skeleton.Repositories;
+using Foundatio.Skeleton.Repositories.Configuration;
+using Foundatio.Storage;
+using SimpleInjector;
+using SimpleInjector.Advanced;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Net.Http;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -39,8 +36,7 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterLogger(loggerFactory);
 
             container.RegisterSingleton<IDependencyResolver>(() => new SimpleInjectorDependencyContainer(container));
-            container.RegisterSingleton<IMetricsClient>(() => new MetricsNETClient());
-            //container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
+            container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
 
             container.RegisterSingleton<EFConfiguration>();
 

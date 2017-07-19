@@ -10,7 +10,6 @@ using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Services;
-using Metrics;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -18,7 +17,6 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json;
 using Owin;
-using Owin.Metrics;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using Swashbuckle.Application;
@@ -27,7 +25,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Cors;
 using System.Web.Http;
@@ -89,7 +86,6 @@ namespace Foundatio.Skeleton.Api {
             app.UseWebApi(config);
             SetupSignalR(app, container);
             SetupSwagger(config);
-            SetupMetric(app);
             //var context = new OwinContext(app.Properties);
             //var token = context.Get<CancellationToken>("host.OnAppDisposing");
 
@@ -167,27 +163,6 @@ namespace Foundatio.Skeleton.Api {
                 c.InjectStylesheet(typeof(AppBuilder).Assembly, "Foundatio.Skeleton.Api.Content.docs.css");
                 c.InjectJavaScript(typeof(AppBuilder).Assembly, "Foundatio.Skeleton.Api.Content.docs.js");
             });
-        }
-
-        private static void SetupMetric(IAppBuilder app) {
-            if (!Settings.Current.EnableRedis) {
-                if (Settings.Current.EnableMetricsReporting) {
-                    Metric.Config
-                        .WithAllCounters()
-                        .WithInternalMetrics()
-                        .WithReporting(r => r.WithConsoleReport(TimeSpan.FromSeconds(30)))
-                        .WithOwin(middleware => app.Use(middleware), config => config
-                       .WithRequestMetricsConfig(c => c.WithAllOwinMetrics(), new[]
-                       {
-                        new Regex("(?i)^sampleignore"),
-                        new Regex("(?i)^metrics"),
-                        new Regex("(?i)^health"),
-                        new Regex("(?i)^json")
-                        })
-                       .WithMetricsEndpoint()
-                    );
-                }
-            }
         }
 
         private static async Task FirstInsatllDataAsync(Container container) {

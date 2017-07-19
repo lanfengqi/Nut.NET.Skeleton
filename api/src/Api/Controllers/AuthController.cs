@@ -1,10 +1,8 @@
 ﻿using Foundatio.Logging;
-using Foundatio.Metrics;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Models.Auth;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain;
-using Foundatio.Skeleton.Domain.Localization;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Swashbuckle.Swagger.Annotations;
@@ -21,14 +19,13 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ITokenRepository _tokenRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IMetricsClient _metricsClient;
         private readonly ILogger _logger;
 
         private static bool _isFirstUserChecked;
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
-            IOrganizationRepository orgRepository, IMetricsClient metricsClient,
+            IOrganizationRepository orgRepository, 
            ITokenRepository tokenRepository, IRoleRepository roleRepository) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
@@ -36,7 +33,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
             _roleRepository = roleRepository;
-            _metricsClient = metricsClient;
         }
 
         /// <summary>
@@ -71,7 +67,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!userPassword.IsValidPassword(model.Password)) {
                 return BadRequest("Password Error.");
             }
-            await _metricsClient.CounterAsync("User Login");
 
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
@@ -153,7 +148,6 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user);
             await _userPasswordRepository.AddAsync(userPassword);
 
-            await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
 
