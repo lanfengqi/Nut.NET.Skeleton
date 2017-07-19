@@ -4,8 +4,6 @@ using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Extensions;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Security;
-using Foundatio.Skeleton.Api.Utility;
-using Foundatio.Skeleton.Core.Collections;
 using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Models;
@@ -113,7 +111,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             email = email.ToLower();
             if (!await IsEmailAddressAvailableInternal(email))
-                return BadRequest("A user with this email address already exists.");
+                return BadRequest((await T("User.UpdateEmailAddress.Email.IsExist")).Text);
 
             user.EmailAddress = email;
 

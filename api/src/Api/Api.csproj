@@ -199,6 +199,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\docs.js" />
     <EmbeddedResource Include="Content\docs.css" />
+    <Content Include="App_Data\Localizaion\en-US\Resources.res.xml" />
     <Content Include="Content\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="index.html" />

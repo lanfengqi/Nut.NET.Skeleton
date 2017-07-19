@@ -48,7 +48,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             TModel model = await AddModelAsync(mapped);
             if (model == null)
-                return BadRequest("Failed to add model");
+                return BadRequest((await T("Common.AddModel.Failed")).Text);
 
             model = await AfterAddAsync(model);
 
@@ -61,7 +61,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return Task.FromResult(PermissionResult.Allow);
 
             if (!CanAccessOrganization(orgModel.OrganizationId))
-                return Task.FromResult(PermissionResult.DenyWithMessage("Invalid organization id specified."));
+                return Task.FromResult(PermissionResult.DenyWithMessage(T("Common.OrganizationId.Invalid").Result.Text));
 
             return Task.FromResult(PermissionResult.Allow);
         }
@@ -152,15 +152,15 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         protected virtual async Task<PermissionResult> CanUpdateAsync(TModel original, TModel modified) {
             if (original.Id != modified.Id)
-                return PermissionResult.DenyWithMessage("Id must match resource.");
+                return PermissionResult.DenyWithMessage((await T("Common.OrganizationId.Same")).Text);
 
             var orgModel = original as IOwnedByOrganization;
             var modifiedOrgModel = modified as IOwnedByOrganization;
             if (orgModel != null && !CanAccessOrganization(orgModel.OrganizationId))
-                return PermissionResult.DenyWithMessage("Invalid organization id specified.");
+                return PermissionResult.DenyWithMessage((await T("Common.AddModel.Failed")).Text);
 
             if (orgModel?.OrganizationId != modifiedOrgModel?.OrganizationId)
-                return PermissionResult.DenyWithMessage("Invalid organization id specified.");
+                return PermissionResult.DenyWithMessage((await T("Common.AddModel.Failed")).Text);
 
             return PermissionResult.Allow;
         }

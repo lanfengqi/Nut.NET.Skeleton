@@ -22,10 +22,9 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly ILogger _logger;
 
         private static bool _isFirstUserChecked;
-        private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
-            IOrganizationRepository orgRepository, 
+            IOrganizationRepository orgRepository,
            ITokenRepository tokenRepository, IRoleRepository roleRepository) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
@@ -33,6 +32,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
             _roleRepository = roleRepository;
+
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("login")]
         public async Task<IHttpActionResult> Login(LoginModel model) {
             if (String.IsNullOrWhiteSpace(model?.Email))
-                return BadRequest((await T("Email Address is required.")).Text);
+                return BadRequest((await T("Auth.Login.Email.Required")).Text);
 
             if (String.IsNullOrWhiteSpace(model.Password))
-                return BadRequest("Password is required.");
+                return BadRequest((await T("Auth.Login.Password.Required")).Text);
 
             User user;
             try {
@@ -58,14 +58,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
             }
 
             if (user == null || !user.IsActive)
-                return BadRequest("user is not exist.Or use is active.");
+                return BadRequest((await T("Auth.Login.User.NotExist")).Text);
 
             var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
             if (userPassword == null)
-                return BadRequest("user password is not exist.");
+                return BadRequest((await T("Auth.Login.User.PaswordNotExist")).Text);
 
             if (!userPassword.IsValidPassword(model.Password)) {
-                return BadRequest("Password Error.");
+                return BadRequest((await T("Auth.Login.Password.Error")).Text);
             }
 
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
@@ -76,24 +76,24 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("signup")]
         public async Task<IHttpActionResult> SignUp(SignupModel model) {
             if (!Settings.Current.EnableAccountCreation)
-                return BadRequest("Sorry,this is not accepting new accountsa at this time.");
+                return BadRequest((await T("Auth.SignUp.EnableAccountCreation")).Text);
 
             if (string.IsNullOrWhiteSpace(model?.Email))
-                return BadRequest("Email address is required.");
+                return BadRequest((await T("Auth.SignUp.Email.Required")).Text);
 
             if (string.IsNullOrWhiteSpace(model?.Password))
-                return BadRequest("Email address is required.");
+                return BadRequest((await T("Auth.SignUp.Password.Required")).Text);
 
             User user;
 
             try {
                 user = await _userRepository.GetByEmailAddressAsync(model.Email);
             } catch {
-                return BadRequest("An error occured.");
+                return BadRequest((await T("Common.Error")).Text);
             }
 
             if (user != null)
-                return BadRequest("The Email address is already!");
+                return BadRequest((await T("Auth.SignUp.Email.IsExist")).Text);
 
             user = new Domain.Models.User {
                 CreatedUtc = DateTime.UtcNow,
@@ -116,7 +116,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await AddGlobaAdminRoleIfFirstUser(user);
 
             if (!IsValidPassword(model.Password))
-                return BadRequest(_invalidPasswordMessage);
+                return BadRequest((await T("Common.Password.Invalid")).Text);
 
             userPassword.Salt = StringUtils.GetRandomString(16);
             userPassword.Password = model.Password.ToSaltedHash(userPassword.Salt);
@@ -127,7 +127,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 try {
                     organization = await _organizationRepository.GetByNameAsync(model.OrganizationName);
                 } catch {
-                    return BadRequest("An error occured.");
+                    return BadRequest((await T("Common.Error")).Text);
                 }
 
                 if (organization == null) {
@@ -157,17 +157,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Authorize(Roles = AuthorizationRoles.User)]
         public async Task<IHttpActionResult> ChangePasword(ChangePasswordModel model) {
             if (model == null || !IsValidPassword(model.Password))
-                return BadRequest(_invalidPasswordMessage);
+                return BadRequest((await T("Common.Password.Invalid")).Text);
 
             var userPassword = await _userPasswordRepository.GetByUserIdAsync(CurrentUser.Id);
 
             if (!String.IsNullOrWhiteSpace(userPassword.Password)) {
                 if (String.IsNullOrWhiteSpace(model.CurrentPassword))
-                    return BadRequest("The current password is incorrect.");
+                    return BadRequest((await T("Auth.ChangePasword.Password.Incorrect")).Text);
 
                 string encodedPassword = model.CurrentPassword.ToSaltedHash(userPassword.Salt);
                 if (!String.Equals(encodedPassword, userPassword.Password))
-                    return BadRequest("The current password is incorrect.");
+                    return BadRequest((await T("Auth.ChangePasword.Password.Incorrect")).Text);
             }
 
             await ChangePassword(userPassword, model.Password);
@@ -181,7 +181,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             var email = new Email { Address = emailAddress };
             var validator = new Domain.Validators.EmailValidator();
             if (!validator.TryValidate(email))
-                return BadRequest("Please specify a valid Email address");
+                return BadRequest((await T("Auth.ForgotPassword.Email.Valid")).Text);
 
             var user = await _userRepository.GetByEmailAddressAsync(email.Address);
             if (user != null) {
@@ -207,17 +207,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Authorize(Roles = AuthorizationRoles.User)]
         public async Task<IHttpActionResult> ResetPasword(ResetPasswordModel model) {
             if (String.IsNullOrEmpty(model?.PasswordResetToken))
-                return BadRequest("Invalid password reset token.");
+                return BadRequest((await T("Auth.ResetPasword.Token.Invalid")).Text);
 
             var userPassword = await _userPasswordRepository.GetByPasswordResetTokenAsync(model.PasswordResetToken);
             if (userPassword == null)
-                return BadRequest("Invalid password reset token.");
+                return BadRequest((await T("Auth.ResetPasword.Token.Invalid")).Text);
 
             if (!userPassword.HasValidPasswordResetTokenExpiration())
-                return BadRequest("Password Reset Token has expired.");
+                return BadRequest((await T("Auth.ResetPasword.Token.Expired")).Text);
 
             if (!IsValidPassword(model.Password))
-                return BadRequest(_invalidPasswordMessage);
+                return BadRequest((await T("Common.Password.Invalid")).Text);
 
             userPassword.User.MarkEmailAddressVerified();
 
