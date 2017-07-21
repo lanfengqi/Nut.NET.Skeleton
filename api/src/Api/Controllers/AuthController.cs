@@ -61,14 +61,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
             }
 
             if (user == null || !user.IsActive)
-                return BadRequest("user is not exist.Or use is active.");
+                return Unauthorized();
 
             var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
             if (userPassword == null)
-                return BadRequest("user password is not exist.");
+                return Unauthorized();
 
             if (!userPassword.IsValidPassword(model.Password)) {
-                return BadRequest("Password Error.");
+                return Unauthorized();
             }
             await _metricsClient.CounterAsync("User Login");
 
