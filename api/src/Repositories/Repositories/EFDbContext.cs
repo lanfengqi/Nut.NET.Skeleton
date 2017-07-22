@@ -1,26 +1,31 @@
 ﻿using Foundatio.Skeleton.Repositories.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using SimpleInjector;
-using Foundatio.Skeleton.Core.Dependency;
+using System.Linq;
+using System.Reflection;
 
 namespace Foundatio.Skeleton.Repositories {
     public class EFDbContext : DbContext {
 
-        private readonly IDependencyResolver _dependencyResolver;
-
-        public EFDbContext(IDependencyResolver dependencyResolver)
+        public EFDbContext()
             : base("DatabaseConnectionString") {
-
-            _dependencyResolver = dependencyResolver;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
-            var _modelBuliders = _dependencyResolver.GetServices<IModelBuilder>();
-
-            foreach (var model in _modelBuliders)
-                model.Configure(modelBuilder);
+            Assembly domainAssembly = null;
+            try {
+                domainAssembly = Assembly.Load("Foundatio.Skeleton.Domain");
+            } catch (Exception ex) {
+                throw ex;
+            }
+            var typesToRegister = domainAssembly.GetTypes()
+           .Where(type => !String.IsNullOrEmpty(type.Namespace))
+           .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
+               type.BaseType.GetGenericTypeDefinition() == typeof(NutEntityTypeConfiguration<>));
+            foreach (var type in typesToRegister) {
+                dynamic configurationInstance = Activator.CreateInstance(type);
+                modelBuilder.Configurations.Add(configurationInstance);
+            }
 
             base.OnModelCreating(modelBuilder);
         }

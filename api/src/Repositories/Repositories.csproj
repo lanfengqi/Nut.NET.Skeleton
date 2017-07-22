@@ -79,8 +79,7 @@
   <ItemGroup>
     <Compile Include="Configuration\CreateTablesIfNotExist.cs" />
     <Compile Include="Configuration\EFConfiguration.cs" />
-    <Compile Include="Configuration\IModelBuilder.cs" />
-    <Compile Include="Configuration\ModelBuilderBase.cs" />
+    <Compile Include="Configuration\NutEntityTypeConfiguration.cs" />
     <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Model\EntityChanged.cs" />

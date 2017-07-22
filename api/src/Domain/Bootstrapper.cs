@@ -40,13 +40,8 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<EFConfiguration>();
 
-            container.AppendToCollection(typeof(IModelBuilder), typeof(OrganizationModelBuilder));
-            container.AppendToCollection(typeof(IModelBuilder), typeof(UserModelBuilder));
-            container.AppendToCollection(typeof(IModelBuilder), typeof(UserPasswordModelBuilder));
-            container.AppendToCollection(typeof(IModelBuilder), typeof(TokenModelBuilder));
-            container.AppendToCollection(typeof(IModelBuilder), typeof(RoleModelBuilder));
-
-            container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
+            container.RegisterSingleton<DbContext>(() => new EFDbContext());
+            //container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
             container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();

@@ -185,11 +185,11 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Configuration\OrganizationModelBuilder.cs" />
-    <Compile Include="Repositories\Configuration\RoleModelBuilder.cs" />
-    <Compile Include="Repositories\Configuration\TokenModelBuilder.cs" />
-    <Compile Include="Repositories\Configuration\UserModelBuilder.cs" />
-    <Compile Include="Repositories\Configuration\UserPasswordModelBuilder.cs" />
+    <Compile Include="Repositories\Configuration\OrganizationMap.cs" />
+    <Compile Include="Repositories\Configuration\RoleMap.cs" />
+    <Compile Include="Repositories\Configuration\TokenMap.cs" />
+    <Compile Include="Repositories\Configuration\UserMap.cs" />
+    <Compile Include="Repositories\Configuration\UserPasswordMap.cs" />
     <Compile Include="Repositories\Interfaces\IOrganizationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRoleRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
