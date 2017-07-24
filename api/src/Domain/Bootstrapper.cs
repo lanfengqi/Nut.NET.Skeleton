@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using Foundatio.Caching;
 using Foundatio.Jobs;
@@ -12,20 +7,22 @@ using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Metrics;
 using Foundatio.Queues;
-using Foundatio.Storage;
-using SimpleInjector;
-using SimpleInjector.Advanced;
-
 using Foundatio.Skeleton.Core.Dependency;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.Queues.Models;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Repositories;
-using Foundatio.Skeleton.Domain.Repositories.Configuration;
-using Foundatio.Skeleton.Repositories.Configuration;
-using Foundatio.Skeleton.Repositories;
-using System.Data.Entity;
 using Foundatio.Skeleton.Domain.Services;
+using Foundatio.Skeleton.Repositories;
+using Foundatio.Skeleton.Repositories.Configuration;
+using Foundatio.Storage;
+using SimpleInjector;
+using SimpleInjector.Advanced;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Net.Http;
 
 namespace Foundatio.Skeleton.Domain {
     public class Bootstrapper {
@@ -41,7 +38,6 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<EFConfiguration>();
 
             container.RegisterSingleton<DbContext>(() => new EFDbContext());
-            //container.RegisterSingleton<DbContext>(() => new EFDbContext(container.GetInstance<IDependencyResolver>()));
             container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
@@ -80,24 +76,15 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IRoleRepository, RoleRepository>();
             container.RegisterSingleton<IUserRepository, UserRepository>();
             container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
-            //container.RegisterSingleton<INotificationRepository, NotificationRepository>();
             container.RegisterSingleton<ITokenRepository, TokenRepository>();
-            //container.RegisterSingleton<ILogRepository, LogRepository>();
-            //container.RegisterSingleton<IMigrationRepository, MigrationRepository>();
 
-            //if (Settings.Current.AppMode == AppMode.Local) {
-            //    container.RegisterSingleton<IMailSender>(() => new InMemoryMailSender());
-            //} else {
-            //    container.RegisterSingleton<IMailSender, SmtpMailSender>();
-            //}
+
+            container.Register(typeof(IValidator<>), new[] { typeof(Bootstrapper).Assembly }, Lifestyle.Singleton);
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();
 
-            container.AddStartupAction(() => {
-                var config = container.GetInstance<EFConfiguration>();
-                config.ConfigureDatabase();
-            });
+            container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
 
             container.AppendToCollection(typeof(Profile), typeof(DomainMappings));
             container.RegisterSingleton<IMapper>(() => {
