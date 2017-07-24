@@ -1,10 +1,8 @@
-﻿using Foundatio.Skeleton.Core.Collections;
-using Foundatio.Skeleton.Core.Models;
-using Foundatio.Skeleton.Repositories.Model;
+﻿using Foundatio.Skeleton.Repositories.Model;
 using System;
 
 namespace Foundatio.Skeleton.Domain.Models {
-    public class Organization : IHaveData, IOwnedByOrganizationWithIdentity, IHaveDates, IVersioned {
+    public class Organization : IOwnedByOrganizationWithIdentity, IHaveDates, IVersioned {
         /// <summary>
         /// Unique id that identifies the organization.
         /// </summary>
@@ -19,11 +17,6 @@ namespace Foundatio.Skeleton.Domain.Models {
         /// If true, the organization has been verified.
         /// </summary>
         public bool IsVerified { get; set; }
-
-        /// <summary>
-        /// Optional data entries that contain additional configuration information for this organization.
-        /// </summary>
-        public DataDictionary Data { get; set; } = new DataDictionary();
 
         public DateTime CreatedUtc { get; set; }
         public DateTime UpdatedUtc { get; set; }

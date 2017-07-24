@@ -49,7 +49,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (role == null)
                 return NotFound();
 
-            var viewRole = await Map<ViewRole>(role, true);
+            var viewRole = await Map<ViewRole>(role);
             return Ok(viewRole);
         }
 

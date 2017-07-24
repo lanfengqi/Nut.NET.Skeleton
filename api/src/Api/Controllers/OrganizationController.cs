@@ -64,7 +64,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (organization == null)
                 return NotFound();
 
-            var viewOrganization = await Map<ViewOrganization>(organization, true);
+            var viewOrganization = await Map<ViewOrganization>(organization);
             return Ok(viewOrganization);
         }
 

@@ -52,7 +52,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             model = await AfterAddAsync(model);
 
-            return Created(new Uri(GetEntityLink(model.Id)), await Map<TViewModel>(model, true));
+            return Created(new Uri(GetEntityLink(model.Id)), await Map<TViewModel>(model));
         }
 
         protected virtual Task<PermissionResult> CanAddAsync(TModel value) {
@@ -179,7 +179,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (typeof(TViewModel) == typeof(TModel))
                 return Ok(results);
 
-            return Ok(await Map<ICollection<TViewModel>>(results, true));
+            return Ok(await Map<ICollection<TViewModel>>(results));
         }
 
         protected async Task<IHttpActionResult> UpdateModelAsync(string id, Func<UpdateModelContext<TModel>, Task> modelUpdateFunc) {
@@ -190,7 +190,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (typeof(TViewModel) == typeof(TModel))
                 return Ok(result.Models.FirstOrDefault());
 
-            return Ok(await Map<TViewModel>(result.Models.FirstOrDefault(), true));
+            return Ok(await Map<TViewModel>(result.Models.FirstOrDefault()));
         }
 
         private async Task<UpdateModelsResult<TModel>> UpdateModelsInternalAsync(string[] ids, Func<UpdateModelContext<TModel>, Task> modelUpdateFunc) {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Foundatio.Skeleton.Core.Models;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
@@ -40,7 +39,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (typeof(TViewModel) == typeof(TModel) && _mapper.ConfigurationProvider.FindTypeMapFor<TModel, TViewModel>() == null)
                 return Ok(model);
 
-            return Ok(await Map<TViewModel>(model, true));
+            return Ok(await Map<TViewModel>(model));
         }
 
         protected virtual async Task<TModel> GetModel(string id, bool useCache = true) {
@@ -70,33 +69,19 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         #region Mapping
 
-        protected async Task<TDestination> Map<TDestination>(object source, bool isResult = false) {
+        protected async Task<TDestination> Map<TDestination>(object source) {
             var destination = _mapper.Map<TDestination>(source);
-
-            if (isResult)
-                await AfterResultMap(new List<TDestination>(new[] { destination }));
             return destination;
         }
 
-        protected async Task<TDestination> Map<TDestination>(object source, TDestination destination, bool isResult = false) {
+        protected async Task<TDestination> Map<TDestination>(object source, TDestination destination) {
             destination = _mapper.Map(source, destination);
-
-            if (isResult)
-                await AfterResultMap(new List<TDestination>(new[] { destination }));
             return destination;
         }
 
-        protected async Task<IReadOnlyCollection<TDestination>> MapCollection<TDestination>(object source, bool isResult = false) {
+        protected async Task<IReadOnlyCollection<TDestination>> MapCollection<TDestination>(object source) {
             var destination = _mapper.Map<IReadOnlyCollection<TDestination>>(source);
-
-            if (isResult)
-                await AfterResultMap<TDestination>(destination);
             return destination;
-        }
-
-        protected virtual async Task AfterResultMap<TDestination>(IReadOnlyCollection<TDestination> models) {
-            foreach (var model in models.OfType<IHaveData>())
-                model.Data.RemoveSensitiveData();
         }
 
         #endregion

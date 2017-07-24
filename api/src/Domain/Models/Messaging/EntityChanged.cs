@@ -10,18 +10,7 @@ namespace Foundatio.Skeleton.Domain.Models.Messaging {
                 Id = entityChanged.Id,
                 Type = entityChanged.Type,
                 ChangeType = entityChanged.ChangeType,
-                Data = entityChanged.Data
             };
-
-            if (appEntityChanged.Data.ContainsKey(KnownKeys.OrganizationId)) {
-                appEntityChanged.OrganizationId = appEntityChanged.Data[KnownKeys.OrganizationId].ToString();
-                appEntityChanged.Data.Remove(KnownKeys.OrganizationId);
-            }
-
-            if (appEntityChanged.Data.ContainsKey(KnownKeys.ContactId)) {
-                appEntityChanged.ContactId = appEntityChanged.Data[KnownKeys.ContactId].ToString();
-                appEntityChanged.Data.Remove(KnownKeys.ContactId);
-            }
 
             return appEntityChanged;
         }

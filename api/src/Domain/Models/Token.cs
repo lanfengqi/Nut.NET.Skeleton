@@ -6,7 +6,6 @@ namespace Foundatio.Skeleton.Domain.Models {
     public class Token : IOwnedByOrganizationWithIdentity, IHaveDates {
         public Token() {
             //Scopes = new HashSet<string>();
-            Data = new DataDictionary();
         }
 
         public string Id { get; set; }
@@ -39,7 +38,6 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime CreatedUtc { get; set; }
 
         public DateTime UpdatedUtc { get; set; }
-        public DataDictionary Data { get; set; }
     }
 
     public enum TokenType {

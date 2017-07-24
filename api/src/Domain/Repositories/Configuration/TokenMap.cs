@@ -15,7 +15,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.Property(u => u.CreatedBy).HasMaxLength(50);
 
             this.Ignore(o => o.Type);
-            this.Ignore(o => o.Data);
         }
     }
 }

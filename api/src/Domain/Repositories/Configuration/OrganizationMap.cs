@@ -9,8 +9,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.HasKey(c => c.Id);
 
             this.Property(u => u.Name).HasMaxLength(500);
-
-            this.Ignore(o => o.Data);
         }
     }
 }

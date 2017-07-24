@@ -6,7 +6,6 @@ namespace Foundatio.Skeleton.Repositories.Model {
         public string Type { get; set; }
         public string Id { get; set; }
         public ChangeType ChangeType { get; set; }
-        public DataDictionary Data { get; set; }
     }
 
     public enum ChangeType {

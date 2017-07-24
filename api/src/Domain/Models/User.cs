@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using Foundatio.Skeleton.Repositories.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Foundatio.Skeleton.Core.Collections;
-using Foundatio.Skeleton.Core.Models;
-using Foundatio.Skeleton.Repositories.Model;
 
 namespace Foundatio.Skeleton.Domain.Models {
-    public class User : IHaveData, IIdentity, IHaveDates {
+    public class User : IIdentity, IHaveDates {
         public string Id { get; set; }
 
         public string FullName { get; set; }
@@ -26,8 +23,6 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string ProfileImagePath { get; set; }
 
-        public DataDictionary Data { get; set; }
-
         public DateTime CreatedUtc { get; set; }
         public DateTime UpdatedUtc { get; set; }
 
@@ -42,7 +37,6 @@ namespace Foundatio.Skeleton.Domain.Models {
             EmailNotificationsEnabled = true;
             IsActive = true;
             Roles = new Collection<Role>();
-            Data = new DataDictionary();
         }
     }
 

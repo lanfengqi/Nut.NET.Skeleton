@@ -10,8 +10,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
 
             this.Property(u => u.EmailAddress).HasMaxLength(500);
 
-            this.Ignore(o => o.Data);
-
             this.HasMany(p => p.Roles)
                 .WithMany()
                 .Map(m => {

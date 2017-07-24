@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Foundatio.Skeleton.Core.Collections;
-using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Repositories.Model;
+﻿using Foundatio.Skeleton.Repositories.Model;
+using System;
 
 namespace Foundatio.Skeleton.Api.Models {
     public class ViewUser : IIdentity, IHaveDates {
@@ -14,7 +11,6 @@ namespace Foundatio.Skeleton.Api.Models {
         public bool IsActive { get; set; }
         public string ProfileImagePath { get; set; }
         public bool IsGlobalAdmin { get; set; }
-        public DataDictionary Data { get; set; }
         public DateTime CreatedUtc { get; set; }
         public DateTime UpdatedUtc { get; set; }
     }

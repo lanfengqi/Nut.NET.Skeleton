@@ -22,7 +22,6 @@ namespace Foundatio.Skeleton.Api.Models
              CurrentOrganizationId = currentOrganizationId;
 
             Hash = HMACSHA256HashString(user.Id);
-            Data = user.Data;
             CreatedUtc = user.CreatedUtc;
             UpdatedUtc = user.UpdatedUtc;
         }
