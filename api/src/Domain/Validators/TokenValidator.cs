@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Foundatio.Skeleton.Core.Extensions;
 using FluentValidation;
 

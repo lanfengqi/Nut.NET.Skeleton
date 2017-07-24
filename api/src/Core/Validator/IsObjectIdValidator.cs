@@ -10,7 +10,7 @@ namespace Foundatio.Skeleton.Core.Validators {
             if (String.IsNullOrEmpty(value))
                 return false;
 
-            return value.Length == 24;
+            return value.Length > 24;
         }
     }
 }

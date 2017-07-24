@@ -205,7 +205,9 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\OrganizationValidator.cs" />
+    <Compile Include="Validators\RoleValidator.cs" />
     <Compile Include="Validators\TokenValidator.cs" />
+    <Compile Include="Validators\UserPasswordValidator.cs" />
     <Compile Include="Validators\UserValidator.cs" />
   </ItemGroup>
   <ItemGroup>

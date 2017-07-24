@@ -1,4 +1,5 @@
-﻿using Foundatio.Caching;
+﻿using FluentValidation;
+using Foundatio.Caching;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using System;
@@ -9,8 +10,8 @@ namespace Foundatio.Skeleton.Domain.Repositories {
     public class UserRepository : EFRepositoryBase<User>, IUserRepository {
 
 
-        public UserRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient)
-            : base(efRepositoryContext, cacheClient, null) {
+        public UserRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient, IValidator<User> validators)
+            : base(efRepositoryContext, cacheClient, validators) {
         }
 
         public async Task<User> GetByEmailAddressAsync(string emailAddress) {

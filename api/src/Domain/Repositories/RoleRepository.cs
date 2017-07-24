@@ -1,4 +1,5 @@
-﻿using Foundatio.Caching;
+﻿using FluentValidation;
+using Foundatio.Caching;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using System;
@@ -9,8 +10,8 @@ using System.Threading.Tasks;
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class RoleRepository : EFRepositoryBase<Role>, IRoleRepository {
 
-        public RoleRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient)
-            : base(efRepositoryContext, cacheClient, null) {
+        public RoleRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient, IValidator<Role> validators)
+            : base(efRepositoryContext, cacheClient, validators) {
         }
 
         public async Task<Role> GetBySystemNameAsync(string systemName) {

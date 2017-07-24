@@ -78,9 +78,6 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
             container.RegisterSingleton<ITokenRepository, TokenRepository>();
 
-
-            container.Register(typeof(IValidator<>), new[] { typeof(Bootstrapper).Assembly }, Lifestyle.Singleton);
-
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();
 

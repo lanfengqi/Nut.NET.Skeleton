@@ -4,11 +4,12 @@ using Foundatio.Skeleton.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class OrganizationRepository : EFRepositoryBase<Organization>, IOrganizationRepository {
-        public OrganizationRepository(IEFRepositoryContext efRepositoryContext,ICacheClient cacheClient)
-            : base(efRepositoryContext, cacheClient, null) {
+        public OrganizationRepository(IEFRepositoryContext efRepositoryContext,ICacheClient cacheClient, IValidator<Organization> validators)
+            : base(efRepositoryContext, cacheClient, validators) {
         }
 
         public async Task<Organization> GetByNameAsync(string name) {
