@@ -42,7 +42,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("me")]
         public async Task<IHttpActionResult> GetCurrentUser() {
-            var currentUser = await GetModel(CurrentUser.Id, false);
+            var currentUser = await GetModel(CurrentUser.Id);
             if (currentUser == null)
                 return NotFound();
 
@@ -86,7 +86,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
         public async Task<IHttpActionResult> RemoveAsync(string id) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -104,7 +104,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Authorize(Roles = AuthorizationRoles.User)]
         [RequireOrganization]
         public async Task<IHttpActionResult> UpdateEmailAddress(string id, string email) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -128,7 +128,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
         public async Task<IHttpActionResult> AddAdminRole(string id) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -147,7 +147,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
         public async Task<IHttpActionResult> DeleteAdminRole(string id) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -167,7 +167,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [OverrideAuthorization]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
         public async Task<IHttpActionResult> AddGlobalAdminRole(string id) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -183,7 +183,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [OverrideAuthorization]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
         public async Task<IHttpActionResult> DeleteGlobalAdminRole(string id) {
-            var user = await GetModel(id, false);
+            var user = await GetModel(id);
             if (user == null)
                 return NotFound();
 
@@ -206,18 +206,18 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return await _repository.GetByEmailAddressAsync(email) == null;
         }
 
-        protected override async Task<User> GetModel(string id, bool useCache = true) {
+        protected override async Task<User> GetModel(string id) {
             if (Request.IsAdmin() || String.Equals(CurrentUser.Id, id))
-                return await base.GetModel(id, useCache);
+                return await base.GetModel(id);
 
             return null;
         }
 
-        protected override Task<IReadOnlyCollection<User>> GetModels(string[] ids, bool useCache = true) {
+        protected override Task<IReadOnlyCollection<User>> GetModels(string[] ids) {
             if (Request.IsAdmin())
-                return base.GetModels(ids, useCache);
+                return base.GetModels(ids);
 
-            return base.GetModels(ids.Where(id => String.Equals(CurrentUser.Id, id)).ToArray(), useCache);
+            return base.GetModels(ids.Where(id => String.Equals(CurrentUser.Id, id)).ToArray());
         }
     }
 }

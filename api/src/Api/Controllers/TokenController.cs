@@ -27,11 +27,11 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.GetById(id);
         }
 
-        protected override async Task<Domain.Models.Token> GetModel(string id, bool useCache = true) {
+        protected override async Task<Domain.Models.Token> GetModel(string id) {
             if (String.IsNullOrEmpty(id))
                 return null;
 
-            var model = await _repository.GetByIdAsync(id, useCache);
+            var model = await _repository.GetByIdAsync(id);
             if (model == null)
                 return null;
 

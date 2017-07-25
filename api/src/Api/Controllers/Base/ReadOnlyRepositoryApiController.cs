@@ -42,22 +42,22 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return Ok(await Map<TViewModel>(model));
         }
 
-        protected virtual async Task<TModel> GetModel(string id, bool useCache = true) {
+        protected virtual async Task<TModel> GetModel(string id) {
             if (String.IsNullOrEmpty(id))
                 return null;
 
-            TModel model = await _repository.GetByIdAsync(id, useCache);
+            TModel model = await _repository.GetByIdAsync(id);
             if (_isOwnedByOrganization && model != null && ((IOwnedByOrganization)model).OrganizationId != GetSelectedOrganizationId())
                 return null;
 
             return model;
         }
 
-        protected virtual async Task<IReadOnlyCollection<TModel>> GetModels(string[] ids, bool useCache = true) {
+        protected virtual async Task<IReadOnlyCollection<TModel>> GetModels(string[] ids) {
             if (ids == null || ids.Length == 0)
                 return new List<TModel>();
 
-            IReadOnlyCollection<TModel> models = await _repository.GetByIdsAsync(ids, useCache: useCache);
+            IReadOnlyCollection<TModel> models = await _repository.GetByIdsAsync(ids);
             var selectedOrganizationId = GetSelectedOrganizationId();
             if (_isOwnedByOrganization)
                 models = models?.Where(m => ((IOwnedByOrganization)m).OrganizationId == selectedOrganizationId).ToList();

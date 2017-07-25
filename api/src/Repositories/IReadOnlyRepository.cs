@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace Foundatio.Skeleton.Repositories {
     public interface IReadOnlyRepository<T> where T : class, new() {
         Task<long> CountAsync();
-        Task<T> GetByIdAsync(string id, bool useCache = false, TimeSpan? expiresIn = null);
-        Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids, bool useCache = false, TimeSpan? expiresIn = null);
+        Task<T> GetByIdAsync(string id);
+        Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids);
         Task<IReadOnlyCollection<T>> GetAllAsync(IPagingOptions paging = null);
         Task<bool> ExistsAsync(string id);
     }

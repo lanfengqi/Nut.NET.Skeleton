@@ -95,7 +95,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         #region Update
 
         public virtual async Task<IHttpActionResult> PatchAsync(string id, PatchDocument changes, long? version = null) {
-            TModel original = await GetModel(id, false);
+            TModel original = await GetModel(id);
             if (original == null)
                 return NotFound();
 
@@ -128,7 +128,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         public virtual async Task<IHttpActionResult> PutAsync(string id, TViewModel model, long? version = null) {
-            TModel original = await GetModel(id, false);
+            TModel original = await GetModel(id);
             if (original == null)
                 return NotFound();
 
@@ -224,7 +224,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!_supportsSoftDeletes)
                 return StatusCode(HttpStatusCode.BadRequest);
 
-            var model = await GetModel(id, false);
+            var model = await GetModel(id);
             if (model == null)
                 return NotFound();
 
@@ -247,7 +247,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!_supportsSoftDeletes)
                 return StatusCode(HttpStatusCode.BadRequest);
 
-            var items = (await GetModels(ids, false)).ToList();
+            var items = (await GetModels(ids)).ToList();
             if (!items.Any())
                 return NotFound();
 
@@ -283,7 +283,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         public virtual async Task<IHttpActionResult> DeleteAsync(string id) {
-            var model = await GetModel(id, false);
+            var model = await GetModel(id);
             if (model == null)
                 return NotFound();
 
@@ -303,7 +303,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         public virtual async Task<IHttpActionResult> DeleteAsync(string[] ids) {
-            var items = (await GetModels(ids, false)).ToList();
+            var items = (await GetModels(ids)).ToList();
             if (!items.Any())
                 return NotFound();
 

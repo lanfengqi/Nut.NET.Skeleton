@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Foundatio.Caching;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using System;
@@ -9,8 +8,8 @@ using System.Threading.Tasks;
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class UserPasswordRepository : EFRepositoryBase<UserPassword>, IUserPasswordRepository {
 
-        public UserPasswordRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient, IValidator<UserPassword> validators)
-            : base(efRepositoryContext, cacheClient, validators) {
+        public UserPasswordRepository(IEFRepositoryContext efRepositoryContext, IValidator<UserPassword> validators)
+            : base(efRepositoryContext, validators) {
         }
 
         public async Task<UserPassword> GetByPasswordResetTokenAsync(string token) {

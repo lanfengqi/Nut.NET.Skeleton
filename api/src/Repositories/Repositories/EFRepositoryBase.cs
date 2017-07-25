@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Foundatio.Caching;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
@@ -10,8 +9,8 @@ namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryBase<T> : EFReadOnlyRepositoryBase<T>, IEFRepository<T> where T : class, IIdentity, new() {
         protected readonly IValidator<T> _validator;
 
-        public EFRepositoryBase(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient, IValidator<T> validator = null)
-            : base(efRepositoryContext, cacheClient) {
+        public EFRepositoryBase(IEFRepositoryContext efRepositoryContext, IValidator<T> validator = null)
+            : base(efRepositoryContext) {
 
             this._validator = validator;
         }

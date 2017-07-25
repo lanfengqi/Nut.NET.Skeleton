@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Foundatio.Caching;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
@@ -11,8 +10,8 @@ using System.Threading.Tasks;
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class TokenRepository : EFRepositoryBase<Token>, ITokenRepository {
 
-        public TokenRepository(IEFRepositoryContext efRepositoryContext, ICacheClient cacheClient, IValidator<Token> validators)
-            : base(efRepositoryContext, cacheClient, validators) {
+        public TokenRepository(IEFRepositoryContext efRepositoryContext, IValidator<Token> validators)
+            : base(efRepositoryContext, validators) {
         }
 
 
