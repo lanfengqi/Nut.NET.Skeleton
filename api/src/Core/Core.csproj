@@ -154,7 +154,6 @@
     <Compile Include="JsonPatch\RemoveOperation.cs" />
     <Compile Include="JsonPatch\ReplaceOperation.cs" />
     <Compile Include="JsonPatch\TestOperation.cs" />
-    <Compile Include="Models\Queue\MailMessage.cs" />
     <Compile Include="Serialization\JsonHelper.cs" />
     <Compile Include="Utility\AssemblyDetail.cs" />
     <Compile Include="Utility\IConnectionMapping.cs" />

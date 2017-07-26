@@ -9,7 +9,6 @@ using Foundatio.Metrics;
 using Foundatio.Queues;
 using Foundatio.Skeleton.Core.Dependency;
 using Foundatio.Skeleton.Core.Extensions;
-using Foundatio.Skeleton.Core.Queues.Models;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Domain.Services;
@@ -42,14 +41,12 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
 
-            container.RegisterSingleton<IEnumerable<IQueueBehavior<MailMessage>>>(() => new[] { new MetricsQueueBehavior<MailMessage>(container.GetInstance<IMetricsClient>()) });
             container.RegisterSingleton<IEnumerable<IQueueBehavior<WorkItemData>>>(() => new[] { new MetricsQueueBehavior<WorkItemData>(container.GetInstance<IMetricsClient>()) });
 
             var handlers = new WorkItemHandlers();
             container.RegisterSingleton(handlers);
 
             container.RegisterSingleton<IQueue<WorkItemData>>(() => new InMemoryQueue<WorkItemData>(behaviors: container.GetAllInstances<IQueueBehavior<WorkItemData>>(), workItemTimeout: TimeSpan.FromHours(1)));
-            container.RegisterSingleton<IQueue<MailMessage>>(() => new InMemoryQueue<MailMessage>(behaviors: container.GetAllInstances<IQueueBehavior<MailMessage>>()));
 
             container.RegisterSingleton<IMessageBus, InMemoryMessageBus>();
             container.RegisterSingleton<IMessagePublisher>(container.GetInstance<IMessageBus>);

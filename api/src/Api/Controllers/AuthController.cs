@@ -46,7 +46,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         /// <returns>An auth token.</returns>
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
         [HttpPost]
-        [Route("SignIn")]
+        [Route("signin")]
         public async Task<IHttpActionResult> SignInAsync(SignInModel model) {
             if (String.IsNullOrWhiteSpace(model?.Email))
                 return BadRequest("Email Address is required.");
@@ -77,22 +77,19 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         [HttpGet]
-        [Route("SignOut")]
+        [Route("signout")]
         [Authorize(Roles = AuthorizationRoles.User)]
         public async Task<IHttpActionResult> SignOutAsync() {
             if (User.IsTokenAuthType()) 
                 return Ok();
-
             string id = User.GetLoggedInUsersTokenId();
             if (string.IsNullOrEmpty(id))
                 return Ok();
-
             try {
                 await _tokenRepository.RemoveAsync(id);
             } catch {
 
             }
-
             return Ok();
         }
 

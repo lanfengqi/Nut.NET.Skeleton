@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon;
+﻿using Amazon;
 using Amazon.Runtime;
 using Foundatio.Caching;
 using Foundatio.Jobs;
@@ -9,14 +6,16 @@ using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Metrics;
 using Foundatio.Queues;
-using Foundatio.Storage;
-using Foundatio.Skeleton.Core.Queues.Models;
 using Foundatio.Skeleton.Core.Serialization;
 using Foundatio.Skeleton.Core.Utility;
-using SimpleInjector;
-using StackExchange.Redis;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Insulation.Redis;
+using Foundatio.Storage;
+using SimpleInjector;
+using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Foundatio.Skeleton.Insulation {
     public class Bootstrapper {
@@ -39,7 +38,6 @@ namespace Foundatio.Skeleton.Insulation {
                 else
                     container.RegisterSingleton<ICacheClient>(() => new RedisHybridCacheClient(container.GetInstance<ConnectionMultiplexer>(), JsonHelper.DefaultFoundatioSerializer));
 
-                container.RegisterSingleton<IQueue<MailMessage>>(() => new RedisQueue<MailMessage>(muxer, queueName: GetQueueName<MailMessage>(), behaviors: container.GetAllInstances<IQueueBehavior<MailMessage>>()));
                 container.RegisterSingleton<IQueue<WorkItemData>>(() => new RedisQueue<WorkItemData>(muxer, queueName: GetQueueName<WorkItemData>(), behaviors: container.GetAllInstances<IQueueBehavior<WorkItemData>>(), workItemTimeout: TimeSpan.FromHours(1)));
 
                 container.RegisterSingleton<IMessageBus>(() => new RedisMessageBus(muxer.GetSubscriber(), Settings.Current.AppScopePrefix + "messages"));
