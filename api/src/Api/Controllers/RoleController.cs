@@ -31,7 +31,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("admin")]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
-        public async Task<IHttpActionResult> GetForAdmins(int page = 1, int limit = 10) {
+        public async Task<IHttpActionResult> GetForAdminsAsync(int page = 1, int limit = 10) {
 
             page = GetPage(page);
             limit = GetLimit(limit);
@@ -44,8 +44,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewRole))]
         [HttpGet]
         [Route("{id:objectid}", Name = "GetRoleById")]
-        public override async Task<IHttpActionResult> GetById(string id) {
-            var role = await GetModel(id);
+        public override async Task<IHttpActionResult> GetByIdAsync(string id) {
+            var role = await GetModelAsync(id);
             if (role == null)
                 return NotFound();
 

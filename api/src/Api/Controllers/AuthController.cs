@@ -45,8 +45,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         /// <returns>An auth token.</returns>
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
         [HttpPost]
-        [Route("login")]
-        public async Task<IHttpActionResult> Login(LoginModel model) {
+        [Route("SignIn")]
+        public async Task<IHttpActionResult> SignInAsync(SignInModel model) {
             if (String.IsNullOrWhiteSpace(model?.Email))
                 return BadRequest("Email Address is required.");
 
@@ -78,7 +78,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
         [HttpPost]
         [Route("signup")]
-        public async Task<IHttpActionResult> SignUp(SignupModel model) {
+        public async Task<IHttpActionResult> SignUpAsync(SignupModel model) {
             if (!Settings.Current.EnableAccountCreation)
                 return BadRequest("Sorry,this is not accepting new accountsa at this time.");
 
@@ -160,7 +160,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpPost]
         [Route("change-pasword")]
         [Authorize(Roles = AuthorizationRoles.User)]
-        public async Task<IHttpActionResult> ChangePasword(ChangePasswordModel model) {
+        public async Task<IHttpActionResult> ChangePaswordAsync(ChangePasswordModel model) {
             if (model == null || !IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
@@ -182,7 +182,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         [HttpGet]
         [Route("forgot-password")]
-        public async Task<IHttpActionResult> ForgotPassword(string emailAddress) {
+        public async Task<IHttpActionResult> ForgotPasswordAsync(string emailAddress) {
             var email = new Email { Address = emailAddress };
             var validator = new Domain.Validators.EmailValidator();
             if (!validator.TryValidate(email))
@@ -210,7 +210,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpPost]
         [Route("reset-pasword")]
         [Authorize(Roles = AuthorizationRoles.User)]
-        public async Task<IHttpActionResult> ResetPasword(ResetPasswordModel model) {
+        public async Task<IHttpActionResult> ResetPaswordAsync(ResetPasswordModel model) {
             if (String.IsNullOrEmpty(model?.PasswordResetToken))
                 return BadRequest("Invalid password reset token.");
 

@@ -16,18 +16,18 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         public TokenController(
             ILoggerFactory loggerFactory,
-            ITokenRepository tokenRepository,  
+            ITokenRepository tokenRepository,
             IMapper mapper) : base(loggerFactory, tokenRepository, mapper) {
         }
 
 
         [HttpGet]
         [Route("{id:token}", Name = "GetTokenById")]
-        public override Task<IHttpActionResult> GetById(string id) {
-            return base.GetById(id);
+        public override Task<IHttpActionResult> GetByIdAsync(string id) {
+            return base.GetByIdAsync(id);
         }
 
-        protected override async Task<Domain.Models.Token> GetModel(string id) {
+        protected override async Task<Domain.Models.Token> GetModelAsync(string id) {
             if (String.IsNullOrEmpty(id))
                 return null;
 

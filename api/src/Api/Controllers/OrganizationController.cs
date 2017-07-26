@@ -36,7 +36,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route]
         [RequireOrganization]
-        public async Task<IHttpActionResult> Get() {
+        public async Task<IHttpActionResult> GetAsync() {
 
             var organizationId = CurrentUser.OrganizationId;
             var organization = await _repository.GetByIdAsync(organizationId);
@@ -46,7 +46,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("admin")]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
-        public async Task<IHttpActionResult> GetForAdmins(int page = 1, int limit = 10) {
+        public async Task<IHttpActionResult> GetForAdminsAsync(int page = 1, int limit = 10) {
 
             page = GetPage(page);
             limit = GetLimit(limit);
@@ -59,8 +59,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewOrganization))]
         [HttpGet]
         [Route("{id:objectid}", Name = "GetOrganizationById")]
-        public override async Task<IHttpActionResult> GetById(string id) {
-            var organization = await GetModel(id);
+        public override async Task<IHttpActionResult> GetByIdAsync(string id) {
+            var organization = await GetModelAsync(id);
             if (organization == null)
                 return NotFound();
 
@@ -97,7 +97,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         [HttpPost]
         [Route("delete")]
-        public async Task<IHttpActionResult> Delete([FromBody]EntitySelection selection) {
+        public async Task<IHttpActionResult> DeleteAsync([FromBody]EntitySelection selection) {
             if (selection == null || ((selection.Ids == null || selection.Ids.Length == 0) && selection.Filter == null))
                 return StatusCode(HttpStatusCode.BadRequest);
 

@@ -27,8 +27,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         #region Get
 
-        public virtual async Task<IHttpActionResult> GetById(string id) {
-            TModel model = await GetModel(id);
+        public virtual async Task<IHttpActionResult> GetByIdAsync(string id) {
+            TModel model = await GetModelAsync(id);
             if (model == null)
                 return NotFound();
 
@@ -42,7 +42,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return Ok(await Map<TViewModel>(model));
         }
 
-        protected virtual async Task<TModel> GetModel(string id) {
+        protected virtual async Task<TModel> GetModelAsync(string id) {
             if (String.IsNullOrEmpty(id))
                 return null;
 
@@ -53,7 +53,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return model;
         }
 
-        protected virtual async Task<IReadOnlyCollection<TModel>> GetModels(string[] ids) {
+        protected virtual async Task<IReadOnlyCollection<TModel>> GetModelsAsync(string[] ids) {
             if (ids == null || ids.Length == 0)
                 return new List<TModel>();
 

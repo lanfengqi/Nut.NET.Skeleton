@@ -41,8 +41,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewCurrentUser))]
         [HttpGet]
         [Route("me")]
-        public async Task<IHttpActionResult> GetCurrentUser() {
-            var currentUser = await GetModel(CurrentUser.Id);
+        public async Task<IHttpActionResult> GetCurrentUseAsync() {
+            var currentUser = await GetModelAsync(CurrentUser.Id);
             if (currentUser == null)
                 return NotFound();
 
@@ -54,8 +54,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
         [HttpGet]
         [Route("{id:objectid}", Name = "GetUserById")]
-        public override Task<IHttpActionResult> GetById(string id) {
-            return base.GetById(id);
+        public override Task<IHttpActionResult> GetByIdAsync(string id) {
+            return base.GetByIdAsync(id);
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
@@ -86,7 +86,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
         public async Task<IHttpActionResult> RemoveAsync(string id) {
-            var user = await GetModel(id);
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -103,8 +103,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("{id:objectid}/email-address/{email:minlength(1)}")]
         [Authorize(Roles = AuthorizationRoles.User)]
         [RequireOrganization]
-        public async Task<IHttpActionResult> UpdateEmailAddress(string id, string email) {
-            var user = await GetModel(id);
+        public async Task<IHttpActionResult> UpdateEmailAddressAsync(string id, string email) {
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -112,7 +112,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return Ok(new { IsVerified = user.IsEmailAddressVerified });
 
             email = email.ToLower();
-            if (!await IsEmailAddressAvailableInternal(email))
+            if (!await IsEmailAddressAvailableInternalAsync(email))
                 return BadRequest("A user with this email address already exists.");
 
             user.EmailAddress = email;
@@ -127,8 +127,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [OverrideAuthorization]
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
-        public async Task<IHttpActionResult> AddAdminRole(string id) {
-            var user = await GetModel(id);
+        public async Task<IHttpActionResult> AddAdminRoleAsync(string id) {
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -146,8 +146,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [OverrideAuthorization]
         [RequireOrganization]
         [Authorize(Roles = AuthorizationRoles.Admin)]
-        public async Task<IHttpActionResult> DeleteAdminRole(string id) {
-            var user = await GetModel(id);
+        public async Task<IHttpActionResult> DeleteAdminRoleAsync(string id) {
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -166,8 +166,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("{id:objectid}/global-admin-role")]
         [OverrideAuthorization]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
-        public async Task<IHttpActionResult> AddGlobalAdminRole(string id) {
-            var user = await GetModel(id);
+        public async Task<IHttpActionResult> AddGlobalAdminRoleAsync(string id) {
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -182,8 +182,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("{id:objectid}/global-admin-role")]
         [OverrideAuthorization]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
-        public async Task<IHttpActionResult> DeleteGlobalAdminRole(string id) {
-            var user = await GetModel(id);
+        public async Task<IHttpActionResult> DeleteGlobalAdminRoleAsync(string id) {
+            var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -196,7 +196,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private async Task<bool> IsEmailAddressAvailableInternal(string email) {
+        private async Task<bool> IsEmailAddressAvailableInternalAsync(string email) {
             if (String.IsNullOrWhiteSpace(email))
                 return false;
 
@@ -206,18 +206,18 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return await _repository.GetByEmailAddressAsync(email) == null;
         }
 
-        protected override async Task<User> GetModel(string id) {
+        protected override async Task<User> GetModelAsync(string id) {
             if (Request.IsAdmin() || String.Equals(CurrentUser.Id, id))
-                return await base.GetModel(id);
+                return await base.GetModelAsync(id);
 
             return null;
         }
 
-        protected override Task<IReadOnlyCollection<User>> GetModels(string[] ids) {
+        protected override Task<IReadOnlyCollection<User>> GetModelsAsync(string[] ids) {
             if (Request.IsAdmin())
-                return base.GetModels(ids);
+                return base.GetModelsAsync(ids);
 
-            return base.GetModels(ids.Where(id => String.Equals(CurrentUser.Id, id)).ToArray());
+            return base.GetModelsAsync(ids.Where(id => String.Equals(CurrentUser.Id, id)).ToArray());
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Foundatio.Skeleton.Core.Extensions;
+﻿using Foundatio.Skeleton.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using Foundatio.Skeleton.Domain.Models;
 using IIdentity = System.Security.Principal.IIdentity;
 
 namespace Foundatio.Skeleton.Domain.Services {
