@@ -75,23 +75,13 @@ namespace Foundatio.Skeleton.Api.Security {
                     }
                 }
             } else {
-                string queryToken = request.GetQueryString("access_token");
-                if (!String.IsNullOrEmpty(queryToken))
-                    token = queryToken;
+                token = request.GetQueryString("access_token");
+                if (String.IsNullOrEmpty(token))
+                    token = request.GetQueryString("api_key");
 
-                queryToken = request.GetQueryString("api_key");
-                if (String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(queryToken))
-                    token = queryToken;
+                if (String.IsNullOrEmpty(token))
+                    token = request.GetQueryString("apikey"); ;
 
-                queryToken = request.GetQueryString("apikey");
-                if (String.IsNullOrEmpty(token) && !String.IsNullOrEmpty(queryToken))
-                    token = queryToken;
-
-                if (String.IsNullOrEmpty(token)) {
-                    var match = _authTokenRegex.Match(request.RequestUri.AbsolutePath);
-                    if (match.Success && match.Groups.Count == 2)
-                        token = match.Groups[1].Value;
-                }
             }
 
             if (String.IsNullOrEmpty(token))
@@ -109,7 +99,7 @@ namespace Foundatio.Skeleton.Api.Security {
                 if (user == null)
                     return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
-                await SetupUserRequest(request, user, tokenRecord.OrganizationId);
+                await SetupUserRequest(request, user, tokenRecord);
             } else {
                 await SetupTokenRequest(request, tokenRecord);
             }
@@ -117,11 +107,11 @@ namespace Foundatio.Skeleton.Api.Security {
             return await BaseSendAsync(request, cancellationToken);
         }
 
-        private async Task SetupUserRequest(HttpRequestMessage request, User user, string organizationId = null) {
-            request.GetRequestContext().Principal = new ClaimsPrincipal(user.ToIdentity(organizationId));
+        private async Task SetupUserRequest(HttpRequestMessage request, User user, Token token = null) {
+            request.GetRequestContext().Principal = new ClaimsPrincipal(user.ToIdentity(token));
             request.SetUser(user);
 
-            string selectedOrganizationId = organizationId ?? request.GetSelectedOrganizationId();
+            string selectedOrganizationId = user.OrganizationId ?? request.GetSelectedOrganizationId();
             var organization = await _organizationRepository.GetByIdAsync(selectedOrganizationId);
             if (organization != null)
                 request.SetOrganization(organization);

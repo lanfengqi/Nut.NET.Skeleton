@@ -12,6 +12,7 @@ namespace Foundatio.Skeleton.Domain.Services {
         public const string UserAuthenticationType = "User";
         public const string UserIdClaim = "UserId";
         public const string OrganizationIdClaim = "OrganizationId";
+        public const string LoggedInUserTokenId = "LoggedInUserTokenId";
 
         public static ClaimsIdentity ToIdentity(this Token token) {
             if (token == null || token.Type != TokenType.Access)
@@ -28,30 +29,22 @@ namespace Foundatio.Skeleton.Domain.Services {
             return new ClaimsIdentity(claims, TokenAuthenticationType);
         }
 
-        public static ClaimsIdentity ToIdentity(this User user, string selectedOrganizationId = null) {
+        public static ClaimsIdentity ToIdentity(this User user, Token token) {
             if (user == null)
                 return WindowsIdentity.GetAnonymous();
 
-            string currentOrganizationId = string.Empty;
-            if (user.OrganizationId == selectedOrganizationId) {
-                currentOrganizationId = user.OrganizationId;
-            }
-
-            return CreateUserIdentity(user.EmailAddress, user.Id, user.Roles, currentOrganizationId);
-        }
-
-        public static ClaimsIdentity CreateUserIdentity(string emailAddress, string userId, ICollection<Role> roles, string organizationId) {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, emailAddress),
-                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim(ClaimTypes.Name, user.EmailAddress),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                 new Claim(OrganizationIdClaim, user.OrganizationId)
             };
 
-            var userRoles = roles.Select(x => x.SystemName).ToList();
-
-            if (!String.IsNullOrEmpty(organizationId)) {
-                claims.Add(new Claim("organizationId", organizationId));
+            if (token != null) {
+                claims.Add(new Claim(LoggedInUserTokenId, token.Id));
             }
+
+            var userRoles = user.Roles.Select(x => x.SystemName).ToList();
 
             if (userRoles.Any()) {
                 // add implied scopes
@@ -105,6 +98,10 @@ namespace Foundatio.Skeleton.Domain.Services {
 
         public static string GetUserId(this IPrincipal principal) {
             return IsTokenAuthType(principal) ? GetClaimValue(principal, UserIdClaim) : GetClaimValue(principal, ClaimTypes.NameIdentifier);
+        }
+
+        public static string GetLoggedInUsersTokenId(this IPrincipal principal) {
+            return IsUserAuthType(principal) ? GetClaimValue(principal, LoggedInUserTokenId) : null;
         }
 
         public static string GetOrganizationId(this IPrincipal principal) {

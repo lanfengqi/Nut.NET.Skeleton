@@ -6,6 +6,7 @@ using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
+using Foundatio.Skeleton.Domain.Services;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Net;
@@ -74,6 +75,27 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
+
+        [HttpGet]
+        [Route("SignOut")]
+        [Authorize(Roles = AuthorizationRoles.User)]
+        public async Task<IHttpActionResult> SignOutAsync() {
+            if (User.IsTokenAuthType()) 
+                return Ok();
+
+            string id = User.GetLoggedInUsersTokenId();
+            if (string.IsNullOrEmpty(id))
+                return Ok();
+
+            try {
+                await _tokenRepository.RemoveAsync(id);
+            } catch {
+
+            }
+
+            return Ok();
+        }
+
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
         [HttpPost]
