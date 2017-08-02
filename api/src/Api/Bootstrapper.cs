@@ -36,8 +36,6 @@ namespace Foundatio.Skeleton.Api {
 
         public class ApiMappings : Profile {
             protected override void Configure() {
-                //CreateMap<Notification, ViewNotification>();
-                //CreateMap<NewNotification, Notification>();
 
                 CreateMap<Organization, ViewOrganization>();
                 CreateMap<Organization, NewOrganization>();
