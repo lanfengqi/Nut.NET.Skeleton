@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Caching;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Api.MessageBus;
@@ -45,12 +45,25 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Role, ViewRole>();
                 CreateMap<ViewRole, Role>();
 
+
                 CreateMap<Domain.Models.Token, ViewToken>();
                 CreateMap<NewToken, Domain.Models.Token>().ForMember(m => m.Type, m => m.Ignore());
 
                 CreateMap<User, ViewUser>().AfterMap((u, vu) => vu.IsGlobalAdmin = u.IsGlobalAdmin());
                 CreateMap<User, UpdateUser>();
                 CreateMap<UpdateUser, User>();
+
+                CreateMap<Product, ViewProduct>();
+                CreateMap<NewProduct, Product>();
+
+                CreateMap<Customer, ViewCustomer>();
+                CreateMap<NewCustomer, Customer>();
+
+                CreateMap<OrderItem, ViewOrderItem>();
+                CreateMap<NewOrderItem, OrderItem>();
+
+                CreateMap<Order, ViewOrder>().ForMember(dto => dto.OrderItems, (map) => map.MapFrom(m => m.OrderItems));
+                CreateMap<NewOrder, Order>().ForMember(dto => dto.OrderItems, (map) => map.MapFrom(m => m.OrderItems));
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentValidation;
 using Foundatio.Caching;
 using Foundatio.Jobs;
@@ -74,9 +74,13 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IUserRepository, UserRepository>();
             container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
             container.RegisterSingleton<ITokenRepository, TokenRepository>();
+            container.RegisterSingleton<IProductRepository, ProductRepository>();
+            container.RegisterSingleton<IOrderRepository, OrderRepository>();
+            container.RegisterSingleton<ICustomerRepository, CustomerRepository>();
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();
+            container.RegisterSingleton<OrderCalculationService>();
 
             container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
 
