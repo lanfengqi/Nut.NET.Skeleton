@@ -77,6 +77,7 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IProductRepository, ProductRepository>();
             container.RegisterSingleton<IOrderRepository, OrderRepository>();
             container.RegisterSingleton<ICustomerRepository, CustomerRepository>();
+            container.RegisterSingleton<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.RegisterSingleton<FirstInsatllService>();

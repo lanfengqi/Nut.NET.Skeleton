@@ -1,5 +1,6 @@
 using Foundatio.Skeleton.Repositories.Model;
 using System;
+using System.Collections.Generic;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public class PurchaseOrder : IIdentity, IHaveDates {
@@ -17,5 +18,6 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public DateTime UpdatedUtc { get; set; }
 
+        public virtual ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; }
     }
 }

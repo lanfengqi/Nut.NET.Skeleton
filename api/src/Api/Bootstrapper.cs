@@ -64,6 +64,12 @@ namespace Foundatio.Skeleton.Api {
 
                 CreateMap<Order, ViewOrder>().ForMember(dto => dto.OrderItems, (map) => map.MapFrom(m => m.OrderItems));
                 CreateMap<NewOrder, Order>().ForMember(dto => dto.OrderItems, (map) => map.MapFrom(m => m.OrderItems));
+
+                CreateMap<PurchaseOrderItem, ViewPurchaseOrderItem>();
+                CreateMap<NewPurchaseOrderItem, PurchaseOrderItem>();
+
+                CreateMap<PurchaseOrder, ViewPurchaseOrder>().ForMember(dto => dto.PurchaseOrderItems, (map) => map.MapFrom(m => m.PurchaseOrderItems));
+                CreateMap<NewPurchaseOrder, PurchaseOrder>().ForMember(dto => dto.PurchaseOrderItems, (map) => map.MapFrom(m => m.PurchaseOrderItems));
             }
         }
     }

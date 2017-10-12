@@ -224,6 +224,7 @@
     <Compile Include="Controllers\Base\RepositoryApiController.cs" />
     <Compile Include="Controllers\Base\ResultWithFacets.cs" />
     <Compile Include="Controllers\Base\TimeInfo.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -249,6 +250,8 @@
     <Compile Include="Models\Customer\ViewCustomer.cs" />
     <Compile Include="Models\Order\NewOrder.cs" />
     <Compile Include="Models\Order\ViewOrder.cs" />
+    <Compile Include="Models\PurchaseOrder\NewPurchaseOrder.cs" />
+    <Compile Include="Models\PurchaseOrder\ViewPurchaseOrder.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />
     <Compile Include="Models\Organization\ViewOrganization.cs" />
     <Compile Include="Models\Product\NewProduct.cs" />

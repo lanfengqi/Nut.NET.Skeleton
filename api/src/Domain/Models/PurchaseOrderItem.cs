@@ -5,6 +5,8 @@ namespace Foundatio.Skeleton.Domain.Models {
     public class PurchaseOrderItem : IIdentity, IHaveDates {
         public string Id { get; set; }
 
+        public string PurchaseOrderId { get; set; }
+
         public string Level { get; set; }
 
         public decimal Quantity { get; set; }
@@ -12,5 +14,7 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime CreatedUtc { get; set; }
 
         public DateTime UpdatedUtc { get; set; }
+
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

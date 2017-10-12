@@ -198,6 +198,8 @@
     <Compile Include="Repositories\Configuration\OrderMap.cs" />
     <Compile Include="Repositories\Configuration\OrganizationMap.cs" />
     <Compile Include="Repositories\Configuration\ProductMap.cs" />
+    <Compile Include="Repositories\Configuration\PurchaseOrderItemMap.cs" />
+    <Compile Include="Repositories\Configuration\PurchaseOrderMap.cs" />
     <Compile Include="Repositories\Configuration\RoleMap.cs" />
     <Compile Include="Repositories\Configuration\TokenMap.cs" />
     <Compile Include="Repositories\Configuration\UserMap.cs" />
@@ -207,12 +209,14 @@
     <Compile Include="Repositories\Interfaces\IOrderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IOrganizationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IProductRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPurchaseOrderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRoleRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserPasswordRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\PurchaseOrderRepository.cs" />
     <Compile Include="Repositories\UserPasswordRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
@@ -226,6 +230,7 @@
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\OrganizationValidator.cs" />
     <Compile Include="Validators\ProductValidator.cs" />
+    <Compile Include="Validators\PurchaseOrderValidator.cs" />
     <Compile Include="Validators\RoleValidator.cs" />
     <Compile Include="Validators\TokenValidator.cs" />
     <Compile Include="Validators\UserPasswordValidator.cs" />
