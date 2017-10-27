@@ -167,7 +167,8 @@
     <Compile Include="Extensions\CryptoExtensions.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Email.cs" />
-    <Compile Include="Models\Enums\OrderStatusType.cs" />
+    <Compile Include="Models\Enums\OrderStatus.cs" />
+    <Compile Include="Models\Enums\PurchaseOrderStatus.cs" />
     <Compile Include="Models\Messaging\EntityChanged.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderItem.cs" />
@@ -182,8 +183,6 @@
     <Compile Include="Models\Helpers\StorageHelper.cs" />
     <Compile Include="Models\Enums\AuthorizationRoles.cs" />
     <Compile Include="Models\Enums\AuthType.cs" />
-    <Compile Include="Models\Enums\NotificationMode.cs" />
-    <Compile Include="Models\Enums\ResponseStatusType.cs" />
     <Compile Include="Models\Extensions\OrganizationExtensions.cs" />
     <Compile Include="Models\Extensions\UserExtensions.cs" />
     <Compile Include="Models\Interfaces\IOwnedByOrganization.cs" />

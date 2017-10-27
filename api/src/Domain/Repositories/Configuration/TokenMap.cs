@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories.Configuration;
 
 namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
@@ -13,8 +13,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.Property(u => u.Refresh).HasMaxLength(50);
             this.Property(u => u.Notes).HasMaxLength(500);
             this.Property(u => u.CreatedBy).HasMaxLength(50);
-
-            this.Ignore(o => o.Type);
         }
     }
 }

@@ -58,8 +58,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
             var order = await GetModelAsync(id);
             if (order == null)
                 return NotFound();
-            if (order.Stat == (int)OrderStatusType.Successful) {
-                order.Stat = (int)OrderStatusType.Canceled;
+            if (order.Stat == OrderStatus.Successful) {
+                order.Stat = OrderStatus.Canceled;
                 await _repository.SaveAsync(order);
             }
             return Ok();
@@ -68,7 +68,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         protected override Task<Order> AddModelAsync(Order value) {
             value.Id = Guid.NewGuid().ToString("N");
             value.CreatedUtc = value.UpdatedUtc = DateTime.UtcNow;
-            value.Stat = (int)OrderStatusType.Successful;
+            value.Stat = OrderStatus.Successful;
 
             value.OrderItems.ToList().ForEach(x => {
                 x.Id = Guid.NewGuid().ToString("N");

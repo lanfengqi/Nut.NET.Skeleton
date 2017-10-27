@@ -1,5 +1,5 @@
 namespace Foundatio.Skeleton.Domain.Models {
-    public enum OrderStatusType {
+    public enum OrderStatus : int {
         Canceled = -10,
 
         Successful = 10,

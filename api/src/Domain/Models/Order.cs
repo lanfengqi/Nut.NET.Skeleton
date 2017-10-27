@@ -15,7 +15,7 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public DateTime PickupTime { get; set; }
 
-        public int Stat { get; set; }
+        public OrderStatus Stat { get; set; }
 
         public DateTime CreatedUtc { get; set; }
 

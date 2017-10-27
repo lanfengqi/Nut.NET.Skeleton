@@ -46,8 +46,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
             var purchaseOrder = await GetModelAsync(id);
             if (purchaseOrder == null)
                 return NotFound();
-            if (purchaseOrder.Stat == (int)OrderStatusType.Successful) {
-                purchaseOrder.Stat = (int)OrderStatusType.Canceled;
+            if (purchaseOrder.Stat == PurchaseOrderStatus.Successful) {
+                purchaseOrder.Stat = PurchaseOrderStatus.Canceled;
                 await _repository.SaveAsync(purchaseOrder);
             }
             return Ok();
@@ -56,7 +56,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         protected override Task<PurchaseOrder> AddModelAsync(PurchaseOrder value) {
             value.Id = Guid.NewGuid().ToString("N");
             value.CreatedUtc = value.UpdatedUtc = DateTime.UtcNow;
-            value.Stat = (int)OrderStatusType.Successful;
+            value.Stat = PurchaseOrderStatus.Successful;
 
             value.PurchaseOrderItems.ToList().ForEach(x => {
                 x.Id = Guid.NewGuid().ToString("N");

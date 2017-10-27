@@ -12,7 +12,7 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public decimal Quantity { get; set; }
 
-        public int Stat { get; set; }
+        public PurchaseOrderStatus Stat { get; set; }
 
         public DateTime CreatedUtc { get; set; }
 
