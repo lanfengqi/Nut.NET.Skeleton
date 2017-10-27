@@ -52,6 +52,19 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.PostAsync(value);
         }
 
+        [HttpPost]
+        [Route("{id:objectid}/cancel")]
+        public async Task<IHttpActionResult> CancelOrderAsync(string id) {
+            var order = await GetModelAsync(id);
+            if (order == null)
+                return NotFound();
+            if (order.Stat == (int)OrderStatusType.Successful) {
+                order.Stat = (int)OrderStatusType.Canceled;
+                await _repository.SaveAsync(order);
+            }
+            return Ok();
+        }
+
         protected override Task<Order> AddModelAsync(Order value) {
             value.Id = Guid.NewGuid().ToString("N");
             value.CreatedUtc = value.UpdatedUtc = DateTime.UtcNow;

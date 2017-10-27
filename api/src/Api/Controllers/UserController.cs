@@ -1,11 +1,9 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Extensions;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Security;
-using Foundatio.Skeleton.Api.Utility;
-using Foundatio.Skeleton.Core.Collections;
 using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Models;

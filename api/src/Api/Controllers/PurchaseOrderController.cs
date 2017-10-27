@@ -1,15 +1,14 @@
-using Foundatio.Skeleton.Domain.Services;
-using Foundatio.Skeleton.Domain.Repositories;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Foundatio.Skeleton.Domain.Models;
-using Foundatio.Skeleton.Api.Models;
-using Foundatio.Logging;
 using AutoMapper;
+using Foundatio.Logging;
+using Foundatio.Skeleton.Api.Models;
+using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Repositories;
 using Swashbuckle.Swagger.Annotations;
-using System.Net;
 using System;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/purchaseorders")]
@@ -39,6 +38,19 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route]
         public override Task<IHttpActionResult> PostAsync(NewPurchaseOrder value) {
             return base.PostAsync(value);
+        }
+
+        [HttpPost]
+        [Route("{id:objectid}/cancel")]
+        public async Task<IHttpActionResult> CancelPurchaseOrderAsync(string id) {
+            var purchaseOrder = await GetModelAsync(id);
+            if (purchaseOrder == null)
+                return NotFound();
+            if (purchaseOrder.Stat == (int)OrderStatusType.Successful) {
+                purchaseOrder.Stat = (int)OrderStatusType.Canceled;
+                await _repository.SaveAsync(purchaseOrder);
+            }
+            return Ok();
         }
 
         protected override Task<PurchaseOrder> AddModelAsync(PurchaseOrder value) {
