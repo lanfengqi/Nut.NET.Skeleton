@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Core.Collections;
+using Foundatio.Skeleton.Core.Collections;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 
@@ -16,18 +16,7 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string Refresh { get; set; }
 
-        public int TypeId { get; set; }
-
-        public TokenType Type {
-            get {
-                return (TokenType)this.TypeId;
-            }
-            set {
-                this.TypeId = (int)value;
-            }
-        }
-
-        //public HashSet<string> Scopes { get; set; }
+        public TokenType Type { get; set; }
 
         public DateTime? ExpiresUtc { get; set; }
 
@@ -40,7 +29,7 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime UpdatedUtc { get; set; }
     }
 
-    public enum TokenType {
+    public enum TokenType : Int16 {
         Authentication = 0,
         Access = 1
     }

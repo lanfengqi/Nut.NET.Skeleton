@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Api.Extensions;
 using Foundatio.Skeleton.Api.Models;

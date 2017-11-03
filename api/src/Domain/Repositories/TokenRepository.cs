@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
@@ -47,7 +47,7 @@ namespace Foundatio.Skeleton.Domain.Repositories {
                 CreatedBy = userId,
                 CreatedUtc = currentDateTime,
                 UpdatedUtc = currentDateTime,
-                TypeId = (int)Models.TokenType.Access,
+                Type = TokenType.Access,
                 ExpiresUtc = currentDateTime.AddMinutes(Settings.Current.TokenExpiressMinutes)
             };
 
