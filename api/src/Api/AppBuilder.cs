@@ -1,4 +1,4 @@
-﻿using Foundatio.Logging;
+using Foundatio.Logging;
 using Foundatio.Skeleton.Api.MessageBus;
 using Foundatio.Skeleton.Api.Security;
 using Foundatio.Skeleton.Api.Serialization;
@@ -46,7 +46,7 @@ namespace Foundatio.Skeleton.Api {
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             config.Formatters.JsonFormatter.SerializerSettings = JsonHelper.DefaultSerializerSettings;
 
-            SetupRoutes(config);
+            SetupRouteAttributeParas(config);
 
             config.Filters.Add(new FluentValidationExceptionHandler());
             config.Filters.Add(new UnauthorizedAccessExceptionHandler());
@@ -87,6 +87,11 @@ namespace Foundatio.Skeleton.Api {
             FirstInsatllDataAsync(container).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// cors http request
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="app"></param>
         private static void EnableCors(HttpConfiguration config, IAppBuilder app) {
             var exposedHeaders = new List<string> { "ETag", "Link", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-Result-Count" };
             app.UseCors(new CorsOptions {
@@ -115,7 +120,11 @@ namespace Foundatio.Skeleton.Api {
             config.EnableCors(enableCorsAttribute);
         }
 
-        public static void SetupRoutes(HttpConfiguration config) {
+        /// <summary>
+        /// setup route Attribute paras
+        /// </summary>
+        /// <param name="config"></param>
+        public static void SetupRouteAttributeParas(HttpConfiguration config) {
             var constraintResolver = new DefaultInlineConstraintResolver();
             constraintResolver.ConstraintMap.Add("objectid", typeof(ObjectIdRouteConstraint));
             constraintResolver.ConstraintMap.Add("objectids", typeof(ObjectIdsRouteConstraint));

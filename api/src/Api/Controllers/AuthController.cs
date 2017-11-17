@@ -1,4 +1,4 @@
-﻿using Foundatio.Logging;
+using Foundatio.Logging;
 using Foundatio.Metrics;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Models.Auth;

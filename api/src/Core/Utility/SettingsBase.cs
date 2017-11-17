@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -99,7 +99,6 @@ namespace Foundatio.Skeleton.Core.Utility {
                     _configVariables = new Dictionary<string, string>();
                     return null;
                 }
-
                 try {
                     _configVariables = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(configPath));
                     Log?.Info($"Loaded settings file ({configPath}) with {_configVariables.Count} values.");

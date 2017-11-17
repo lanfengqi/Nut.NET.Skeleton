@@ -1,8 +1,8 @@
-using Foundatio.Skeleton.Core.Collections;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 
-namespace Foundatio.Skeleton.Domain.Models {
+namespace Foundatio.Skeleton.Domain.Models
+{
     public class Token : IOwnedByOrganizationWithIdentity, IHaveDates {
         public Token() {
             //Scopes = new HashSet<string>();
