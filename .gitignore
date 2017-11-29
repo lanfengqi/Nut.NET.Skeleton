@@ -177,3 +177,4 @@ Logs/
 *.DS_Store
 *.orig
 *.nugetreferenceswitcher
+/api/.vs

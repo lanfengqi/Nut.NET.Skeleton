@@ -165,6 +165,7 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Extensions\CryptoExtensions.cs" />
+    <Compile Include="Jobs\CronService.cs" />
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\Messaging\EntityChanged.cs" />
     <Compile Include="Models\Role.cs" />
