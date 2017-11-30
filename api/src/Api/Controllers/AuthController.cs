@@ -12,6 +12,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web;
+using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/auth")]
@@ -23,13 +25,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IRoleRepository _roleRepository;
         private readonly IMetricsClient _metricsClient;
         private readonly ILogger _logger;
+        private readonly ICacheClient _cacheClinet;
 
         private static bool _isFirstUserChecked;
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
             IOrganizationRepository orgRepository, IMetricsClient metricsClient,
-           ITokenRepository tokenRepository, IRoleRepository roleRepository) {
+           ITokenRepository tokenRepository, IRoleRepository roleRepository, ICacheClient cacheClient) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
             _userPasswordRepository = userPasswordRepository;
@@ -37,6 +40,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _tokenRepository = tokenRepository;
             _roleRepository = roleRepository;
             _metricsClient = metricsClient;
+            _cacheClinet = cacheClient;
         }
 
         /// <summary>
@@ -61,6 +65,12 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return Unauthorized();
             }
 
+            var loginFailCountCacheKey = string.Format("{0}-LoginFailCount", user.Id);
+            var loginFailCount = (await _cacheClinet.GetAsync<int>(loginFailCountCacheKey))?.Value;
+            if (loginFailCount.HasValue && loginFailCount.Value >= 5) {
+                return BadRequest("More than 5 errors, please wait for 10 minutes to log in again");
+            }
+
             if (user == null || !user.IsActive)
                 return BadRequest("user is not exist.Or use is active.");
 
@@ -69,6 +79,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return BadRequest("user password is not exist.");
 
             if (!userPassword.IsValidPassword(model.Password)) {
+                loginFailCount = loginFailCount.Value + 1;
+                await _cacheClinet.SetAsync(loginFailCountCacheKey, loginFailCount, TimeSpan.FromMinutes(10));
                 return BadRequest("Password Error.");
             }
             await _metricsClient.CounterAsync("User Login");
@@ -80,7 +92,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("signout")]
         [Authorize(Roles = AuthorizationRoles.User)]
         public async Task<IHttpActionResult> SignOutAsync() {
-            if (User.IsTokenAuthType()) 
+            if (User.IsTokenAuthType())
                 return Ok();
             string id = User.GetLoggedInUsersTokenId();
             if (string.IsNullOrEmpty(id))
