@@ -1,3 +1,4 @@
+using Foundatio.Caching;
 using Foundatio.Logging;
 using Foundatio.Metrics;
 using Foundatio.Skeleton.Api.Models;
@@ -12,8 +13,6 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web;
-using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/auth")]
@@ -64,6 +63,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
             } catch (Exception) {
                 return Unauthorized();
             }
+            if (user == null || !user.IsActive)
+                return BadRequest("user is not exist.Or use is active.");
 
             var loginFailCountCacheKey = string.Format("{0}-LoginFailCount", user.Id);
             var loginFailCount = (await _cacheClinet.GetAsync<int>(loginFailCountCacheKey))?.Value;
@@ -71,17 +72,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return BadRequest("More than 5 errors, please wait for 10 minutes to log in again");
             }
 
-            if (user == null || !user.IsActive)
-                return BadRequest("user is not exist.Or use is active.");
-
             var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
             if (userPassword == null)
                 return BadRequest("user password is not exist.");
 
             if (!userPassword.IsValidPassword(model.Password)) {
-                loginFailCount = loginFailCount.Value + 1;
+                loginFailCount++;
                 await _cacheClinet.SetAsync(loginFailCountCacheKey, loginFailCount, TimeSpan.FromMinutes(10));
-                return BadRequest("Password Error.");
+                return BadRequest(string.Format("Password Error.{0} more errors will lock the account", 6 - loginFailCount));
             }
             await _metricsClient.CounterAsync("User Login");
 
@@ -135,7 +133,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 UpdatedUtc = DateTime.UtcNow,
                 IsActive = true,
                 FullName = model.Name ?? model.Email,
-                EmailAddress = model.Email,
+                EmailAddress = model.Email.ToLower(),
                 IsEmailAddressVerified = false,
                 EmailNotificationsEnabled = false,
                 Id = Guid.NewGuid().ToString("N"),

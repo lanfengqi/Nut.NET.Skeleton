@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -28,14 +28,16 @@ namespace Foundatio.Skeleton.Repositories.Configuration {
             }
             if (dbExists) {
                 bool createTables;
+                var dbName = context.Database.Connection.Database;
+
                 if (_tablesToValidate != null && _tablesToValidate.Length > 0) {
                     //we have some table names to validate
-                    var existingTableNames = new List<string>(context.Database.SqlQuery<string>("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'"));
+                    var existingTableNames = new List<string>(context.Database.SqlQuery<string>(string.Format("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' AND TABLE_SCHEMA='{0}'", dbName)));
                     createTables = !existingTableNames.Intersect(_tablesToValidate, StringComparer.InvariantCultureIgnoreCase).Any();
                 } else {
                     //check whether tables are already created
                     int numberOfTables = 0;
-                    foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' "))
+                    foreach (var t1 in context.Database.SqlQuery<int>(string.Format("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' AND TABLE_SCHEMA='{0}'", dbName)))
                         numberOfTables = t1;
 
                     createTables = numberOfTables == 0;

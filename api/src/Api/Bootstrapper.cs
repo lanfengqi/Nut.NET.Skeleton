@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Caching;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Api.MessageBus;

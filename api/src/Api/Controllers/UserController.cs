@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Extensions;
@@ -20,7 +20,7 @@ using System.Web.Http;
 
 namespace Foundatio.Skeleton.Api.Controllers {
     [RoutePrefix(API_PREFIX + "/users")]
-    //[Authorize(Roles = AuthorizationRoles.User)]
+    [Authorize(Roles = AuthorizationRoles.User)]
     public class UserController : RepositoryApiController<IUserRepository, User, ViewUser, User, UpdateUser> {
         private readonly IPublicFileStorage _publicFileStorage;
         private readonly IMessagePublisher _messagePublisher;
@@ -42,6 +42,9 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("me")]
         public async Task<IHttpActionResult> GetCurrentUseAsync() {
+            if (CurrentUser == null)
+                return NotFound();
+
             var currentUser = await GetModelAsync(CurrentUser.Id);
             if (currentUser == null)
                 return NotFound();
