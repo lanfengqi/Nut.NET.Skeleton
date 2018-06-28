@@ -7,7 +7,7 @@ using Exceptionless.Api.Controllers;
 using Exceptionless.Api.Extensions;
 using Exceptionless.Api.Models;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Repositories;
 using Exceptionless.Core.Models;
@@ -25,11 +25,13 @@ namespace Exceptionless.App.Controllers.API {
     [Authorize(Policy = AuthorizationRoles.ClientPolicy)]
     public class WebHookController : RepositoryApiController<IWebHookRepository, WebHook, WebHook, NewWebHook, NewWebHook> {
         private readonly IProjectRepository _projectRepository;
-        private readonly BillingManager _billingManager;
+        //private readonly BillingManager _billingManager;
 
-        public WebHookController(IWebHookRepository repository, IProjectRepository projectRepository, BillingManager billingManager, IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(repository, mapper, validator, loggerFactory) {
+        public WebHookController(IWebHookRepository repository, IProjectRepository projectRepository, 
+            //BillingManager billingManager, 
+            IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(repository, mapper, validator, loggerFactory) {
             _projectRepository = projectRepository;
-            _billingManager = billingManager;
+            //_billingManager = billingManager;
         }
 
         #region CRUD
@@ -219,8 +221,8 @@ namespace Exceptionless.App.Controllers.API {
                 value.OrganizationId = project.OrganizationId;
             }
 
-            if (!await _billingManager.HasPremiumFeaturesAsync(project != null ? project.OrganizationId : value.OrganizationId))
-                return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add integrations.");
+            //if (!await _billingManager.HasPremiumFeaturesAsync(project != null ? project.OrganizationId : value.OrganizationId))
+            //    return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add integrations.");
 
             return PermissionResult.Allow;
         }

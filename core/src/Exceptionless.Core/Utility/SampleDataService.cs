@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Repositories;
 using Exceptionless.Core.Models;
@@ -58,7 +58,7 @@ namespace Exceptionless.Core.Utility {
 
             var user = await _userRepository.GetByIdAsync(userId, o => o.Cache()).AnyContext();
             var organization = new Organization { Id = TEST_ORG_ID, Name = "Acme" };
-            BillingManager.ApplyBillingPlan(organization, BillingManager.UnlimitedPlan, user);
+            //BillingManager.ApplyBillingPlan(organization, BillingManager.UnlimitedPlan, user);
             organization = await _organizationRepository.AddAsync(organization, o => o.Cache()).AnyContext();
 
             var project = new Project { Id = TEST_PROJECT_ID, Name = "Disintegrating Pistol", OrganizationId = organization.Id };
@@ -94,7 +94,7 @@ namespace Exceptionless.Core.Utility {
 
             var user = await _userRepository.GetByIdAsync(userId, o => o.Cache()).AnyContext();
             var organization = new Organization { Name = "Exceptionless" };
-            BillingManager.ApplyBillingPlan(organization, BillingManager.UnlimitedPlan, user);
+            //BillingManager.ApplyBillingPlan(organization, BillingManager.UnlimitedPlan, user);
             organization = await _organizationRepository.AddAsync(organization, o => o.Cache()).AnyContext();
 
             var project = new Project { Id = INTERNAL_PROJECT_ID, Name = "API", OrganizationId = organization.Id };

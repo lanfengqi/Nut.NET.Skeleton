@@ -11,7 +11,7 @@ using Stripe;
 
 namespace Exceptionless.Api.Controllers {
     [Route(API_PREFIX + "/stripe")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [Authorize]
     public class StripeController : ExceptionlessApiController {
         private readonly StripeEventHandler _stripeEventHandler;

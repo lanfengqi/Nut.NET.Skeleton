@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Mail;
 using Exceptionless.Core.Models;
@@ -131,7 +131,8 @@ namespace Exceptionless.Core.Jobs {
             double newTotal = result.Aggregations.Terms<double>("terms_first")?.Buckets.FirstOrDefault()?.Total ?? 0;
             double uniqueTotal = result.Aggregations.Cardinality("cardinality_stack_id")?.Value ?? 0;
             bool hasSubmittedEvents = total > 0 || project.IsConfigured.GetValueOrDefault();
-            bool isFreePlan = organization.PlanId == BillingManager.FreePlan.Id;
+            //bool isFreePlan = organization.PlanId == BillingManager.FreePlan.Id;
+            bool isFreePlan = false;
 
             string fixedFilter = $"{EventIndexType.Alias.Type}:{Event.KnownTypes.Error} {EventIndexType.Alias.IsHidden}:false {EventIndexType.Alias.IsFixed}:true";
             var fixedResult = await _eventRepository.CountBySearchAsync(systemFilter, fixedFilter, "sum:count~1").AnyContext();

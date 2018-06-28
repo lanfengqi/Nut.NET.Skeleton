@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Exceptionless.Core;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Messaging.Models;
 using Exceptionless.Core.Models;
@@ -23,7 +23,7 @@ using Newtonsoft.Json;
 namespace Exceptionless.Api.Controllers {
     [Route(API_PREFIX + "/admin")]
     [Authorize(Policy = AuthorizationRoles.GlobalAdminPolicy)]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = false)]
     public class AdminController : ExceptionlessApiController {
         private readonly ExceptionlessElasticConfiguration _configuration;
         private readonly IFileStorage _fileStorage;
@@ -52,30 +52,30 @@ namespace Exceptionless.Api.Controllers {
             return Ok(details);
         }
 
-        [HttpPost("change-plan")]
-        public async Task<IActionResult> ChangePlanAsync([FromQuery] string organizationId, [FromQuery] string planId) {
-            if (String.IsNullOrEmpty(organizationId) || !CanAccessOrganization(organizationId))
-                return Ok(new { Success = false, Message = "Invalid Organization Id." });
+        //[HttpPost("change-plan")]
+        //public async Task<IActionResult> ChangePlanAsync([FromQuery] string organizationId, [FromQuery] string planId) {
+        //    if (String.IsNullOrEmpty(organizationId) || !CanAccessOrganization(organizationId))
+        //        return Ok(new { Success = false, Message = "Invalid Organization Id." });
 
-            var organization = await _organizationRepository.GetByIdAsync(organizationId);
-            if (organization == null)
-                return Ok(new { Success = false, Message = "Invalid Organization Id." });
+        //    var organization = await _organizationRepository.GetByIdAsync(organizationId);
+        //    if (organization == null)
+        //        return Ok(new { Success = false, Message = "Invalid Organization Id." });
 
-            var plan = BillingManager.GetBillingPlan(planId);
-            if (plan == null)
-                return Ok(new { Success = false, Message = "Invalid PlanId." });
+        //    var plan = BillingManager.GetBillingPlan(planId);
+        //    if (plan == null)
+        //        return Ok(new { Success = false, Message = "Invalid PlanId." });
 
-            organization.BillingStatus = !String.Equals(plan.Id, BillingManager.FreePlan.Id) ? BillingStatus.Active : BillingStatus.Trialing;
-            organization.RemoveSuspension();
-            BillingManager.ApplyBillingPlan(organization, plan, CurrentUser, false);
+        //    organization.BillingStatus = !String.Equals(plan.Id, BillingManager.FreePlan.Id) ? BillingStatus.Active : BillingStatus.Trialing;
+        //    organization.RemoveSuspension();
+        //    BillingManager.ApplyBillingPlan(organization, plan, CurrentUser, false);
 
-            await _organizationRepository.SaveAsync(organization, o => o.Cache());
-            await _messagePublisher.PublishAsync(new PlanChanged {
-                OrganizationId = organization.Id
-            });
+        //    await _organizationRepository.SaveAsync(organization, o => o.Cache());
+        //    await _messagePublisher.PublishAsync(new PlanChanged {
+        //        OrganizationId = organization.Id
+        //    });
 
-            return Ok(new { Success = true });
-        }
+        //    return Ok(new { Success = true });
+        //}
 
         [HttpPost("set-bonus")]
         public async Task<IActionResult> SetBonusAsync([FromQuery] string organizationId, [FromQuery] int bonusEvents, [FromQuery] DateTime? expires = null) {

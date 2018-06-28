@@ -597,22 +597,22 @@ namespace Exceptionless.Api.Controllers {
             return StatusCode(StatusCodes.Status202Accepted);
         }
 
-        [HttpPatch("~/api/v1/error/{id:objectid}")]
-        [ConfigurationResponseFilter]
-        public async Task<IActionResult> LegacyPatchAsync(string id, [FromBody] Delta<UpdateEvent> changes) {
-            if (changes == null)
-                return Ok();
+        //[HttpPatch("~/api/v1/error/{id:objectid}")]
+        //[ConfigurationResponseFilter]
+        //public async Task<IActionResult> LegacyPatchAsync(string id, [FromBody] Delta<UpdateEvent> changes) {
+        //    if (changes == null)
+        //        return Ok();
 
-            if (changes.UnknownProperties.TryGetValue("UserEmail", out var value))
-                changes.TrySetPropertyValue("EmailAddress", value);
-            if (changes.UnknownProperties.TryGetValue("UserDescription", out value))
-                changes.TrySetPropertyValue("Description", value);
+        //    if (changes.UnknownProperties.TryGetValue("UserEmail", out var value))
+        //        changes.TrySetPropertyValue("EmailAddress", value);
+        //    if (changes.UnknownProperties.TryGetValue("UserDescription", out value))
+        //        changes.TrySetPropertyValue("Description", value);
 
-            var userDescription = new UserDescription();
-            changes.Patch(userDescription);
+        //    var userDescription = new UserDescription();
+        //    changes.Patch(userDescription);
 
-            return await SetUserDescriptionAsync(id, userDescription);
-        }
+        //    return await SetUserDescriptionAsync(id, userDescription);
+        //}
 
         /// <summary>
         /// Submit heartbeat
@@ -800,11 +800,11 @@ namespace Exceptionless.Api.Controllers {
         }
 
 
-        [HttpPost("~/api/v1/error")]
-        [ConfigurationResponseFilter]
-        public Task<IActionResult> LegacyPostAsync([UserAgent] string userAgent = null) {
-            return PostAsync(null, 1, userAgent);
-        }
+        ////[HttpPost("~/api/v1/error")]
+        //[ConfigurationResponseFilter]
+        //public Task<IActionResult> LegacyPostAsync([UserAgent] string userAgent = null) {
+        //    return PostAsync(null, 1, userAgent);
+        //}
 
         ///  <summary>
         ///  Create

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exceptionless.Core.AppStats;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Plugins.EventProcessor;
 using Foundatio.Metrics;
@@ -23,8 +23,8 @@ namespace Exceptionless.Core.Pipeline {
             try {
                 _metricsClient.Counter(MetricNames.EventsProcessed, contexts.Count);
 
-                if (contexts.First().Organization.PlanId != BillingManager.FreePlan.Id)
-                    _metricsClient.Counter(MetricNames.EventsPaidProcessed, contexts.Count);
+                //if (contexts.First().Organization.PlanId != BillingManager.FreePlan.Id)
+                //    _metricsClient.Counter(MetricNames.EventsPaidProcessed, contexts.Count);
             } catch (Exception ex) {
                 foreach (var context in contexts) {
                     bool cont = false;

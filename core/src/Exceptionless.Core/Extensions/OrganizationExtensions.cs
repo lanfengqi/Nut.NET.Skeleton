@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.DateTimeExtensions;
 using Exceptionless.Core.Models;
 using Foundatio.Caching;
@@ -56,8 +56,8 @@ namespace Exceptionless.Core.Extensions {
             if (eventsLeftInMonth < 0)
                 return 0;
 
-            if (organization.PlanId == BillingManager.FreePlan.Id)
-                return eventsLeftInMonth;
+            //if (organization.PlanId == BillingManager.FreePlan.Id)
+            //    return eventsLeftInMonth;
 
             var utcNow = SystemClock.UtcNow;
             double hoursLeftInMonth = (utcNow.EndOfMonth() - utcNow).TotalHours;

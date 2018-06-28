@@ -80,7 +80,7 @@ namespace Exceptionless.Api {
             app.UseSwaggerUI(s => {
                 s.RoutePrefix = "docs";
                 s.SwaggerEndpoint("/docs/v2/swagger.json", "Exceptionless API V2");
-                s.SwaggerEndpoint("/docs/v1/swagger.json", "Exceptionless API V1");
+                //s.SwaggerEndpoint("/docs/v1/swagger.json", "Exceptionless API V1");
                 s.InjectStylesheet("/docs.css");
             });
 
@@ -153,10 +153,10 @@ namespace Exceptionless.Api {
                     Title = "Exceptionless API V2",
                     Version = "v2"
                 });
-                c.SwaggerDoc("v1", new Info {
-                    Title = "Exceptionless API V1",
-                    Version = "v1"
-                });
+                //c.SwaggerDoc("v1", new Info {
+                //    Title = "Exceptionless API V1",
+                //    Version = "v1"
+                //});
 
                 c.AddSecurityDefinition("access_token", new ApiKeyScheme {
                     Name = "access_token",

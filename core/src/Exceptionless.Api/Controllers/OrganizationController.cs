@@ -8,7 +8,7 @@ using Exceptionless.Api.Models;
 using Exceptionless.Api.Utility;
 using Exceptionless.Core;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Mail;
 using Exceptionless.Core.Messaging.Models;
@@ -44,17 +44,21 @@ namespace Exceptionless.Api.Controllers {
         private readonly IUserRepository _userRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IQueue<WorkItemData> _workItemQueue;
-        private readonly BillingManager _billingManager;
+        //private readonly BillingManager _billingManager;
         private readonly IMailer _mailer;
         private readonly IMessagePublisher _messagePublisher;
 
-        public OrganizationController(IOrganizationRepository organizationRepository, ICacheClient cacheClient, IEventRepository eventRepository, IUserRepository userRepository, IProjectRepository projectRepository, IQueue<WorkItemData> workItemQueue, BillingManager billingManager, IMailer mailer, IMessagePublisher messagePublisher, IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(organizationRepository, mapper, validator, loggerFactory) {
+        public OrganizationController(IOrganizationRepository organizationRepository, ICacheClient cacheClient, 
+            IEventRepository eventRepository, IUserRepository userRepository, IProjectRepository projectRepository, 
+            IQueue<WorkItemData> workItemQueue,
+            //BillingManager billingManager, 
+            IMailer mailer, IMessagePublisher messagePublisher, IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(organizationRepository, mapper, validator, loggerFactory) {
             _cacheClient = cacheClient;
             _eventRepository = eventRepository;
             _userRepository = userRepository;
             _projectRepository = projectRepository;
             _workItemQueue = workItemQueue;
-            _billingManager = billingManager;
+            //_billingManager = billingManager;
             _mailer = mailer;
             _messagePublisher = messagePublisher;
         }
@@ -92,12 +96,12 @@ namespace Exceptionless.Api.Controllers {
             return OkWithResourceLinks(viewOrganizations, organizations.HasMore, page, organizations.Total);
         }
 
-        [HttpGet("~/" + API_PREFIX + "/admin/organizations/stats")]
-        [Authorize(Policy = AuthorizationRoles.GlobalAdminPolicy)]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> PlanStatsAsync() {
-            return Ok(await _repository.GetBillingPlanStatsAsync());
-        }
+        //[HttpGet("~/" + API_PREFIX + "/admin/organizations/stats")]
+        //[Authorize(Policy = AuthorizationRoles.GlobalAdminPolicy)]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public async Task<IActionResult> PlanStatsAsync() {
+        //    return Ok(await _repository.GetBillingPlanStatsAsync());
+        //}
 
         /// <summary>
         /// Get by id
@@ -203,19 +207,19 @@ namespace Exceptionless.Api.Controllers {
                 Total = stripeInvoice.Total / 100.0
             };
 
-            foreach (var line in stripeInvoice.StripeInvoiceLineItems.Data) {
-                var item = new InvoiceLineItem { Amount = line.Amount / 100.0 };
+            //foreach (var line in stripeInvoice.StripeInvoiceLineItems.Data) {
+            //    var item = new InvoiceLineItem { Amount = line.Amount / 100.0 };
 
-                if (line.Plan != null) {
-                    string planName = line.Plan.Nickname ?? BillingManager.GetBillingPlan(line.Plan.Id)?.Name;
-                    item.Description = $"Exceptionless - {planName} Plan ({(line.Plan.Amount / 100.0):c}/{line.Plan.Interval})";
-                } else {
-                    item.Description = line.Description;
-                }
+            //    if (line.Plan != null) {
+            //        string planName = line.Plan.Nickname ?? BillingManager.GetBillingPlan(line.Plan.Id)?.Name;
+            //        item.Description = $"Exceptionless - {planName} Plan ({(line.Plan.Amount / 100.0):c}/{line.Plan.Interval})";
+            //    } else {
+            //        item.Description = line.Description;
+            //    }
 
-                item.Date = $"{(line.StripePeriod.Start ?? stripeInvoice.PeriodStart).ToShortDateString()} - {(line.StripePeriod.End ?? stripeInvoice.PeriodEnd).ToShortDateString()}";
-                invoice.Items.Add(item);
-            }
+            //    item.Date = $"{(line.StripePeriod.Start ?? stripeInvoice.PeriodStart).ToShortDateString()} - {(line.StripePeriod.End ?? stripeInvoice.PeriodEnd).ToShortDateString()}";
+            //    invoice.Items.Add(item);
+            //}
 
             var coupon = stripeInvoice.StripeDiscount?.StripeCoupon;
             if (coupon != null) {
@@ -267,167 +271,167 @@ namespace Exceptionless.Api.Controllers {
             return OkWithResourceLinks(invoices.Take(limit).ToList(), invoices.Count > limit, i => i.Id);
         }
 
-        /// <summary>
-        /// Get plans
-        /// </summary>
-        /// <remarks>
-        /// Gets available plans for a specific organization.
-        /// </remarks>
-        /// <param name="id">The identifier of the organization.</param>
-        /// <response code="404">The organization was not found.</response>
-        [HttpGet]
-        [Route("{id:objectid}/plans")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<BillingPlan>))]
-        public async Task<IActionResult> GetPlansAsync(string id) {
-            var organization = await GetModelAsync(id);
-            if (organization == null)
-                return NotFound();
+        ///// <summary>
+        ///// Get plans
+        ///// </summary>
+        ///// <remarks>
+        ///// Gets available plans for a specific organization.
+        ///// </remarks>
+        ///// <param name="id">The identifier of the organization.</param>
+        ///// <response code="404">The organization was not found.</response>
+        //[HttpGet]
+        //[Route("{id:objectid}/plans")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<BillingPlan>))]
+        //public async Task<IActionResult> GetPlansAsync(string id) {
+        //    var organization = await GetModelAsync(id);
+        //    if (organization == null)
+        //        return NotFound();
 
-            var plans = BillingManager.Plans.ToList();
-            if (!Request.IsGlobalAdmin())
-                plans = plans.Where(p => !p.IsHidden || p.Id == organization.PlanId).ToList();
+        //    var plans = BillingManager.Plans.ToList();
+        //    if (!Request.IsGlobalAdmin())
+        //        plans = plans.Where(p => !p.IsHidden || p.Id == organization.PlanId).ToList();
 
-            var currentPlan = new BillingPlan {
-                Id = organization.PlanId,
-                Name = organization.PlanName,
-                Description = organization.PlanDescription,
-                IsHidden = false,
-                Price = organization.BillingPrice,
-                MaxProjects = organization.MaxProjects,
-                MaxUsers = organization.MaxUsers,
-                RetentionDays = organization.RetentionDays,
-                MaxEventsPerMonth = organization.MaxEventsPerMonth,
-                HasPremiumFeatures = organization.HasPremiumFeatures
-            };
+        //    var currentPlan = new BillingPlan {
+        //        Id = organization.PlanId,
+        //        Name = organization.PlanName,
+        //        Description = organization.PlanDescription,
+        //        IsHidden = false,
+        //        Price = organization.BillingPrice,
+        //        MaxProjects = organization.MaxProjects,
+        //        MaxUsers = organization.MaxUsers,
+        //        RetentionDays = organization.RetentionDays,
+        //        MaxEventsPerMonth = organization.MaxEventsPerMonth,
+        //        HasPremiumFeatures = organization.HasPremiumFeatures
+        //    };
 
-            if (plans.All(p => p.Id != organization.PlanId))
-                plans.Add(currentPlan);
-            else
-                plans[plans.FindIndex(p => p.Id == organization.PlanId)] = currentPlan;
+        //    if (plans.All(p => p.Id != organization.PlanId))
+        //        plans.Add(currentPlan);
+        //    else
+        //        plans[plans.FindIndex(p => p.Id == organization.PlanId)] = currentPlan;
 
-            return Ok(plans);
-        }
+        //    return Ok(plans);
+        //}
 
-        /// <summary>
-        /// Change plan
-        /// </summary>
-        /// <remarks>
-        /// Upgrades or downgrades the organizations plan.
-        /// </remarks>
-        /// <param name="id">The identifier of the organization.</param>
-        /// <param name="planId">The identifier of the plan.</param>
-        /// <param name="stripeToken">The token returned from the stripe service.</param>
-        /// <param name="last4">The last four numbers of the card.</param>
-        /// <param name="couponId">The coupon id.</param>
-        /// <response code="404">The organization was not found.</response>
-        [HttpPost]
-        [Route("{id:objectid}/change-plan")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ChangePlanResult))]
-        public async Task<IActionResult> ChangePlanAsync(string id, [FromQuery] string planId, [FromQuery] string stripeToken = null, [FromQuery] string last4 = null, [FromQuery] string couponId = null) {
-            if (String.IsNullOrEmpty(id) || !CanAccessOrganization(id))
-                return NotFound();
+        ///// <summary>
+        ///// Change plan
+        ///// </summary>
+        ///// <remarks>
+        ///// Upgrades or downgrades the organizations plan.
+        ///// </remarks>
+        ///// <param name="id">The identifier of the organization.</param>
+        ///// <param name="planId">The identifier of the plan.</param>
+        ///// <param name="stripeToken">The token returned from the stripe service.</param>
+        ///// <param name="last4">The last four numbers of the card.</param>
+        ///// <param name="couponId">The coupon id.</param>
+        ///// <response code="404">The organization was not found.</response>
+        //[HttpPost]
+        //[Route("{id:objectid}/change-plan")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ChangePlanResult))]
+        //public async Task<IActionResult> ChangePlanAsync(string id, [FromQuery] string planId, [FromQuery] string stripeToken = null, [FromQuery] string last4 = null, [FromQuery] string couponId = null) {
+        //    if (String.IsNullOrEmpty(id) || !CanAccessOrganization(id))
+        //        return NotFound();
 
-            if (!Settings.Current.EnableBilling)
-                return Ok(ChangePlanResult.FailWithMessage("Plans cannot be changed while billing is disabled."));
+        //    if (!Settings.Current.EnableBilling)
+        //        return Ok(ChangePlanResult.FailWithMessage("Plans cannot be changed while billing is disabled."));
 
-            var organization = await GetModelAsync(id, false);
-            if (organization == null)
-                return Ok(ChangePlanResult.FailWithMessage("Invalid OrganizationId."));
+        //    var organization = await GetModelAsync(id, false);
+        //    if (organization == null)
+        //        return Ok(ChangePlanResult.FailWithMessage("Invalid OrganizationId."));
 
-            var plan = BillingManager.GetBillingPlan(planId);
-            if (plan == null)
-                return Ok(ChangePlanResult.FailWithMessage("Invalid PlanId."));
+        //    var plan = BillingManager.GetBillingPlan(planId);
+        //    if (plan == null)
+        //        return Ok(ChangePlanResult.FailWithMessage("Invalid PlanId."));
 
-            if (String.Equals(organization.PlanId, plan.Id) && String.Equals(BillingManager.FreePlan.Id, plan.Id))
-                return Ok(ChangePlanResult.SuccessWithMessage("Your plan was not changed as you were already on the free plan."));
+        //    if (String.Equals(organization.PlanId, plan.Id) && String.Equals(BillingManager.FreePlan.Id, plan.Id))
+        //        return Ok(ChangePlanResult.SuccessWithMessage("Your plan was not changed as you were already on the free plan."));
 
-            // Only see if they can downgrade a plan if the plans are different.
-            if (!String.Equals(organization.PlanId, plan.Id)) {
-                var result = await _billingManager.CanDownGradeAsync(organization, plan, CurrentUser);
-                if (!result.Success)
-                    return Ok(result);
-            }
+        //    // Only see if they can downgrade a plan if the plans are different.
+        //    if (!String.Equals(organization.PlanId, plan.Id)) {
+        //        var result = await _billingManager.CanDownGradeAsync(organization, plan, CurrentUser);
+        //        if (!result.Success)
+        //            return Ok(result);
+        //    }
 
-            var customerService = new StripeCustomerService(Settings.Current.StripeApiKey);
-            var subscriptionService = new StripeSubscriptionService(Settings.Current.StripeApiKey);
+        //    var customerService = new StripeCustomerService(Settings.Current.StripeApiKey);
+        //    var subscriptionService = new StripeSubscriptionService(Settings.Current.StripeApiKey);
 
-            try {
-                // If they are on a paid plan and then downgrade to a free plan then cancel their stripe subscription.
-                if (!String.Equals(organization.PlanId, BillingManager.FreePlan.Id) && String.Equals(plan.Id, BillingManager.FreePlan.Id)) {
-                    if (!String.IsNullOrEmpty(organization.StripeCustomerId)) {
-                        var subs = await subscriptionService.ListAsync(new StripeSubscriptionListOptions { CustomerId = organization.StripeCustomerId });
-                        foreach (var sub in subs.Where(s => !s.CanceledAt.HasValue))
-                            await subscriptionService.CancelAsync(sub.Id);
-                    }
+        //    try {
+        //        // If they are on a paid plan and then downgrade to a free plan then cancel their stripe subscription.
+        //        if (!String.Equals(organization.PlanId, BillingManager.FreePlan.Id) && String.Equals(plan.Id, BillingManager.FreePlan.Id)) {
+        //            if (!String.IsNullOrEmpty(organization.StripeCustomerId)) {
+        //                var subs = await subscriptionService.ListAsync(new StripeSubscriptionListOptions { CustomerId = organization.StripeCustomerId });
+        //                foreach (var sub in subs.Where(s => !s.CanceledAt.HasValue))
+        //                    await subscriptionService.CancelAsync(sub.Id);
+        //            }
 
-                    organization.BillingStatus = BillingStatus.Trialing;
-                    organization.RemoveSuspension();
-                } else if (String.IsNullOrEmpty(organization.StripeCustomerId)) {
-                    if (String.IsNullOrEmpty(stripeToken))
-                        return Ok(ChangePlanResult.FailWithMessage("Billing information was not set."));
+        //            organization.BillingStatus = BillingStatus.Trialing;
+        //            organization.RemoveSuspension();
+        //        } else if (String.IsNullOrEmpty(organization.StripeCustomerId)) {
+        //            if (String.IsNullOrEmpty(stripeToken))
+        //                return Ok(ChangePlanResult.FailWithMessage("Billing information was not set."));
 
-                    organization.SubscribeDate = SystemClock.UtcNow;
+        //            organization.SubscribeDate = SystemClock.UtcNow;
 
-                    var createCustomer = new StripeCustomerCreateOptions {
-                        SourceToken = stripeToken,
-                        PlanId = planId,
-                        Description = organization.Name,
-                        Email = CurrentUser.EmailAddress
-                    };
+        //            var createCustomer = new StripeCustomerCreateOptions {
+        //                SourceToken = stripeToken,
+        //                PlanId = planId,
+        //                Description = organization.Name,
+        //                Email = CurrentUser.EmailAddress
+        //            };
 
-                    if (!String.IsNullOrWhiteSpace(couponId))
-                        createCustomer.CouponId = couponId;
+        //            if (!String.IsNullOrWhiteSpace(couponId))
+        //                createCustomer.CouponId = couponId;
 
-                    var customer = await customerService.CreateAsync(createCustomer);
+        //            var customer = await customerService.CreateAsync(createCustomer);
 
-                    organization.BillingStatus = BillingStatus.Active;
-                    organization.RemoveSuspension();
-                    organization.StripeCustomerId = customer.Id;
-                    if (customer.Sources.TotalCount > 0)
-                        organization.CardLast4 = customer.Sources.Data.First().Card.Last4;
-                } else {
-                    var update = new StripeSubscriptionUpdateOptions { Items = new List<StripeSubscriptionItemUpdateOption>() };
-                    var create = new StripeSubscriptionCreateOptions();
-                    bool cardUpdated = false;
+        //            organization.BillingStatus = BillingStatus.Active;
+        //            organization.RemoveSuspension();
+        //            organization.StripeCustomerId = customer.Id;
+        //            if (customer.Sources.TotalCount > 0)
+        //                organization.CardLast4 = customer.Sources.Data.First().Card.Last4;
+        //        } else {
+        //            var update = new StripeSubscriptionUpdateOptions { Items = new List<StripeSubscriptionItemUpdateOption>() };
+        //            var create = new StripeSubscriptionCreateOptions();
+        //            bool cardUpdated = false;
 
-                    if (!String.IsNullOrEmpty(stripeToken)) {
-                        update.Source = stripeToken;
-                        create.Source = stripeToken;
-                        cardUpdated = true;
-                    }
+        //            if (!String.IsNullOrEmpty(stripeToken)) {
+        //                update.Source = stripeToken;
+        //                create.Source = stripeToken;
+        //                cardUpdated = true;
+        //            }
 
-                    var subscriptionList = await subscriptionService.ListAsync(new StripeSubscriptionListOptions { CustomerId = organization.StripeCustomerId });
-                    var subscription = subscriptionList.FirstOrDefault(s => !s.CanceledAt.HasValue);
-                    if (subscription != null) {
-                        update.Items.Add(new StripeSubscriptionItemUpdateOption { Id = subscription.Items.Data[0].Id, PlanId = planId });
-                        await subscriptionService.UpdateAsync(subscription.Id, update);
-                    } else {
-                        await subscriptionService.CreateAsync(organization.StripeCustomerId, planId, create);
-                    }
+        //            var subscriptionList = await subscriptionService.ListAsync(new StripeSubscriptionListOptions { CustomerId = organization.StripeCustomerId });
+        //            var subscription = subscriptionList.FirstOrDefault(s => !s.CanceledAt.HasValue);
+        //            if (subscription != null) {
+        //                update.Items.Add(new StripeSubscriptionItemUpdateOption { Id = subscription.Items.Data[0].Id, PlanId = planId });
+        //                await subscriptionService.UpdateAsync(subscription.Id, update);
+        //            } else {
+        //                await subscriptionService.CreateAsync(organization.StripeCustomerId, planId, create);
+        //            }
 
-                    await customerService.UpdateAsync(organization.StripeCustomerId, new StripeCustomerUpdateOptions {
-                        Email = CurrentUser.EmailAddress
-                    });
+        //            await customerService.UpdateAsync(organization.StripeCustomerId, new StripeCustomerUpdateOptions {
+        //                Email = CurrentUser.EmailAddress
+        //            });
 
-                    if (cardUpdated)
-                        organization.CardLast4 = last4;
+        //            if (cardUpdated)
+        //                organization.CardLast4 = last4;
 
-                    organization.BillingStatus = BillingStatus.Active;
-                    organization.RemoveSuspension();
-                }
+        //            organization.BillingStatus = BillingStatus.Active;
+        //            organization.RemoveSuspension();
+        //        }
 
-                BillingManager.ApplyBillingPlan(organization, plan, CurrentUser);
-                await _repository.SaveAsync(organization, o => o.Cache());
-                await _messagePublisher.PublishAsync(new PlanChanged { OrganizationId = organization.Id });
-            } catch (Exception ex) {
-                using (_logger.BeginScope(new ExceptionlessState().Tag("Change Plan").Identity(CurrentUser.EmailAddress).Property("User", CurrentUser).SetHttpContext(HttpContext)))
-                    _logger.LogCritical(ex, "An error occurred while trying to update your billing plan: {Message}", ex.Message);
+        //        BillingManager.ApplyBillingPlan(organization, plan, CurrentUser);
+        //        await _repository.SaveAsync(organization, o => o.Cache());
+        //        await _messagePublisher.PublishAsync(new PlanChanged { OrganizationId = organization.Id });
+        //    } catch (Exception ex) {
+        //        using (_logger.BeginScope(new ExceptionlessState().Tag("Change Plan").Identity(CurrentUser.EmailAddress).Property("User", CurrentUser).SetHttpContext(HttpContext)))
+        //            _logger.LogCritical(ex, "An error occurred while trying to update your billing plan: {Message}", ex.Message);
 
-                return Ok(ChangePlanResult.FailWithMessage(ex.Message));
-            }
+        //        return Ok(ChangePlanResult.FailWithMessage(ex.Message));
+        //    }
 
-            return Ok(new ChangePlanResult { Success = true });
-        }
+        //    return Ok(new ChangePlanResult { Success = true });
+        //}
 
         /// <summary>
         /// Add user
@@ -447,8 +451,8 @@ namespace Exceptionless.Api.Controllers {
             if (organization == null)
                 return NotFound();
 
-            if (!await _billingManager.CanAddUserAsync(organization))
-                return PlanLimitReached("Please upgrade your plan to add an additional user.");
+            //if (!await _billingManager.CanAddUserAsync(organization))
+            //    return PlanLimitReached("Please upgrade your plan to add an additional user.");
 
             var user = await _userRepository.GetByEmailAddressAsync(email);
             if (user != null) {
@@ -638,14 +642,14 @@ namespace Exceptionless.Api.Controllers {
             if (!await IsOrganizationNameAvailableInternalAsync(value.Name))
                 return PermissionResult.DenyWithMessage("A organization with this name already exists.");
 
-            if (!await _billingManager.CanAddOrganizationAsync(CurrentUser))
-                return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add an additional organization.");
+            //if (!await _billingManager.CanAddOrganizationAsync(CurrentUser))
+            //    return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add an additional organization.");
 
             return await base.CanAddAsync(value);
         }
 
         protected override async Task<Organization> AddModelAsync(Organization value) {
-            BillingManager.ApplyBillingPlan(value, Settings.Current.EnableBilling ? BillingManager.FreePlan : BillingManager.UnlimitedPlan, CurrentUser);
+            //BillingManager.ApplyBillingPlan(value, Settings.Current.EnableBilling ? BillingManager.FreePlan : BillingManager.UnlimitedPlan, CurrentUser);
 
             var organization = await base.AddModelAsync(value);
 

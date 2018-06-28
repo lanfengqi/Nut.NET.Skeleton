@@ -5,6 +5,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Controllers\StripeController.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Exceptionless.AspNetCore.Signed" Version="4.2.1989" />
     <PackageReference Include="Joonasw.AspNetCore.SecurityHeaders" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />

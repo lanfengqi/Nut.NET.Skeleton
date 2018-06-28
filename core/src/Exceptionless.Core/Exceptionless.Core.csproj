@@ -5,6 +5,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Authentication\**" />
+    <Compile Remove="Billing\**" />
+    <EmbeddedResource Remove="Authentication\**" />
+    <EmbeddedResource Remove="Billing\**" />
+    <None Remove="Authentication\**" />
+    <None Remove="Billing\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Mail\Templates\event-notice.html" />
     <None Remove="Mail\Templates\organization-added.html" />
     <None Remove="Mail\Templates\organization-invited.html" />

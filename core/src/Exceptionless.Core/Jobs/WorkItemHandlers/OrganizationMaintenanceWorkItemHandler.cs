@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Models;
 using Exceptionless.Core.Models.WorkItems;
@@ -37,8 +37,8 @@ namespace Exceptionless.Core.Jobs.WorkItemHandlers {
             var results = await _organizationRepository.GetAllAsync(o => o.PageLimit(LIMIT)).AnyContext();
             while (results.Documents.Count > 0 && !context.CancellationToken.IsCancellationRequested) {
                 foreach (var organization in results.Documents) {
-                    if (wi.UpgradePlans)
-                        UpgradePlan(organization);
+                    //if (wi.UpgradePlans)
+                    //    UpgradePlan(organization);
 
                     if (wi.RemoveOldUsageStats) {
                         foreach (var usage in organization.OverageHours.Where(u => u.Date < SystemClock.UtcNow.Subtract(TimeSpan.FromDays(3))).ToList())
@@ -64,14 +64,14 @@ namespace Exceptionless.Core.Jobs.WorkItemHandlers {
             
         }
 
-        private void UpgradePlan(Organization organization) {
-            var plan = BillingManager.GetBillingPlan(organization.PlanId);
-            if (plan == null) {
-                Log.LogError("Unable to find a valid plan for organization: {organization}", organization.Id);
-                return;
-            }
+        //private void UpgradePlan(Organization organization) {
+        //    var plan = BillingManager.GetBillingPlan(organization.PlanId);
+        //    if (plan == null) {
+        //        Log.LogError("Unable to find a valid plan for organization: {organization}", organization.Id);
+        //        return;
+        //    }
 
-            BillingManager.ApplyBillingPlan(organization, plan, user: null, updateBillingPrice: false);
-        }
+        //    BillingManager.ApplyBillingPlan(organization, plan, user: null, updateBillingPrice: false);
+        //}
     }
 }

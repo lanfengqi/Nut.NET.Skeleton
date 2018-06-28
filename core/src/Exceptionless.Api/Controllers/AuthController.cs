@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Exceptionless.Api.Extensions;
 using Exceptionless.Api.Models;
 using Exceptionless.Core;
-using Exceptionless.Core.Authentication;
+//using Exceptionless.Core.Authentication;
 using Exceptionless.Core.Authorization;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Mail;
@@ -31,7 +31,7 @@ namespace Exceptionless.Api.Controllers {
     [Route(API_PREFIX + "/auth")]
     [Authorize(Policy = AuthorizationRoles.UserPolicy)]
     public class AuthController : ExceptionlessApiController {
-        private readonly IDomainLoginProvider _domainLoginProvider;
+        //private readonly IDomainLoginProvider _domainLoginProvider;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITokenRepository _tokenRepository;
@@ -41,8 +41,10 @@ namespace Exceptionless.Api.Controllers {
 
         private static bool _isFirstUserChecked;
 
-        public AuthController(IOrganizationRepository organizationRepository, IUserRepository userRepository, ITokenRepository tokenRepository, ICacheClient cacheClient, IMailer mailer, ILogger<AuthController> logger, IDomainLoginProvider domainLoginProvider) {
-            _domainLoginProvider = domainLoginProvider;
+        public AuthController(IOrganizationRepository organizationRepository, IUserRepository userRepository, ITokenRepository tokenRepository,
+            ICacheClient cacheClient, IMailer mailer, ILogger<AuthController> logger) {
+            //, IDomainLoginProvider domainLoginProvider
+            //_domainLoginProvider = domainLoginProvider;
             _organizationRepository = organizationRepository;
             _userRepository = userRepository;
             _tokenRepository = tokenRepository;
@@ -120,27 +122,27 @@ namespace Exceptionless.Api.Controllers {
                     return Unauthorized();
                 }
 
-                if (!Settings.Current.EnableActiveDirectoryAuth) {
-                    if (String.IsNullOrEmpty(user.Salt)) {
-                        _logger.LogError("Login failed for {EmailAddress}: The user has no salt defined.", user.EmailAddress);
-                        return Unauthorized();
-                    }
-
-                    if (!user.IsCorrectPassword(model.Password)) {
-                        _logger.LogError("Login failed for {EmailAddress}: Invalid Password.", user.EmailAddress);
-                        return Unauthorized();
-                    }
-
-                    if (!PasswordMeetsRequirements(model.Password)) {
-                        _logger.LogError("Login denied for {EmailAddress} for invalid password.", email);
-                        return StatusCode(423, "Password requirements have changed. Password needs to be reset to meet the new requirements.");
-                    }
-                } else {
-                    if (!IsValidActiveDirectoryLogin(email, model.Password)) {
-                        _logger.LogError("Domain login failed for {EmailAddress}: Invalid Password or Account.", user.EmailAddress);
-                        return Unauthorized();
-                    }
+                //if (!Settings.Current.EnableActiveDirectoryAuth) {
+                if (String.IsNullOrEmpty(user.Salt)) {
+                    _logger.LogError("Login failed for {EmailAddress}: The user has no salt defined.", user.EmailAddress);
+                    return Unauthorized();
                 }
+
+                if (!user.IsCorrectPassword(model.Password)) {
+                    _logger.LogError("Login failed for {EmailAddress}: Invalid Password.", user.EmailAddress);
+                    return Unauthorized();
+                }
+
+                if (!PasswordMeetsRequirements(model.Password)) {
+                    _logger.LogError("Login denied for {EmailAddress} for invalid password.", email);
+                    return StatusCode(423, "Password requirements have changed. Password needs to be reset to meet the new requirements.");
+                }
+                //} else {
+                //    if (!IsValidActiveDirectoryLogin(email, model.Password)) {
+                //        _logger.LogError("Domain login failed for {EmailAddress}: Invalid Password or Account.", user.EmailAddress);
+                //        return Unauthorized();
+                //    }
+                //}
 
                 if (!String.IsNullOrEmpty(model.InviteToken))
                     await AddInvitedUserToOrganizationAsync(model.InviteToken, user);
@@ -226,10 +228,10 @@ namespace Exceptionless.Api.Controllers {
                     }
                 }
 
-                if (Settings.Current.EnableActiveDirectoryAuth && !IsValidActiveDirectoryLogin(email, model.Password)) {
-                    _logger.LogError("Signup failed for {EmailAddress}: Active Directory authentication failed.", email);
-                    return BadRequest();
-                }
+                //if (Settings.Current.EnableActiveDirectoryAuth && !IsValidActiveDirectoryLogin(email, model.Password)) {
+                //    _logger.LogError("Signup failed for {EmailAddress}: Active Directory authentication failed.", email);
+                //    return BadRequest();
+                //}
 
                 user = new User {
                     IsActive = true,
@@ -274,9 +276,9 @@ namespace Exceptionless.Api.Controllers {
         [HttpPost("github")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResult))]
         public Task<IActionResult> GitHubAsync([FromBody] JObject value) {
-            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(), 
-                Settings.Current.GitHubAppId, 
-                Settings.Current.GitHubAppSecret, 
+            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(),
+                Settings.Current.GitHubAppId,
+                Settings.Current.GitHubAppSecret,
                 (f, c) => {
                     c.Scope = "user:email";
                     return new GitHubClient(f, c);
@@ -289,9 +291,9 @@ namespace Exceptionless.Api.Controllers {
         [HttpPost("google")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResult))]
         public Task<IActionResult> GoogleAsync([FromBody] JObject value) {
-            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(), 
-                Settings.Current.GoogleAppId, 
-                Settings.Current.GoogleAppSecret, 
+            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(),
+                Settings.Current.GoogleAppId,
+                Settings.Current.GoogleAppSecret,
                 (f, c) => {
                     c.Scope = "profile email";
                     return new GoogleClient(f, c);
@@ -304,9 +306,9 @@ namespace Exceptionless.Api.Controllers {
         [HttpPost("facebook")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResult))]
         public Task<IActionResult> FacebookAsync([FromBody] JObject value) {
-            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(), 
-                Settings.Current.FacebookAppId, 
-                Settings.Current.FacebookAppSecret, 
+            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(),
+                Settings.Current.FacebookAppId,
+                Settings.Current.FacebookAppSecret,
                 (f, c) => {
                     c.Scope = "email";
                     return new FacebookClient(f, c);
@@ -319,9 +321,9 @@ namespace Exceptionless.Api.Controllers {
         [HttpPost("live")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResult))]
         public Task<IActionResult> LiveAsync([FromBody] JObject value) {
-            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(), 
-                Settings.Current.MicrosoftAppId, 
-                Settings.Current.MicrosoftAppSecret, 
+            return ExternalLoginAsync(value.ToObject<ExternalAuthInfo>(),
+                Settings.Current.MicrosoftAppId,
+                Settings.Current.MicrosoftAppSecret,
                 (f, c) => {
                     c.Scope = "wl.emails";
                     return new WindowsLiveClient(f, c);
@@ -553,7 +555,7 @@ namespace Exceptionless.Api.Controllers {
             user.ResetPasswordResetToken();
             await _userRepository.SaveAsync(user, o => o.Cache());
 
-            using (_logger.BeginScope(new ExceptionlessState().Tag("Cancel Reset Password").Identity(user.EmailAddress).Property("User", user).SetHttpContext(HttpContext))) 
+            using (_logger.BeginScope(new ExceptionlessState().Tag("Cancel Reset Password").Identity(user.EmailAddress).Property("User", user).SetHttpContext(HttpContext)))
                 _logger.LogInformation("{EmailAddress} canceled the reset password", user.EmailAddress);
 
             return Ok();
@@ -563,7 +565,7 @@ namespace Exceptionless.Api.Controllers {
             if (_isFirstUserChecked)
                 return;
 
-            bool isFirstUser =  await _userRepository.CountAsync() == 0;
+            bool isFirstUser = await _userRepository.CountAsync() == 0;
             if (isFirstUser)
                 user.Roles.Add(AuthorizationRoles.GlobalAdmin);
 
@@ -767,10 +769,10 @@ namespace Exceptionless.Api.Controllers {
             return token.Id;
         }
 
-        private bool IsValidActiveDirectoryLogin(string email, string password) {
-            string domainUsername = _domainLoginProvider.GetUsernameFromEmailAddress(email);
-            return domainUsername != null && _domainLoginProvider.Login(domainUsername, password);
-        }
+        //private bool IsValidActiveDirectoryLogin(string email, string password) {
+        //    string domainUsername = _domainLoginProvider.GetUsernameFromEmailAddress(email);
+        //    return domainUsername != null && _domainLoginProvider.Login(domainUsername, password);
+        //}
 
         private static bool PasswordMeetsRequirements(string password) {
             if (String.IsNullOrWhiteSpace(password))

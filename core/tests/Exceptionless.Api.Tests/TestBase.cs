@@ -1,8 +1,8 @@
 ﻿using System;
-using Exceptionless.Api.Tests.Authentication;
+//using Exceptionless.Api.Tests.Authentication;
 using Exceptionless.Api.Tests.Mail;
 using Exceptionless.Core;
-using Exceptionless.Core.Authentication;
+//using Exceptionless.Core.Authentication;
 using Exceptionless.Core.Mail;
 using Exceptionless.Insulation.Configuration;
 using Foundatio.Logging.Xunit;
@@ -47,7 +47,7 @@ namespace Exceptionless.Api.Tests {
             Bootstrapper.RegisterServices(services, Log);
 
             services.AddSingleton<IMailer, NullMailer>();
-            services.AddSingleton<IDomainLoginProvider, TestDomainLoginProvider>();
+            //services.AddSingleton<IDomainLoginProvider, TestDomainLoginProvider>();
         }
 
         protected virtual IServiceProvider GetDefaultContainer() {

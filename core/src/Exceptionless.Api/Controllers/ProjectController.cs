@@ -6,7 +6,7 @@ using AutoMapper;
 using Exceptionless.Api.Extensions;
 using Exceptionless.Api.Models;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Repositories;
 using Exceptionless.Api.Utility;
@@ -33,14 +33,16 @@ namespace Exceptionless.Api.Controllers {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IQueue<WorkItemData> _workItemQueue;
-        private readonly BillingManager _billingManager;
+        //private readonly BillingManager _billingManager;
         private readonly SlackService _slackService;
 
-        public ProjectController(IProjectRepository projectRepository, IOrganizationRepository organizationRepository, IEventRepository eventRepository, IQueue<WorkItemData> workItemQueue, BillingManager billingManager, SlackService slackService, IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(projectRepository, mapper, validator, loggerFactory) {
+        public ProjectController(IProjectRepository projectRepository, IOrganizationRepository organizationRepository, IEventRepository eventRepository, IQueue<WorkItemData> workItemQueue,
+            //BillingManager billingManager, 
+            SlackService slackService, IMapper mapper, IQueryValidator validator, ILoggerFactory loggerFactory) : base(projectRepository, mapper, validator, loggerFactory) {
             _organizationRepository = organizationRepository;
             _eventRepository = eventRepository;
             _workItemQueue = workItemQueue;
-            _billingManager = billingManager;
+            //_billingManager = billingManager;
             _slackService = slackService;
         }
 
@@ -169,7 +171,7 @@ namespace Exceptionless.Api.Controllers {
         /// <response code="404">The project could not be found.</response>
         [HttpGet("config")]
         [HttpGet("{id:objectid}/config")]
-        [HttpGet("~/api/v1/project/config")]
+        //[HttpGet("~/api/v1/project/config")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ClientConfiguration))]
         public async Task<IActionResult> GetConfigAsync(string id = null, [FromQuery] int? v = null) {
             if (String.IsNullOrEmpty(id))
@@ -629,8 +631,8 @@ namespace Exceptionless.Api.Controllers {
             if (!await IsProjectNameAvailableInternalAsync(value.OrganizationId, value.Name))
                 return PermissionResult.DenyWithMessage("A project with this name already exists.");
 
-            if (!await _billingManager.CanAddProjectAsync(value))
-                return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add additional projects.");
+            //if (!await _billingManager.CanAddProjectAsync(value))
+            //    return PermissionResult.DenyWithPlanLimitReached("Please upgrade your plan to add additional projects.");
 
             return await base.CanAddAsync(value);
         }

@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Exceptionless.Core.Authentication;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Authentication;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Geo;
 using Exceptionless.Core.Jobs;
@@ -167,8 +167,8 @@ namespace Exceptionless.Core {
 
             container.AddSingleton<CacheLockProvider>(s => new CacheLockProvider(s.GetRequiredService<ICacheClient>(), s.GetRequiredService<IMessageBus>(), s.GetRequiredService<ILoggerFactory>()));
             container.AddSingleton<ILockProvider>(s => s.GetRequiredService<CacheLockProvider>());
-            container.AddTransient<StripeEventHandler>();
-            container.AddSingleton<BillingManager>();
+            //container.AddTransient<StripeEventHandler>();
+            //container.AddSingleton<BillingManager>();
             container.AddSingleton<EventPostService>();
             container.AddSingleton<SampleDataService>();
             container.AddSingleton<SemanticVersionParser>();
@@ -185,7 +185,7 @@ namespace Exceptionless.Core {
             container.AddSingleton<SlackService>();
             container.AddSingleton<StackService>();
 
-            container.AddTransient<IDomainLoginProvider, ActiveDirectoryLoginProvider>();
+            //container.AddTransient<IDomainLoginProvider, ActiveDirectoryLoginProvider>();
 
             container.AddTransient<AutoMapper.Profile, CoreMappings>();
             container.AddSingleton<IMapper>(s => {

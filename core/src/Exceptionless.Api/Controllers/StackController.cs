@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Exceptionless.Core.Authorization;
-using Exceptionless.Core.Billing;
+//using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Queries.Validation;
 using Exceptionless.Core.Models;
@@ -42,10 +42,12 @@ namespace Exceptionless.Api.Controllers {
         private readonly WebHookDataPluginManager _webHookDataPluginManager;
         private readonly ICacheClient _cache;
         private readonly IQueue<WebHookNotification> _webHookNotificationQueue;
-        private readonly BillingManager _billingManager;
+        //private readonly BillingManager _billingManager;
         private readonly FormattingPluginManager _formattingPluginManager;
 
-        public StackController(IStackRepository stackRepository,  IOrganizationRepository organizationRepository, IProjectRepository projectRepository, IEventRepository eventRepository, IQueue<WorkItemData> workItemQueue, IWebHookRepository webHookRepository, WebHookDataPluginManager webHookDataPluginManager, IQueue<WebHookNotification> webHookNotificationQueue, ICacheClient cacheClient, BillingManager billingManager, FormattingPluginManager formattingPluginManager, IMapper mapper, StackQueryValidator validator, ILoggerFactory loggerFactory) : base(stackRepository, mapper, validator, loggerFactory) {
+        public StackController(IStackRepository stackRepository,  IOrganizationRepository organizationRepository, IProjectRepository projectRepository, IEventRepository eventRepository, IQueue<WorkItemData> workItemQueue, IWebHookRepository webHookRepository, WebHookDataPluginManager webHookDataPluginManager, IQueue<WebHookNotification> webHookNotificationQueue, ICacheClient cacheClient, 
+            //BillingManager billingManager, 
+            FormattingPluginManager formattingPluginManager, IMapper mapper, StackQueryValidator validator, ILoggerFactory loggerFactory) : base(stackRepository, mapper, validator, loggerFactory) {
             _stackRepository = stackRepository;
             _organizationRepository = organizationRepository;
             _projectRepository = projectRepository;
@@ -55,7 +57,7 @@ namespace Exceptionless.Api.Controllers {
             _webHookDataPluginManager = webHookDataPluginManager;
             _webHookNotificationQueue = webHookNotificationQueue;
             _cache = cacheClient;
-            _billingManager = billingManager;
+            //_billingManager = billingManager;
             _formattingPluginManager = formattingPluginManager;
 
             AllowedDateFields.AddRange(new[] { StackIndexType.Alias.FirstOccurrence, StackIndexType.Alias.LastOccurrence });
@@ -439,8 +441,8 @@ namespace Exceptionless.Api.Controllers {
             if (stack == null || !CanAccessOrganization(stack.OrganizationId))
                 return NotFound();
 
-            if (!await _billingManager.HasPremiumFeaturesAsync(stack.OrganizationId))
-                return PlanLimitReached("Promote to External is a premium feature used to promote an error stack to an external system. Please upgrade your plan to enable this feature.");
+            //if (!await _billingManager.HasPremiumFeaturesAsync(stack.OrganizationId))
+            //    return PlanLimitReached("Promote to External is a premium feature used to promote an error stack to an external system. Please upgrade your plan to enable this feature.");
 
             var promotedProjectHooks = (await _webHookRepository.GetByProjectIdAsync(stack.ProjectId)).Documents.Where(p => p.EventTypes.Contains(WebHookRepository.EventTypes.StackPromoted)).ToList();
             if (!promotedProjectHooks.Any())
