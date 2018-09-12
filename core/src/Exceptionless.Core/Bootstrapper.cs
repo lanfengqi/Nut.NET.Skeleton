@@ -7,7 +7,7 @@ using AutoMapper.EquivalencyExpression;
 //using Exceptionless.Core.Authentication;
 //using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
-using Exceptionless.Core.Geo;
+//using Exceptionless.Core.Geo;
 using Exceptionless.Core.Jobs;
 using Exceptionless.Core.Jobs.WorkItemHandlers;
 using Exceptionless.Core.Mail;
@@ -15,9 +15,9 @@ using Exceptionless.Core.Models;
 using Exceptionless.Core.Models.WorkItems;
 using Exceptionless.Core.Pipeline;
 using Exceptionless.Core.Plugins;
-using Exceptionless.Core.Plugins.EventParser;
-using Exceptionless.Core.Plugins.EventProcessor;
-using Exceptionless.Core.Plugins.EventUpgrader;
+//using Exceptionless.Core.Plugins.EventParser;
+//using Exceptionless.Core.Plugins.EventProcessor;
+//using Exceptionless.Core.Plugins.EventUpgrader;
 using Exceptionless.Core.Plugins.Formatting;
 using Exceptionless.Core.Plugins.WebHook;
 using Exceptionless.Core.Queries.Validation;
@@ -50,7 +50,7 @@ using Newtonsoft.Json.Serialization;
 using DataDictionary = Exceptionless.Core.Models.DataDictionary;
 
 namespace Exceptionless.Core {
-    public class Bootstrapper {
+    public class Bootstrapper { 
         public static void RegisterServices(IServiceCollection container) {
             container.AddSingleton<IServiceCollection>(container);
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
@@ -96,7 +96,7 @@ namespace Exceptionless.Core {
                 handlers.Register<ReindexWorkItem>(s.GetRequiredService<ReindexWorkItemHandler>);
                 handlers.Register<RemoveOrganizationWorkItem>(s.GetRequiredService<RemoveOrganizationWorkItemHandler>);
                 handlers.Register<RemoveProjectWorkItem>(s.GetRequiredService<RemoveProjectWorkItemHandler>);
-                handlers.Register<SetLocationFromGeoWorkItem>(s.GetRequiredService<SetLocationFromGeoWorkItemHandler>);
+                //handlers.Register<SetLocationFromGeoWorkItem>(s.GetRequiredService<SetLocationFromGeoWorkItemHandler>);
                 handlers.Register<SetProjectIsConfiguredWorkItem>(s.GetRequiredService<SetProjectIsConfiguredWorkItemHandler>);
                 handlers.Register<StackWorkItem>(s.GetRequiredService<StackWorkItemHandler>);
                 handlers.Register<ThrottleBotsWorkItem>(s.GetRequiredService<ThrottleBotsWorkItemHandler>);
@@ -142,8 +142,8 @@ namespace Exceptionless.Core {
             container.AddSingleton<IWebHookRepository, WebHookRepository>();
             container.AddSingleton<ITokenRepository, TokenRepository>();
 
-            container.AddSingleton<IGeoIpService, MaxMindGeoIpService>();
-            container.AddSingleton<IGeocodeService, NullGeocodeService>();
+            //container.AddSingleton<IGeoIpService, MaxMindGeoIpService>();
+            //container.AddSingleton<IGeocodeService, NullGeocodeService>();
 
             container.AddSingleton<IQueryParser>(s => new ElasticQueryParser());
             container.AddSingleton<IQueryValidator, QueryValidator>();
@@ -151,11 +151,11 @@ namespace Exceptionless.Core {
             container.AddSingleton<StackQueryValidator>();
 
             container.AddSingleton(typeof(IValidator<>), typeof(Bootstrapper).Assembly);
-            container.AddSingleton(typeof(IPipelineAction<EventContext>), typeof(Bootstrapper).Assembly);
+            //container.AddSingleton(typeof(IPipelineAction<EventContext>), typeof(Bootstrapper).Assembly);
             container.AddSingleton(typeof(IPlugin), typeof(Bootstrapper).Assembly);
-            container.AddSingleton<EventParserPluginManager>();
-            container.AddSingleton<EventPluginManager>();
-            container.AddSingleton<EventUpgraderPluginManager>();
+            //container.AddSingleton<EventParserPluginManager>();
+            //container.AddSingleton<EventPluginManager>();
+            //container.AddSingleton<EventUpgraderPluginManager>();
             container.AddSingleton<FormattingPluginManager>();
             container.AddSingleton<WebHookDataPluginManager>();
             container.AddSingleton(typeof(IJob), typeof(Bootstrapper).Assembly);
@@ -172,9 +172,9 @@ namespace Exceptionless.Core {
             container.AddSingleton<EventPostService>();
             container.AddSingleton<SampleDataService>();
             container.AddSingleton<SemanticVersionParser>();
-            container.AddSingleton<EventParserPluginManager>();
-            container.AddSingleton<EventPipeline>();
-            container.AddSingleton<EventPluginManager>();
+            //container.AddSingleton<EventParserPluginManager>();
+            //container.AddSingleton<EventPipeline>();
+            //container.AddSingleton<EventPluginManager>();
             container.AddSingleton<FormattingPluginManager>();
             container.AddSingleton<WebHookDataPluginManager>();
             container.AddSingleton<UserAgentParser>();
@@ -258,14 +258,14 @@ namespace Exceptionless.Core {
                 return;
             }
 
-            new JobRunner(container.GetRequiredService<EventPostsJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(2)).RunInBackground(token);
+            //new JobRunner(container.GetRequiredService<EventPostsJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(2)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<EventUserDescriptionsJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(3)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<EventNotificationsJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(5)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<MailMessageJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(5)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<WebHooksJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(5)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<CloseInactiveSessionsJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(30), interval: TimeSpan.FromSeconds(30)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<DailySummaryJob>(), loggerFactory, initialDelay: TimeSpan.FromMinutes(1), interval: TimeSpan.FromHours(1)).RunInBackground(token);
-            new JobRunner(container.GetRequiredService<DownloadGeoIPDatabaseJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(5), interval: TimeSpan.FromDays(1)).RunInBackground(token);
+            //new JobRunner(container.GetRequiredService<DownloadGeoIPDatabaseJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(5), interval: TimeSpan.FromDays(1)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<RetentionLimitsJob>(), loggerFactory, initialDelay: TimeSpan.FromMinutes(15), interval: TimeSpan.FromHours(1)).RunInBackground(token);
             new JobRunner(container.GetRequiredService<WorkItemJob>(), loggerFactory, initialDelay: TimeSpan.FromSeconds(2), instanceCount: 2).RunInBackground(token);
             new JobRunner(container.GetRequiredService<MaintainIndexesJob>(), loggerFactory, initialDelay: SystemClock.UtcNow.Ceiling(TimeSpan.FromHours(1)) - SystemClock.UtcNow, interval: TimeSpan.FromHours(1)).RunInBackground(token);

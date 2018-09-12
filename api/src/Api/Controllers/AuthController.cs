@@ -23,6 +23,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly ITokenRepository _tokenRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IMetricsClient _metricsClient;
+        private readonly ITemplatedSmsService _templatedSmsService;
         private readonly ILogger _logger;
         private readonly ICacheClient _cacheClinet;
 
@@ -30,13 +31,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private const string _invalidPasswordMessage = "The password must be at least 8 characters long.";
 
         public AuthController(ILoggerFactory loggerFactory, IUserRepository userRepository, IUserPasswordRepository userPasswordRepository,
-            IOrganizationRepository orgRepository, IMetricsClient metricsClient,
+            IOrganizationRepository orgRepository, IMetricsClient metricsClient, ITemplatedSmsService templatedSmsService,
            ITokenRepository tokenRepository, IRoleRepository roleRepository, ICacheClient cacheClient) {
             _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
             _userRepository = userRepository;
             _userPasswordRepository = userPasswordRepository;
             _organizationRepository = orgRepository;
             _tokenRepository = tokenRepository;
+            _templatedSmsService = templatedSmsService;
             _roleRepository = roleRepository;
             _metricsClient = metricsClient;
             _cacheClinet = cacheClient;
@@ -117,6 +119,9 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (string.IsNullOrWhiteSpace(model?.Password))
                 return BadRequest("Email address is required.");
 
+            if (string.IsNullOrWhiteSpace(model?.Phone))
+                return BadRequest("Phone is required.");
+
             User user;
 
             try {
@@ -134,6 +139,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 IsActive = true,
                 FullName = model.Name ?? model.Email,
                 EmailAddress = model.Email.ToLower(),
+                Phone = model.Phone,
                 IsEmailAddressVerified = false,
                 EmailNotificationsEnabled = false,
                 Id = Guid.NewGuid().ToString("N"),
@@ -181,6 +187,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user);
             await _userPasswordRepository.AddAsync(userPassword);
 
+            _templatedSmsService.SendWellcomeSms(user);
             await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }

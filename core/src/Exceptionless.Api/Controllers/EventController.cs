@@ -11,7 +11,7 @@ using Exceptionless.Core;
 using Exceptionless.Core.Authorization;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Queries.Validation;
-using Exceptionless.Core.Geo;
+//using Exceptionless.Core.Geo;
 using Exceptionless.Core.Models;
 using Exceptionless.Core.Plugins.Formatting;
 using Exceptionless.Core.Queues.Models;
@@ -740,9 +740,9 @@ namespace Exceptionless.Api.Controllers {
                         if (Decimal.TryParse(kvp.Value.FirstOrDefault(), out var decValue))
                             ev.Value = decValue;
                         break;
-                    case "geo":
-                        if (GeoResult.TryParse(kvp.Value.FirstOrDefault(), out var geo))
-                            ev.Geo = geo.ToString();
+                    //case "geo":
+                    //    if (GeoResult.TryParse(kvp.Value.FirstOrDefault(), out var geo))
+                    //        ev.Geo = geo.ToString();
                         break;
                     case "tags":
                         ev.Tags.AddRange(kvp.Value.SelectMany(t => t.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)).Distinct());

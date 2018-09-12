@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 //using Exceptionless.Core.Billing;
 using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Models;
-using Exceptionless.Core.Models.Billing;
+//using Exceptionless.Core.Models.Billing;
 using Exceptionless.Core.Repositories.Configuration;
 using FluentValidation;
 using Foundatio.Repositories;

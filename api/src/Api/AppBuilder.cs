@@ -1,3 +1,4 @@
+using Foundatio.Jobs;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Api.MessageBus;
 using Foundatio.Skeleton.Api.Security;
@@ -6,6 +7,7 @@ using Foundatio.Skeleton.Api.Utility;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.Serialization;
 using Foundatio.Skeleton.Core.Utility;
+using Foundatio.Skeleton.Core.Jobs;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Services;
 using Microsoft.AspNet.SignalR;
@@ -23,6 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Cors;
 using System.Web.Http;
@@ -84,7 +87,23 @@ namespace Foundatio.Skeleton.Api {
             SetupSignalR(app, container);
             SetupSwagger(config);
 
+            var context = new OwinContext(app.Properties);
+            var token = context.Get<CancellationToken>("host.OnAppDisposing");
+
             FirstInsatllDataAsync(container).GetAwaiter().GetResult();
+            RunJobs(container, app, token, loggerFactory, logger);
+        }
+
+        private static void RunJobs(Container container, IAppBuilder app, CancellationToken token, ILoggerFactory loggerFactory, ILogger logger) {
+            if (!Settings.Current.RunJobsInProcess) {
+                logger.Info("Jobs running out of process.");
+                return;
+            }
+
+            new JobRunner(container.GetInstance<SmsMessageJob>(), loggerFactory).RunInBackground(token);
+            new JobRunner(container.GetInstance<WorkItemJob>(), loggerFactory, instanceCount: 2).RunInBackground(token);
+
+            logger.Warn("Jobs running in process.");
         }
 
         /// <summary>

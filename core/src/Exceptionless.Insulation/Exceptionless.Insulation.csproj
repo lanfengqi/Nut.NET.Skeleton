@@ -5,6 +5,11 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Geo\**" />
+    <EmbeddedResource Remove="Geo\**" />
+    <None Remove="Geo\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Foundatio.Aliyun" Version="7.0.26-pre" />
     <PackageReference Include="Foundatio.AzureStorage" Version="7.0.1503-pre" />
     <PackageReference Include="Foundatio.Minio" Version="7.0.16-pre" />

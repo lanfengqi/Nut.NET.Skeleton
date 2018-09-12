@@ -42,6 +42,12 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="aliyun-net-sdk-core">
+      <HintPath>..\..\..\..\FoodTrace\packages\aliyun-net-sdk-core.dll</HintPath>
+    </Reference>
+    <Reference Include="aliyun-net-sdk-dysmsapi">
+      <HintPath>..\..\..\..\FoodTrace\packages\aliyun-net-sdk-dysmsapi.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
@@ -142,6 +148,7 @@
     <Compile Include="Extensions\MimeExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Jobs\SmsMessageJob.cs" />
     <Compile Include="JsonPatch\AbstractPatcher.cs" />
     <Compile Include="JsonPatch\AddOperation.cs" />
     <Compile Include="JsonPatch\CopyOperation.cs" />
@@ -155,6 +162,11 @@
     <Compile Include="JsonPatch\ReplaceOperation.cs" />
     <Compile Include="JsonPatch\TestOperation.cs" />
     <Compile Include="Serialization\JsonHelper.cs" />
+    <Compile Include="Sms\AliyunSmsOption.cs" />
+    <Compile Include="Sms\AliyunSmsSender.cs" />
+    <Compile Include="Sms\ISmsSender.cs" />
+    <Compile Include="Sms\Model\SmsMessage.cs" />
+    <Compile Include="Sms\TokenExtensions.cs" />
     <Compile Include="Utility\AssemblyDetail.cs" />
     <Compile Include="Utility\IConnectionMapping.cs" />
     <Compile Include="Utility\IPublicFileStorage.cs" />
@@ -192,6 +204,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

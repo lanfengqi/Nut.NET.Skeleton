@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories.Configuration;
 
 namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
@@ -9,6 +9,7 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.HasKey(c => c.Id);
 
             this.Property(u => u.EmailAddress).HasMaxLength(500);
+            this.Property(u => u.Phone).HasMaxLength(50);
 
             this.HasMany(p => p.Roles)
                 .WithMany()

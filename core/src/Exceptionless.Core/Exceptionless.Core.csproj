@@ -7,10 +7,33 @@
   <ItemGroup>
     <Compile Remove="Authentication\**" />
     <Compile Remove="Billing\**" />
+    <Compile Remove="Geo\**" />
+    <Compile Remove="Models\Billing\**" />
+    <Compile Remove="Pipeline\**" />
+    <Compile Remove="Plugins\EventParser\**" />
+    <Compile Remove="Plugins\EventProcessor\**" />
+    <Compile Remove="Plugins\EventUpgrader\**" />
     <EmbeddedResource Remove="Authentication\**" />
     <EmbeddedResource Remove="Billing\**" />
+    <EmbeddedResource Remove="Geo\**" />
+    <EmbeddedResource Remove="Models\Billing\**" />
+    <EmbeddedResource Remove="Pipeline\**" />
+    <EmbeddedResource Remove="Plugins\EventParser\**" />
+    <EmbeddedResource Remove="Plugins\EventProcessor\**" />
+    <EmbeddedResource Remove="Plugins\EventUpgrader\**" />
     <None Remove="Authentication\**" />
     <None Remove="Billing\**" />
+    <None Remove="Geo\**" />
+    <None Remove="Models\Billing\**" />
+    <None Remove="Pipeline\**" />
+    <None Remove="Plugins\EventParser\**" />
+    <None Remove="Plugins\EventProcessor\**" />
+    <None Remove="Plugins\EventUpgrader\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Jobs\DownloadGeoIPDatabaseJob.cs" />
+    <Compile Remove="Jobs\EventPostsJob.cs" />
+    <Compile Remove="Jobs\WorkItemHandlers\SetLocationFromGeoWorkItemHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Mail\Templates\event-notice.html" />
@@ -21,6 +44,9 @@
     <None Remove="Mail\Templates\project-daily-summary.html" />
     <None Remove="Mail\Templates\user-email-verify.html" />
     <None Remove="Mail\Templates\user-password-reset.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Pipeline\Base\PriorityAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mail\Templates\event-notice.html" />

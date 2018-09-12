@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -13,6 +13,7 @@ namespace Foundatio.Skeleton.Api.Models
             Id = user.Id;
             FullName = user.FullName;
             EmailAddress = user.EmailAddress;
+            Phone = user.Phone;
             EmailNotificationsEnabled = user.EmailNotificationsEnabled;
             IsEmailAddressVerified = user.IsEmailAddressVerified;
             IsActive = user.IsActive;

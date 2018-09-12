@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +10,8 @@ namespace Foundatio.Skeleton.Domain.Models {
         public string FullName { get; set; }
 
         public string EmailAddress { get; set; }
+
+        public string Phone { get; set; }
 
         public bool EmailNotificationsEnabled { get; set; }
 

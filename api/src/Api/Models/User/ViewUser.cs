@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
 
 namespace Foundatio.Skeleton.Api.Models {
@@ -6,6 +6,7 @@ namespace Foundatio.Skeleton.Api.Models {
         public string Id { get; set; }
         public string FullName { get; set; }
         public string EmailAddress { get; set; }
+        public string Phone { get; set; }
         public bool EmailNotificationsEnabled { get; set; }
         public bool IsEmailAddressVerified { get; set; }
         public bool IsActive { get; set; }

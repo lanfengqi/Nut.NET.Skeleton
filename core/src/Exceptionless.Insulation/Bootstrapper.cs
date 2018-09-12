@@ -2,11 +2,11 @@
 using System.Linq;
 using Exceptionless.Core;
 using Exceptionless.Core.Extensions;
-using Exceptionless.Core.Geo;
+//using Exceptionless.Core.Geo;
 using Exceptionless.Core.Mail;
 using Exceptionless.Core.Queues.Models;
 using Exceptionless.Core.Utility;
-using Exceptionless.Insulation.Geo;
+//using Exceptionless.Insulation.Geo;
 using Exceptionless.Insulation.Mail;
 using Exceptionless.Insulation.Redis;
 using Foundatio.Caching;
@@ -42,8 +42,8 @@ namespace Exceptionless.Insulation {
                 container.AddSingleton<ExceptionlessClient>(client);
             }
 
-            if (!String.IsNullOrEmpty(Settings.Current.GoogleGeocodingApiKey))
-                container.ReplaceSingleton<IGeocodeService>(s => new GoogleGeocodeService(Settings.Current.GoogleGeocodingApiKey));
+            //if (!String.IsNullOrEmpty(Settings.Current.GoogleGeocodingApiKey))
+            //    container.ReplaceSingleton<IGeocodeService>(s => new GoogleGeocodeService(Settings.Current.GoogleGeocodingApiKey));
 
             if (Settings.Current.EnableMetricsReporting)
                 container.ReplaceSingleton<IMetricsClient>(s => new StatsDMetricsClient(new StatsDMetricsClientOptions { ServerName = Settings.Current.MetricsServerName, Port = Settings.Current.MetricsServerPort, Prefix = "ex", LoggerFactory = s.GetRequiredService<ILoggerFactory>() }));

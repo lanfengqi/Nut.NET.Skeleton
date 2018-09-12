@@ -13,7 +13,7 @@ using Exceptionless.Core.Extensions;
 using Exceptionless.Core.Mail;
 using Exceptionless.Core.Messaging.Models;
 using Exceptionless.Core.Models;
-using Exceptionless.Core.Models.Billing;
+//using Exceptionless.Core.Models.Billing;
 using Exceptionless.Core.Models.WorkItems;
 using Exceptionless.Core.Queries.Validation;
 using Exceptionless.Core.Repositories;
