@@ -35,7 +35,7 @@ namespace Foundatio.Skeleton.Domain.Services {
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.EmailAddress),
+                new Claim(ClaimTypes.Name, user.Phone),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                  new Claim(OrganizationIdClaim, user.OrganizationId)
             };

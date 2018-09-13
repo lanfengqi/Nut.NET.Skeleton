@@ -9,19 +9,17 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string FullName { get; set; }
 
-        public string EmailAddress { get; set; }
-
         public string Phone { get; set; }
 
-        public bool EmailNotificationsEnabled { get; set; }
+        public bool PhoneNotificationsEnabled { get; set; }
 
         public bool IsActive { get; set; }
 
-        public bool IsEmailAddressVerified { get; set; }
+        public bool IsPhoneVerified { get; set; }
 
-        public string VerifyEmailAddressToken { get; set; }
+        public string VerifyPhoneToken { get; set; }
 
-        public DateTime VerifyEmailAddressTokenCreated { get; set; }
+        public DateTime VerifyPhoneTokenCreated { get; set; }
 
         public string ProfileImagePath { get; set; }
 
@@ -36,7 +34,7 @@ namespace Foundatio.Skeleton.Domain.Models {
         public virtual ICollection<Role> Roles { get; set; }
 
         public User() {
-            EmailNotificationsEnabled = true;
+            PhoneNotificationsEnabled = true;
             IsActive = true;
             Roles = new Collection<Role>();
         }

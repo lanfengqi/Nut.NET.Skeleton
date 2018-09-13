@@ -8,7 +8,6 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.ToTable("User");
             this.HasKey(c => c.Id);
 
-            this.Property(u => u.EmailAddress).HasMaxLength(500);
             this.Property(u => u.Phone).HasMaxLength(50);
 
             this.HasMany(p => p.Roles)

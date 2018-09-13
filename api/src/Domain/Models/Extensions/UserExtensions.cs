@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Foundatio.Skeleton.Core.Collections;
@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 namespace Foundatio.Skeleton.Domain.Models {
     public static class UserExtensions {
 
-        public static void CreateVerifyEmailAddressToken(this User user) {
+        public static void CreateVerifyPhoneToken(this User user) {
             if (user == null)
                 return;
 
-            user.VerifyEmailAddressToken = StringUtils.GetNewToken();
-            user.VerifyEmailAddressTokenCreated = DateTime.UtcNow;
+            user.VerifyPhoneToken = StringUtils.GetPhoneToken();
+            user.VerifyPhoneTokenCreated = DateTime.UtcNow;
         }
 
-        public static bool HasValidEmailAddressTokenExpiration(this User user) {
+        public static bool HasValidPhoneTokenExpiration(this User user) {
             if (user == null)
                 return false;
 
             //  todo:  revisit expiration date
-            return user.VerifyEmailAddressTokenCreated != DateTime.MinValue && user.VerifyEmailAddressTokenCreated < DateTime.UtcNow.AddDays(30);
+            return user.VerifyPhoneTokenCreated != DateTime.MinValue && user.VerifyPhoneTokenCreated < DateTime.UtcNow.AddDays(30);
         }
 
-        public static void MarkEmailAddressVerified(this User user) {
+        public static void MarkPhoneVerified(this User user) {
             if (user == null)
                 return;
 
-            user.IsEmailAddressVerified = true;
-            user.VerifyEmailAddressToken = null;
-            user.VerifyEmailAddressTokenCreated = DateTime.MinValue;
+            user.IsPhoneVerified = true;
+            user.VerifyPhoneToken = null;
+            user.VerifyPhoneTokenCreated = DateTime.MinValue;
         }
 
         public static bool IsValidPassword(this UserPassword userPassword, string password) {

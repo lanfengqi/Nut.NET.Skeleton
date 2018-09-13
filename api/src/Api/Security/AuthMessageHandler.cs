@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -51,7 +51,7 @@ namespace Foundatio.Skeleton.Api.Security {
                     else {
                         User user;
                         try {
-                            user = await _userRepository.GetByEmailAddressAsync(authInfo.Username);
+                            user = await _userRepository.GetByPhoneAsync(authInfo.Username);
                         } catch (Exception) {
                             return new HttpResponseMessage(HttpStatusCode.Unauthorized);
                         }

@@ -10,6 +10,7 @@ using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
+using Foundatio.Skeleton.Domain.Services;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -25,17 +26,20 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IPublicFileStorage _publicFileStorage;
         private readonly IMessagePublisher _messagePublisher;
         private readonly IRoleRepository _roleRepository;
+        private readonly ITemplatedSmsService _templatedSmsService;
 
         public UserController(
             ILoggerFactory loggerFactory,
             IUserRepository userRepository,
             IRoleRepository roleRepository,
+            ITemplatedSmsService templatedSmsService,
             IPublicFileStorage publicFileStorage,
             IMapper mapper,
             IMessagePublisher messagePublisher) : base(loggerFactory, userRepository, mapper) {
             _publicFileStorage = publicFileStorage;
             _messagePublisher = messagePublisher;
             _roleRepository = roleRepository;
+            _templatedSmsService = templatedSmsService;
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewCurrentUser))]
@@ -106,23 +110,58 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [Route("{id:objectid}/email-address/{email:minlength(1)}")]
         [Authorize(Roles = AuthorizationRoles.User)]
         [RequireOrganization]
-        public async Task<IHttpActionResult> UpdateEmailAddressAsync(string id, string email) {
+        public async Task<IHttpActionResult> UpdatePhoneAsync(string id, string phone) {
             var user = await GetModelAsync(id);
             if (user == null)
                 return NotFound();
 
-            if (String.Equals(CurrentUser.EmailAddress, email, StringComparison.OrdinalIgnoreCase))
-                return Ok(new { IsVerified = user.IsEmailAddressVerified });
+            if (String.Equals(CurrentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
+                return Ok(new { IsVerified = user.IsPhoneVerified });
 
-            email = email.ToLower();
-            if (!await IsEmailAddressAvailableInternalAsync(email))
-                return BadRequest("A user with this email address already exists.");
+            phone = phone.ToLower();
+            if (!await IsPhonesAvailableInternalAsync(phone))
+                return BadRequest("A user with this phone already exists.");
 
-            user.EmailAddress = email;
+            user.Phone = phone;
 
             await UpdateModelAsync(user);
 
-            return Ok(new { IsVerified = user.IsEmailAddressVerified });
+            return Ok(new { IsVerified = user.IsPhoneVerified });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("verify-phone")]
+        public async Task<IHttpActionResult> Verify(string token) {
+            var user = await _repository.GetByVerifyPhoneTokenAsync(token);
+            if (user == null)
+                return NotFound();
+
+            if (!user.HasValidPhoneTokenExpiration())
+                return BadRequest("Verify Email Address Token has expired.");
+
+            user.MarkPhoneVerified();
+
+            await _repository.SaveAsync(user);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id:objectid}/resend-verification-phone")]
+        public async Task<IHttpActionResult> ResendVerificationPhone(string id) {
+            var user = await GetModelAsync(id);
+            if (user == null)
+                return NotFound();
+
+            if (!user.IsPhoneVerified) {
+                user.CreateVerifyPhoneToken();
+                await _repository.SaveAsync(user);
+
+                _templatedSmsService.SendPhoneVerifySms(user);
+            }
+
+            return Ok();
         }
 
         [HttpPost]
@@ -199,14 +238,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private async Task<bool> IsEmailAddressAvailableInternalAsync(string email) {
-            if (String.IsNullOrWhiteSpace(email))
+        private async Task<bool> IsPhonesAvailableInternalAsync(string phone) {
+            if (String.IsNullOrWhiteSpace(phone))
                 return false;
 
-            if (CurrentUser != null && String.Equals(CurrentUser.EmailAddress, email, StringComparison.OrdinalIgnoreCase))
+            if (CurrentUser != null && String.Equals(CurrentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            return await _repository.GetByEmailAddressAsync(email) == null;
+            return await _repository.GetByPhoneAsync(phone) == null;
         }
 
         protected override async Task<User> GetModelAsync(string id) {

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using System;
@@ -13,14 +13,24 @@ namespace Foundatio.Skeleton.Domain.Repositories {
             : base(efRepositoryContext, validators) {
         }
 
-        public async Task<User> GetByEmailAddressAsync(string emailAddress) {
-            if (String.IsNullOrEmpty(emailAddress))
+        public async Task<User> GetByPhoneAsync(string phone) {
+            if (String.IsNullOrEmpty(phone))
                 return null;
 
-            emailAddress = emailAddress.ToLower();
+            phone = phone.ToLower();
 
-            var users = await this.FindAsync(x => x.EmailAddress.Equals(emailAddress));
+            var users = await this.FindAsync(x => x.Phone.Equals(phone));
             return users.FirstOrDefault();
+        }
+
+        public async Task<User> GetByVerifyPhoneTokenAsync(string token) {
+            if (String.IsNullOrEmpty(token))
+                return null;
+
+
+            var users = await this.FindAsync(x => x.VerifyPhoneToken.Equals(token));
+            return users.FirstOrDefault();
+
         }
     }
 }

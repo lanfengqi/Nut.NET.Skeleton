@@ -53,7 +53,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpPost]
         [Route("signin")]
         public async Task<IHttpActionResult> SignInAsync(SignInModel model) {
-            if (String.IsNullOrWhiteSpace(model?.Email))
+            if (String.IsNullOrWhiteSpace(model?.Phone))
                 return BadRequest("Email Address is required.");
 
             if (String.IsNullOrWhiteSpace(model.Password))
@@ -61,7 +61,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
             User user;
             try {
-                user = await _userRepository.GetByEmailAddressAsync(model.Email);
+                user = await _userRepository.GetByPhoneAsync(model.Phone);
             } catch (Exception) {
                 return Unauthorized();
             }
@@ -113,38 +113,34 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!Settings.Current.EnableAccountCreation)
                 return BadRequest("Sorry,this is not accepting new accountsa at this time.");
 
-            if (string.IsNullOrWhiteSpace(model?.Email))
-                return BadRequest("Email address is required.");
-
-            if (string.IsNullOrWhiteSpace(model?.Password))
-                return BadRequest("Email address is required.");
-
             if (string.IsNullOrWhiteSpace(model?.Phone))
                 return BadRequest("Phone is required.");
+
+            if (string.IsNullOrWhiteSpace(model?.Password))
+                return BadRequest("Password is required.");
 
             User user;
 
             try {
-                user = await _userRepository.GetByEmailAddressAsync(model.Email);
+                user = await _userRepository.GetByPhoneAsync(model.Phone);
             } catch {
                 return BadRequest("An error occured.");
             }
 
             if (user != null)
-                return BadRequest("The Email address is already!");
+                return BadRequest("The Phone is already!");
 
             user = new Domain.Models.User {
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
                 IsActive = true,
-                FullName = model.Name ?? model.Email,
-                EmailAddress = model.Email.ToLower(),
+                FullName = model.Name ?? model.Phone,
                 Phone = model.Phone,
-                IsEmailAddressVerified = false,
-                EmailNotificationsEnabled = false,
+                IsPhoneVerified = false,
+                PhoneNotificationsEnabled = false,
                 Id = Guid.NewGuid().ToString("N"),
             };
-            user.CreateVerifyEmailAddressToken();
+            user.CreateVerifyPhoneToken();
             var userPassword = new UserPassword {
                 Id = Guid.NewGuid().ToString("N"),
                 CreatedUtc = DateTime.UtcNow,
@@ -187,7 +183,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user);
             await _userPasswordRepository.AddAsync(userPassword);
 
-            _templatedSmsService.SendWellcomeSms(user);
+            _templatedSmsService.SendPhoneVerifySms(user);
             await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
@@ -218,13 +214,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         [HttpGet]
         [Route("forgot-password")]
-        public async Task<IHttpActionResult> ForgotPasswordAsync(string emailAddress) {
-            var email = new Email { Address = emailAddress };
-            var validator = new Domain.Validators.EmailValidator();
-            if (!validator.TryValidate(email))
-                return BadRequest("Please specify a valid Email address");
+        public async Task<IHttpActionResult> ForgotPasswordAsync(string phone) {
+            //var email = new Email { Address = emailAddress };
+            //var validator = new Domain.Validators.EmailValidator();
+            //if (!validator.TryValidate(email))
+            //    return BadRequest("Please specify a valid Email address");
+            var passwordResetToken = "";
 
-            var user = await _userRepository.GetByEmailAddressAsync(email.Address);
+            var user = await _userRepository.GetByPhoneAsync(phone);
             if (user != null) {
                 var userPassword = await _userPasswordRepository.GetByUserIdAsync(user.Id);
                 if (userPassword != null) {
@@ -235,11 +232,12 @@ namespace Foundatio.Skeleton.Api.Controllers {
                     } else {
                         userPassword.PasswordResetTokenCreated = DateTime.UtcNow;
                     }
+                    passwordResetToken = userPassword.PasswordResetToken;
 
                     await _userPasswordRepository.SaveAsync(userPassword);
                 }
             }
-            return Ok();
+            return Ok(passwordResetToken);
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(TokenResponseModel))]
@@ -260,7 +258,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (!IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
-            userPassword.User.MarkEmailAddressVerified();
+            userPassword.User.MarkPhoneVerified();
 
             await ChangePassword(userPassword, model.Password);
 

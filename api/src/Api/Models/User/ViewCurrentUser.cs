@@ -12,10 +12,9 @@ namespace Foundatio.Skeleton.Api.Models
         public ViewCurrentUser(User user, string[] roles, string currentOrganizationId) {
             Id = user.Id;
             FullName = user.FullName;
-            EmailAddress = user.EmailAddress;
             Phone = user.Phone;
-            EmailNotificationsEnabled = user.EmailNotificationsEnabled;
-            IsEmailAddressVerified = user.IsEmailAddressVerified;
+            PhoneNotificationsEnabled = user.PhoneNotificationsEnabled;
+            IsPhoneVerified = user.IsPhoneVerified;
             IsActive = user.IsActive;
             ProfileImagePath = user.ProfileImagePath;
             ProfileImageUrl = StorageHelper.GetPictureUrl(user.ProfileImagePath);

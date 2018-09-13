@@ -14,7 +14,7 @@ namespace Foundatio.Skeleton.Domain.Services {
             _queue = queue;
         }
 
-        public void SendWellcomeSms(User user) {
+        public void SendPhoneVerifySms(User user) {
             if (string.IsNullOrEmpty(user?.Phone))
                 return;
             Task.Run(async () => {
