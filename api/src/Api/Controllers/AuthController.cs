@@ -196,7 +196,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (model == null || !IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
 
-            var userPassword = await _userPasswordRepository.GetByUserIdAsync(CurrentUser.Id);
+            var userPassword = await _userPasswordRepository.GetByUserIdAsync(currentUser.Id);
 
             if (!String.IsNullOrWhiteSpace(userPassword.Password)) {
                 if (String.IsNullOrWhiteSpace(model.CurrentPassword))

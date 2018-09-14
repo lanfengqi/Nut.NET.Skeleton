@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -141,7 +141,7 @@ namespace Foundatio.Skeleton.Repositories {
 
             var query = _context.Set<T>().Where(x => x.Id == id);
 
-            return await query.FirstOrDefaultAsync(); ;
+            return await query.AsNoTracking().FirstOrDefaultAsync(); 
 
         }
         public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {

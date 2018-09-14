@@ -51,6 +51,19 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<User, ViewUser>().AfterMap((u, vu) => vu.IsGlobalAdmin = u.IsGlobalAdmin());
                 CreateMap<User, UpdateUser>();
                 CreateMap<UpdateUser, User>();
+
+
+                CreateMap<PurchaseCar, ViewPurchaseCar>();
+                CreateMap<PurchaseCar, NewPurchaseCar>();
+                CreateMap<NewPurchaseCar, PurchaseCar>();
+
+                CreateMap<Car, ViewCar>();
+                CreateMap<ViewCar, Car>();
+                CreateMap<Car, NewCar>();
+                CreateMap<NewCar, Car>();
+
+                CreateMap<Car, UpdateCar>();
+                CreateMap<UpdateCar, Car>();
             }
         }
     }

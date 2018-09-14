@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -82,7 +82,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return skip;
         }
 
-        public User CurrentUser => Request.GetUser();
+        public User currentUser => Request.GetUser();
 
         public Organization Organization => Request.GetOrganization();
 

@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace Foundatio.Skeleton.Repositories {
                 throw new ArgumentNullException(nameof(document));
 
             var doc = _context.Entry(document);
-            doc.State = System.Data.Entity.EntityState.Modified;
+            doc.State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 

@@ -92,6 +92,7 @@
     <Compile Include="Model\EntityChanged.cs" />
     <Compile Include="Model\IHaveDates.cs" />
     <Compile Include="Model\IIdentity.cs" />
+    <Compile Include="Model\IMapPoint.cs" />
     <Compile Include="Model\IPagingOptions.cs" />
     <Compile Include="Model\ISupportSoftDeletes.cs" />
     <Compile Include="Model\IVersioned.cs" />

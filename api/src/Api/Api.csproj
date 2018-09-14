@@ -24,6 +24,7 @@
     <ApplicationInsightsResourceId>/subscriptions/ea97cd5e-30b0-435e-8f8d-d63fedf616f8/resourcegroups/auto-gp-resourcegroup/providers/microsoft.insights/components/auto-gp-apiweb</ApplicationInsightsResourceId>
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -223,6 +224,8 @@
     <Compile Include="Controllers\Base\RepositoryApiController.cs" />
     <Compile Include="Controllers\Base\ResultWithFacets.cs" />
     <Compile Include="Controllers\Base\TimeInfo.cs" />
+    <Compile Include="Controllers\CarController.cs" />
+    <Compile Include="Controllers\PurchaseCarController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
@@ -241,6 +244,11 @@
     <Compile Include="Models\Auth\ResetPasswordModel.cs" />
     <Compile Include="Models\Auth\SignupModel.cs" />
     <Compile Include="Models\Auth\TokenResponseModel.cs" />
+    <Compile Include="Models\Base\NewCar.cs" />
+    <Compile Include="Models\Base\UpdateCar.cs" />
+    <Compile Include="Models\Base\ViewCar.cs" />
+    <Compile Include="Models\Order\NewPurchaseCar.cs" />
+    <Compile Include="Models\Order\ViewPurchaseCar.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />
     <Compile Include="Models\Organization\ViewOrganization.cs" />
     <Compile Include="Models\Token\NewToken.cs" />

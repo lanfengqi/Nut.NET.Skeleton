@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Core.JsonPatch;
@@ -127,16 +127,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return await OkModel(modified);
         }
 
-        public virtual async Task<IHttpActionResult> PutAsync(string id, TViewModel model, long? version = null) {
+        public virtual async Task<IHttpActionResult> PutAsync(string id, TUpdateModel model, long? version = null) {
             TModel original = await GetModelAsync(id);
             if (original == null)
                 return NotFound();
 
             var modified = original.Copy();
             // map to update model first so we can restrict what is allowed to be modified
-            var updateModel = await Map<TUpdateModel>(modified);
-            updateModel = await Map(model, updateModel);
-            modified = await Map(updateModel, modified);
+            //var updateModel = await Map<TUpdateModel>(modified);
+            //updateModel = await Map(model, updateModel);
+            modified = await Map(model, modified);
+
             if (version.HasValue && _isVersioned)
                 ((IVersioned)modified).Version = version.Value;
 

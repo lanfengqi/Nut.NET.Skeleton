@@ -46,10 +46,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("me")]
         public async Task<IHttpActionResult> GetCurrentUseAsync() {
-            if (CurrentUser == null)
-                return NotFound();
+            if (base.currentUser == null)
+                return base.NotFound();
 
-            var currentUser = await GetModelAsync(CurrentUser.Id);
+            var currentUser = await GetModelAsync(base.currentUser.Id);
             if (currentUser == null)
                 return NotFound();
 
@@ -72,10 +72,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.PatchAsync(id, changes, version);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UpdateUser))]
         [HttpPut]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PutAsync(string id, ViewUser user, long? version = null) {
+        public override Task<IHttpActionResult> PutAsync(string id, UpdateUser user, long? version = null) {
             return base.PutAsync(id, user, version);
         }
 
@@ -115,7 +115,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (user == null)
                 return NotFound();
 
-            if (String.Equals(CurrentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(currentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
                 return Ok(new { IsVerified = user.IsPhoneVerified });
 
             phone = phone.ToLower();
@@ -242,14 +242,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (String.IsNullOrWhiteSpace(phone))
                 return false;
 
-            if (CurrentUser != null && String.Equals(CurrentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
+            if (currentUser != null && String.Equals(currentUser.Phone, phone, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             return await _repository.GetByPhoneAsync(phone) == null;
         }
 
         protected override async Task<User> GetModelAsync(string id) {
-            if (Request.IsAdmin() || String.Equals(CurrentUser.Id, id))
+            if (Request.IsAdmin() || String.Equals(currentUser.Id, id))
                 return await base.GetModelAsync(id);
 
             return null;
@@ -259,7 +259,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (Request.IsAdmin())
                 return base.GetModelsAsync(ids);
 
-            return base.GetModelsAsync(ids.Where(id => String.Equals(CurrentUser.Id, id)).ToArray());
+            return base.GetModelsAsync(ids.Where(id => String.Equals(currentUser.Id, id)).ToArray());
         }
     }
 }

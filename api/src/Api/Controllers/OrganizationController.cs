@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Models;
@@ -38,7 +38,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [RequireOrganization]
         public async Task<IHttpActionResult> GetAsync() {
 
-            var organizationId = CurrentUser.OrganizationId;
+            var organizationId = currentUser.OrganizationId;
             var organization = await _repository.GetByIdAsync(organizationId);
             return Ok(organization);
         }
@@ -82,10 +82,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.PatchAsync(id, changes, version);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewOrganization))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(NewOrganization))]
         [HttpPut]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PutAsync(string id, ViewOrganization organization, long? version = null) {
+        public override Task<IHttpActionResult> PutAsync(string id, NewOrganization organization, long? version = null) {
             return base.PutAsync(id, organization, version);
         }
 
