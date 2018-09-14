@@ -1,12 +1,9 @@
 using AutoMapper;
 using Foundatio.Logging;
 using Foundatio.Skeleton.Core.Extensions;
-using Foundatio.Skeleton.Core.JsonPatch;
-using Foundatio.Skeleton.Core.Serialization;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,28 +91,16 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         #region Update
 
-        public virtual async Task<IHttpActionResult> PatchAsync(string id, PatchDocument changes, long? version = null) {
+        public virtual async Task<IHttpActionResult> PatchAsync(string id, TUpdateModel changes, long? version = null) {
             TModel original = await GetModelAsync(id);
             if (original == null)
                 return NotFound();
 
-            // if there are no changes in the delta, then ignore the request
-            if (changes == null || !changes.Operations.Any())
-                return await OkModel(original);
-
             var modified = original.Copy();
+            modified = await Map(changes, modified);
+
             if (version.HasValue && _isVersioned)
                 ((IVersioned)modified).Version = version.Value;
-
-            // map to update model first so we can restrict what is allowed to be modified
-            var updateModel = await Map<TUpdateModel>(modified);
-
-            // Supports either JsonPatch or JSONPath syntax: http://goessner.net/articles/JsonPath/
-            var target = JToken.FromObject(updateModel, JsonHelper.DefaultSerializer);
-            new JsonPatcher().Patch(ref target, changes);
-            updateModel = target.ToObject<TUpdateModel>(JsonHelper.DefaultSerializer);
-
-            await Map(updateModel, modified);
 
             var permission = await CanUpdateAsync(original, modified);
             if (!permission.Allowed)
@@ -127,15 +112,12 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return await OkModel(modified);
         }
 
-        public virtual async Task<IHttpActionResult> PutAsync(string id, TUpdateModel model, long? version = null) {
+        public virtual async Task<IHttpActionResult> PutAsync(string id, TViewModel model, long? version = null) {
             TModel original = await GetModelAsync(id);
             if (original == null)
                 return NotFound();
 
             var modified = original.Copy();
-            // map to update model first so we can restrict what is allowed to be modified
-            //var updateModel = await Map<TUpdateModel>(modified);
-            //updateModel = await Map(model, updateModel);
             modified = await Map(model, modified);
 
             if (version.HasValue && _isVersioned)

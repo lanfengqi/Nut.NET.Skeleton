@@ -141,7 +141,7 @@ namespace Foundatio.Skeleton.Repositories {
 
             var query = _context.Set<T>().Where(x => x.Id == id);
 
-            return await query.AsNoTracking().FirstOrDefaultAsync(); 
+            return await query.FirstOrDefaultAsync(); 
 
         }
         public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {

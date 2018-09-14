@@ -67,10 +67,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UpdateCar))]
-        [HttpPut]
+        [HttpPatch]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PutAsync(string id, UpdateCar value, long? version = null) {
-            return base.PutAsync(id, value, version);
+        public override Task<IHttpActionResult> PatchAsync(string id, UpdateCar value, long? version = null) {
+            return base.PatchAsync(id, value, version);
         }
 
         [HttpDelete]

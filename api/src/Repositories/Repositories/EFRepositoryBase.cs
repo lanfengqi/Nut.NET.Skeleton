@@ -2,7 +2,6 @@ using FluentValidation;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,10 +49,10 @@ namespace Foundatio.Skeleton.Repositories {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
 
-            var doc = _context.Entry(document);
-            doc.State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
+            //_context.Set<T>().Attach(document);
+            //_context.Entry(document).State = EntityState.Modified;
+            _context.SaveChanges();
+            await Task.FromResult(1);
 
             return document;
         }
@@ -68,8 +67,7 @@ namespace Foundatio.Skeleton.Repositories {
                 return;
 
             foreach (var doc in docs) {
-                var document = _context.Entry(doc);
-                document.State = System.Data.Entity.EntityState.Modified;
+                _context.Set<T>().Attach(doc);
             }
             await _context.SaveChangesAsync();
         }
@@ -120,7 +118,6 @@ namespace Foundatio.Skeleton.Repositories {
             }
             await _context.SaveChangesAsync();
         }
-
 
     }
 }

@@ -65,17 +65,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.GetByIdAsync(id);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UpdateUser))]
         [HttpPatch]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PatchAsync(string id, PatchDocument changes, long? version = null) {
+        public override Task<IHttpActionResult> PatchAsync(string id, UpdateUser changes, long? version = null) {
             return base.PatchAsync(id, changes, version);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UpdateUser))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewUser))]
         [HttpPut]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PutAsync(string id, UpdateUser user, long? version = null) {
+        public override Task<IHttpActionResult> PutAsync(string id, ViewUser user, long? version = null) {
             return base.PutAsync(id, user, version);
         }
 

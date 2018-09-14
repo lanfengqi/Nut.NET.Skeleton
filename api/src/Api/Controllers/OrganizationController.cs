@@ -3,8 +3,6 @@ using Foundatio.Logging;
 using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Security;
-using Foundatio.Skeleton.Core.Extensions;
-using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
@@ -75,17 +73,17 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.PostAsync(value);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewOrganization))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(NewOrganization))]
         [HttpPatch]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PatchAsync(string id, [FromBody]PatchDocument changes, long? version = null) {
+        public override Task<IHttpActionResult> PatchAsync(string id, NewOrganization changes, long? version = null) {
             return base.PatchAsync(id, changes, version);
         }
 
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(NewOrganization))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(ViewOrganization))]
         [HttpPut]
         [Route("{id:objectid}")]
-        public override Task<IHttpActionResult> PutAsync(string id, NewOrganization organization, long? version = null) {
+        public override Task<IHttpActionResult> PutAsync(string id, ViewOrganization organization, long? version = null) {
             return base.PutAsync(id, organization, version);
         }
 
