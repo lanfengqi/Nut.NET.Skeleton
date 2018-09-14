@@ -139,10 +139,7 @@ namespace Foundatio.Skeleton.Repositories {
         }
         public async Task<T> GetByIdAsync(string id) {
 
-            var query = _context.Set<T>().Where(x => x.Id == id);
-
-            return await query.FirstOrDefaultAsync(); 
-
+            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {
 

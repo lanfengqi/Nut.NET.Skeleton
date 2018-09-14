@@ -2,6 +2,8 @@ using FluentValidation;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,11 +52,36 @@ namespace Foundatio.Skeleton.Repositories {
                 throw new ArgumentNullException(nameof(document));
 
             //_context.Set<T>().Attach(document);
-            //_context.Entry(document).State = EntityState.Modified;
-            _context.SaveChanges();
-            await Task.FromResult(1);
+            RemoveHoldingEntityInContext(document);
+
+            AttachIfNot(document);
+            _context.Entry(document).State = EntityState.Modified;
+
+
+            await _context.SaveChangesAsync();
 
             return document;
+        }
+
+        private Boolean RemoveHoldingEntityInContext(T entity) {
+            var objContext = ((IObjectContextAdapter)_context).ObjectContext;
+            var objSet = objContext.CreateObjectSet<T>();
+            var entityKey = objContext.CreateEntityKey(objSet.EntitySet.Name, entity);
+
+            Object foundEntity;
+            var exists = objContext.TryGetObjectByKey(entityKey, out foundEntity);
+
+            if (exists) {
+                objContext.Detach(foundEntity);
+            }
+
+            return (exists);
+        }
+
+        protected virtual void AttachIfNot(T entity) {
+            if (!_context.Set<T>().Local.Contains(entity)) {
+                _context.Set<T>().Attach(entity);
+            }
         }
 
         public async Task SaveAsync(IEnumerable<T> documents) {
@@ -67,7 +94,9 @@ namespace Foundatio.Skeleton.Repositories {
                 return;
 
             foreach (var doc in docs) {
-                _context.Set<T>().Attach(doc);
+                RemoveHoldingEntityInContext(doc);
+                AttachIfNot(doc);
+                _context.Entry(doc).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
         }
