@@ -79,6 +79,7 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<ITokenRepository, TokenRepository>();
             container.RegisterSingleton<IPurchaseCarRepository, PurchaseCarRepository>();
             container.RegisterSingleton<ICarRepository, CarRepository>();
+            container.RegisterSingleton<IAttendanceRepository, AttendanceRepository>();
             container.RegisterSingleton<ITemplatedSmsService, TemplatedSmsService>();
 
             container.RegisterSingleton<AliyunSmsOption>(() => new AliyunSmsOption(accessKeyId: "LTAInWMed2C2HnjD", accessKeySecret: "yjXA5bMaKgSgcotE98oPjCqP9ISmBC", signName: "华宝食品"));

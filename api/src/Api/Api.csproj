@@ -224,6 +224,7 @@
     <Compile Include="Controllers\Base\RepositoryApiController.cs" />
     <Compile Include="Controllers\Base\ResultWithFacets.cs" />
     <Compile Include="Controllers\Base\TimeInfo.cs" />
+    <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\PurchaseCarController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -247,7 +248,9 @@
     <Compile Include="Models\Base\NewCar.cs" />
     <Compile Include="Models\Base\UpdateCar.cs" />
     <Compile Include="Models\Base\ViewCar.cs" />
+    <Compile Include="Models\Order\NewAttendance.cs" />
     <Compile Include="Models\Order\NewPurchaseCar.cs" />
+    <Compile Include="Models\Order\ViewAttendance.cs" />
     <Compile Include="Models\Order\ViewPurchaseCar.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />
     <Compile Include="Models\Organization\ViewOrganization.cs" />

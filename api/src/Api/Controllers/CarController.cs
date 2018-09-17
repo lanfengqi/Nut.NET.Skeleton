@@ -27,12 +27,12 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("admin")]
         [Authorize(Roles = AuthorizationRoles.GlobalAdmin)]
-        public async Task<IHttpActionResult> GetForAdminsAsync(int page = 1, int limit = 10) {
+        public async Task<IHttpActionResult> GetForAdminsAsync(string carNum = "", int page = 1, int limit = 10) {
 
             page = GetPage(page);
             limit = GetLimit(limit);
 
-            var organizations = await _repository.FindAsync(x => x.CreatedUtc != null, new PagingOptions { Page = page, Limit = limit });
+            var organizations = await _repository.FindAsync(x => x.CarNum.Contains(carNum) && x.IsActive, new PagingOptions { Page = page, Limit = limit });
 
             return OkWithResourceLinks(organizations, organizations.TotalPages > page, page, organizations.TotalCount);
         }
@@ -83,6 +83,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             value.Id = Guid.NewGuid().ToString("N");
             value.CreatedUtc = value.UpdatedUtc = DateTime.UtcNow;
             value.OrganizationId = Request.GetSelectedOrganizationId();
+            value.IsActive = true;
 
             return base.AddModelAsync(value);
         }

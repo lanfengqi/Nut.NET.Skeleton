@@ -62,6 +62,10 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Car, NewCar>();
                 CreateMap<NewCar, Car>();
                 CreateMap<UpdateCar, Car>();
+
+                CreateMap<Attendance, ViewAttendance>();
+                CreateMap<NewAttendance, Attendance>();
+                CreateMap<Attendance, NewAttendance>();
             }
         }
     }

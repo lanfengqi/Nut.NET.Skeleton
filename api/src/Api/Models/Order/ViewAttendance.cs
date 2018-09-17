@@ -1,8 +1,9 @@
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 
-namespace Foundatio.Skeleton.Domain.Models {
-    public class Attendance : IOwnedByOrganizationWithIdentity, IHaveCreatedDate, IMapPoint {
+namespace Foundatio.Skeleton.Api.Models {
+    public class ViewAttendance : IIdentity, IHaveCreatedDate {
+
         public string Id { get; set; }
 
         public string OrganizationId { get; set; }
@@ -20,6 +21,5 @@ namespace Foundatio.Skeleton.Domain.Models {
         public decimal Lng { get; set; }
 
         public DateTime CreatedUtc { get; set; }
-
     }
 }
