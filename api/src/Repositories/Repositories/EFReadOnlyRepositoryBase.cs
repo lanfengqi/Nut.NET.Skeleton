@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Repositories {
     public class EFReadOnlyRepositoryBase<T> : IEFReadOnlyRepository<T> where T : class, IIdentity, new() {
@@ -14,15 +12,15 @@ namespace Foundatio.Skeleton.Repositories {
         protected static readonly string EntityTypeName = typeof(T).Name;
         protected readonly DbContext _context;
 
-        public EFReadOnlyRepositoryBase(IEFRepositoryContext efRepositoryContext) {
-            _context = efRepositoryContext.Context;
+        public EFReadOnlyRepositoryBase(IEFRepositoryContext eFRepositoryContext) {
+            _context = eFRepositoryContext.Context;
         }
 
         public async Task<IReadOnlyCollection<T>> FindAsync(Expression<Func<T, bool>> specification) {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
 
             return await query.ToListAsync();
         }
@@ -31,7 +29,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
             if (orderByExpression != null) {
                 switch (sortOrder) {
                     case SortOrder.Ascending:
@@ -52,7 +50,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
 
             var result = new PagedList<T>();
 
@@ -80,7 +78,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
 
             var result = new PagedList<T>();
 
@@ -120,7 +118,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 return false;
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
             var result = await query.CountAsync();
 
             return result > 0 ? true : false;
@@ -130,7 +128,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification);
+            var query = _context.Set<T>().Where(specification).AsNoTracking();
             return await query.CountAsync();
         }
 
@@ -138,8 +136,7 @@ namespace Foundatio.Skeleton.Repositories {
             return await this.CountAsync(x => x.Id != null);
         }
         public async Task<T> GetByIdAsync(string id) {
-
-            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {
 

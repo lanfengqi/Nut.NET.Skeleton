@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;

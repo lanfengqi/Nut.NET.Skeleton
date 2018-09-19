@@ -183,7 +183,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user);
             await _userPasswordRepository.AddAsync(userPassword);
 
-            _templatedSmsService.SendPhoneVerifySms(user);
+            _templatedSmsService.SendPhoneVerifyNotification(user);
             await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }

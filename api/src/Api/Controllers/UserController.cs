@@ -158,7 +158,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 user.CreateVerifyPhoneToken();
                 await _repository.SaveAsync(user);
 
-                _templatedSmsService.SendPhoneVerifySms(user);
+                _templatedSmsService.SendPhoneVerifyNotification(user);
             }
 
             return Ok();

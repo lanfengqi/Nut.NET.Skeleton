@@ -1,4 +1,4 @@
-﻿using Foundatio.Skeleton.Repositories.Configuration;
+using Foundatio.Skeleton.Repositories.Configuration;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -9,6 +9,8 @@ namespace Foundatio.Skeleton.Repositories {
 
         public EFDbContext()
             : base("DatabaseConnectionString") {
+
+            Init();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
@@ -29,5 +31,12 @@ namespace Foundatio.Skeleton.Repositories {
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public static void Init() {
+            var connectionFactory = new MySqlConnectionFactory();
+#pragma warning disable 0618
+            Database.DefaultConnectionFactory = connectionFactory;
+        }
     }
+
 }

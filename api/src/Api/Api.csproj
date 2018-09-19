@@ -215,6 +215,7 @@
     </Compile>
     <Compile Include="AppBuilder.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\AppApiController.cs" />
     <Compile Include="Controllers\Base\EntitySelectionPatches.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="Controllers\Base\ResultWithFacets.cs" />
     <Compile Include="Controllers\Base\TimeInfo.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
+    <Compile Include="Controllers\FarmerController.cs" />
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\PurchaseCarController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
@@ -245,11 +247,14 @@
     <Compile Include="Models\Auth\ResetPasswordModel.cs" />
     <Compile Include="Models\Auth\SignupModel.cs" />
     <Compile Include="Models\Auth\TokenResponseModel.cs" />
+    <Compile Include="Models\Base\NewFarmer.cs" />
     <Compile Include="Models\Base\NewCar.cs" />
     <Compile Include="Models\Base\UpdateCar.cs" />
     <Compile Include="Models\Base\ViewCar.cs" />
+    <Compile Include="Models\Base\ViewFarmer.cs" />
     <Compile Include="Models\Order\NewAttendance.cs" />
     <Compile Include="Models\Order\NewPurchaseCar.cs" />
+    <Compile Include="Models\Order\ProcessOrderModel.cs" />
     <Compile Include="Models\Order\ViewAttendance.cs" />
     <Compile Include="Models\Order\ViewPurchaseCar.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />

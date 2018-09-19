@@ -10,6 +10,7 @@ using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Domain.Services;
+using SimpleInjector;
 
 namespace Foundatio.Skeleton.Api.Security {
     public class AuthMessageHandler : DelegatingHandler {
@@ -23,12 +24,11 @@ namespace Foundatio.Skeleton.Api.Security {
         private readonly IUserPasswordRepository _userPasswordRepository;
         private readonly IOrganizationRepository _organizationRepository;
 
-        public AuthMessageHandler(ITokenRepository tokenRepository, IUserRepository userRepository,
-            IUserPasswordRepository userPasswordRepository, IOrganizationRepository organizationRepository) {
-            _tokenRepository = tokenRepository;
-            _userRepository = userRepository;
-            _userPasswordRepository = userPasswordRepository;
-            _organizationRepository = organizationRepository;
+        public AuthMessageHandler(Container container) {
+            _tokenRepository = container.GetInstance<ITokenRepository>();
+            _userRepository = container.GetInstance<IUserRepository>();
+            _userPasswordRepository = container.GetInstance<IUserPasswordRepository>();
+            _organizationRepository = container.GetInstance<IOrganizationRepository>();
         }
 
         protected virtual Task<HttpResponseMessage> BaseSendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {

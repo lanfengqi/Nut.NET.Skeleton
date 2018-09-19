@@ -11,8 +11,8 @@ namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryBase<T> : EFReadOnlyRepositoryBase<T>, IEFRepository<T> where T : class, IIdentity, new() {
         protected readonly IValidator<T> _validator;
 
-        public EFRepositoryBase(IEFRepositoryContext efRepositoryContext, IValidator<T> validator = null)
-            : base(efRepositoryContext) {
+        public EFRepositoryBase(IEFRepositoryContext eFRepositoryContext, IValidator<T> validator = null)
+            : base(eFRepositoryContext) {
 
             this._validator = validator;
         }
@@ -35,7 +35,6 @@ namespace Foundatio.Skeleton.Repositories {
 
             if (docs.Count == 0)
                 return;
-
             if (_validator != null)
                 foreach (var doc in docs)
                     await _validator.ValidateAndThrowAsync(doc);
@@ -43,6 +42,8 @@ namespace Foundatio.Skeleton.Repositories {
             foreach (var doc in docs) {
                 _context.Set<T>().Add(doc);
             }
+
+            
             await _context.SaveChangesAsync();
         }
 
@@ -51,13 +52,13 @@ namespace Foundatio.Skeleton.Repositories {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
 
-            //_context.Set<T>().Attach(document);
-            RemoveHoldingEntityInContext(document);
+            ////RemoveHoldingEntityInContext(document);
+            ////AttachIfNot(document);
+            ////_context.Entry(document).State = EntityState.Modified;
+            //((IObjectContextAdapter)_context).ObjectContext.Detach(document);
 
-            AttachIfNot(document);
             _context.Entry(document).State = EntityState.Modified;
-
-
+               
             await _context.SaveChangesAsync();
 
             return document;
@@ -94,8 +95,6 @@ namespace Foundatio.Skeleton.Repositories {
                 return;
 
             foreach (var doc in docs) {
-                RemoveHoldingEntityInContext(doc);
-                AttachIfNot(doc);
                 _context.Entry(doc).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();

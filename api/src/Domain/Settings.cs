@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -97,6 +97,8 @@ namespace Foundatio.Skeleton.Domain {
 
         public int TokenExpiressMinutes { get; set; }
 
+        public string CustomOrderNumberMask { get; set; }
+
 
         public override void Initialize() {
             EnableSsl = GetBool("EnableSsl", false);
@@ -163,6 +165,7 @@ namespace Foundatio.Skeleton.Domain {
                 PublicS3StorageFolder = PublicS3StorageFolder.TrimEnd('/');
             EnableS3Storage = GetBool("EnableS3Storage", !String.IsNullOrEmpty(PrivateS3StorageConnectionString));
 
+            CustomOrderNumberMask = GetString("CustomOrderNumberMask") ?? "{YYYY}{MM}{DD}{ID}";
             try {
                 var versionInfo = FileVersionInfo.GetVersionInfo(typeof(Settings).Assembly.Location);
                 Version = versionInfo.FileVersion;

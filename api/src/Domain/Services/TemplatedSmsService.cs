@@ -14,7 +14,7 @@ namespace Foundatio.Skeleton.Domain.Services {
             _queue = queue;
         }
 
-        public void SendPhoneVerifySms(User user) {
+        public void SendPhoneVerifyNotification(User user) {
             if (string.IsNullOrEmpty(user?.Phone))
                 return;
             Task.Run(async () => {
@@ -35,6 +35,55 @@ namespace Foundatio.Skeleton.Domain.Services {
                 await QueueMessageAsync(message).AnyContext();
             });
 
+        }
+
+        public void SendOrderCompletedNotification(Order order) {
+            if (order == null)
+                return;
+
+            if (string.IsNullOrEmpty(order?.Farmer?.Phone))
+                return;
+            Task.Run(async () => {
+                var message = new SmsMessage() {
+                    OutId = Guid.NewGuid().ToString("N"),
+                    Phone = order?.Farmer?.Phone,
+                    TemplateCode = "SMS_142621751",
+                    Title = "WellcomeSms"
+                };
+                message.TemplateParams.Add(new SmsToken {
+                    Key = "BuyerName",
+                    Value = "测试"
+                });
+                message.TemplateParams.Add(new SmsToken {
+                    Key = "OrderNo",
+                    Value = "123455"
+                });
+                await QueueMessageAsync(message).AnyContext();
+            });
+        }
+        public void SendOrderCannelledNotification(Order order) {
+            if (order == null)
+                return;
+
+            if (string.IsNullOrEmpty(order?.Farmer?.Phone))
+                return;
+            Task.Run(async () => {
+                var message = new SmsMessage() {
+                    OutId = Guid.NewGuid().ToString("N"),
+                    Phone = order?.Farmer?.Phone,
+                    TemplateCode = "SMS_142621751",
+                    Title = "WellcomeSms"
+                };
+                message.TemplateParams.Add(new SmsToken {
+                    Key = "BuyerName",
+                    Value = "测试"
+                });
+                message.TemplateParams.Add(new SmsToken {
+                    Key = "OrderNo",
+                    Value = "123455"
+                });
+                await QueueMessageAsync(message).AnyContext();
+            });
         }
 
         private Task QueueMessageAsync(SmsMessage message) {

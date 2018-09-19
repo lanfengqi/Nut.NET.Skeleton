@@ -38,8 +38,8 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<EFConfiguration>();
 
-            container.RegisterSingleton<DbContext>(() => new EFDbContext());
-            container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
+            //container.RegisterSingleton<DbContext>(() => new EFDbContext());
+            container.Register<IEFRepositoryContext, EFRepositoryContext>();
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
 
@@ -72,15 +72,18 @@ namespace Foundatio.Skeleton.Domain {
 
             container.Register(typeof(IValidator<>), new[] { typeof(Bootstrapper).Assembly }, Lifestyle.Singleton);
 
-            container.RegisterSingleton<IOrganizationRepository, OrganizationRepository>();
-            container.RegisterSingleton<IRoleRepository, RoleRepository>();
-            container.RegisterSingleton<IUserRepository, UserRepository>();
-            container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
-            container.RegisterSingleton<ITokenRepository, TokenRepository>();
-            container.RegisterSingleton<IPurchaseCarRepository, PurchaseCarRepository>();
-            container.RegisterSingleton<ICarRepository, CarRepository>();
-            container.RegisterSingleton<IAttendanceRepository, AttendanceRepository>();
-            container.RegisterSingleton<ITemplatedSmsService, TemplatedSmsService>();
+            container.Register<IOrganizationRepository, OrganizationRepository>();
+            container.Register<IRoleRepository, RoleRepository>();
+            container.Register<IUserRepository, UserRepository>();
+            container.Register<IUserPasswordRepository, UserPasswordRepository>();
+            container.Register<ITokenRepository, TokenRepository>();
+            container.Register<IPurchaseCarRepository, PurchaseCarRepository>();
+            container.Register<ICarRepository, CarRepository>();
+            container.Register<IAttendanceRepository, AttendanceRepository>();
+            container.Register<IFarmerRepository, FarmerRepository>();
+            container.Register<ITemplatedSmsService, TemplatedSmsService>();
+            container.Register<IOrderRepository, OrderRepository>();
+            container.Register<IOrderProcessingService, OrderProcessingService>();
 
             container.RegisterSingleton<AliyunSmsOption>(() => new AliyunSmsOption(accessKeyId: "LTAInWMed2C2HnjD", accessKeySecret: "yjXA5bMaKgSgcotE98oPjCqP9ISmBC", signName: "华宝食品"));
             container.RegisterSingleton<ISmsSender, AliyunSmsSender>();
@@ -88,7 +91,7 @@ namespace Foundatio.Skeleton.Domain {
 
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
-            container.RegisterSingleton<FirstInsatllService>();
+            container.Register<FirstInsatllService>();
 
             container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
 
