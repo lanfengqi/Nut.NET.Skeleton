@@ -43,7 +43,7 @@ namespace Foundatio.Skeleton.Repositories {
                 _context.Set<T>().Add(doc);
             }
 
-            
+
             await _context.SaveChangesAsync();
         }
 
@@ -52,39 +52,12 @@ namespace Foundatio.Skeleton.Repositories {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
 
-            ////RemoveHoldingEntityInContext(document);
-            ////AttachIfNot(document);
-            ////_context.Entry(document).State = EntityState.Modified;
-            //((IObjectContextAdapter)_context).ObjectContext.Detach(document);
-
             _context.Entry(document).State = EntityState.Modified;
-               
             await _context.SaveChangesAsync();
 
             return document;
         }
-
-        private Boolean RemoveHoldingEntityInContext(T entity) {
-            var objContext = ((IObjectContextAdapter)_context).ObjectContext;
-            var objSet = objContext.CreateObjectSet<T>();
-            var entityKey = objContext.CreateEntityKey(objSet.EntitySet.Name, entity);
-
-            Object foundEntity;
-            var exists = objContext.TryGetObjectByKey(entityKey, out foundEntity);
-
-            if (exists) {
-                objContext.Detach(foundEntity);
-            }
-
-            return (exists);
-        }
-
-        protected virtual void AttachIfNot(T entity) {
-            if (!_context.Set<T>().Local.Contains(entity)) {
-                _context.Set<T>().Attach(entity);
-            }
-        }
-
+        
         public async Task SaveAsync(IEnumerable<T> documents) {
 
             var docs = documents?.ToList();
@@ -118,9 +91,10 @@ namespace Foundatio.Skeleton.Repositories {
 
             var entitys = await GetByIdsAsync(ids);
             if (entitys != null && entitys.Any()) {
-                _context.Set<T>().RemoveRange(entitys);
-
-                await _context.SaveChangesAsync();
+                foreach (var entity in entitys) {
+                    _context.Entry(entity).State = EntityState.Deleted;
+                }
+               await _context.SaveChangesAsync();
             }
         }
 
@@ -142,8 +116,9 @@ namespace Foundatio.Skeleton.Repositories {
                 return;
 
             foreach (var doc in docs) {
-                _context.Set<T>().Remove(doc);
+                _context.Entry(doc).State = EntityState.Deleted;
             }
+
             await _context.SaveChangesAsync();
         }
 

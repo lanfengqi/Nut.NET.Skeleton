@@ -46,7 +46,7 @@ namespace Foundatio.Skeleton.Domain.Services {
             Task.Run(async () => {
                 var message = new SmsMessage() {
                     OutId = Guid.NewGuid().ToString("N"),
-                    Phone = order?.Farmer?.Phone,
+                    Phone = order?.Farmer.Phone,
                     TemplateCode = "SMS_142621751",
                     Title = "WellcomeSms"
                 };
@@ -70,7 +70,7 @@ namespace Foundatio.Skeleton.Domain.Services {
             Task.Run(async () => {
                 var message = new SmsMessage() {
                     OutId = Guid.NewGuid().ToString("N"),
-                    Phone = order?.Farmer?.Phone,
+                    Phone = order?.Farmer.Phone,
                     TemplateCode = "SMS_142621751",
                     Title = "WellcomeSms"
                 };

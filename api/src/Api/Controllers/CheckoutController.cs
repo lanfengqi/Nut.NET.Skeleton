@@ -22,18 +22,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
             _metricsClient = metricsClient;
         }
 
-        /// <summary>
-        /// Login with a local username and password.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>An auth token.</returns>
-        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(OrderResponseModel))]
         [HttpPost]
         [Route("placeorder")]
         public async Task<IHttpActionResult> PlaceOrderAsync(ProcessOrderModel model) {
             if (model == null)
                 return BadRequest("Process Order Request is required.");
 
+            string customOrderNumber;
             try {
                 var request = new ProcessOrderRequest() {
                     FarmerId = model.FarmerId,
@@ -50,13 +46,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
                 if (!result.Success)
                     return BadRequest(string.Join(",", result.Errors));
+                customOrderNumber = result.PlacedOrder.CustomOrderNumber;
 
-                await _metricsClient.CounterAsync("Place Order");
-
-                return Ok(result.PlacedOrder);
             } catch (Exception) {
                 return Unauthorized();
             }
+
+            await _metricsClient.CounterAsync("Place Order");
+            return Ok(new OrderResponseModel { CustomOrderNumber = customOrderNumber });
         }
 
     }

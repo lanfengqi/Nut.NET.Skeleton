@@ -54,6 +54,7 @@ namespace Foundatio.Skeleton.Domain.Services {
                     OrderStatus = OrderStatus.Complete,
 
                     FarmerId = request.FarmerId,
+                    Farmer = farmer,
                     Notes = request.Notes,
                     OrganizationId = request.OrganizationId,
                     PaymentMethodSystemName = request.PaymentMethodSystemName,
