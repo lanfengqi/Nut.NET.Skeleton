@@ -37,8 +37,7 @@ namespace Foundatio.Skeleton.Domain {
             container.RegisterSingleton<IMetricsClient>(() => new InMemoryMetricsClient());
 
             container.RegisterSingleton<EFConfiguration>();
-
-            //container.RegisterSingleton<DbContext>(() => new EFDbContext());
+            container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
             container.Register<IEFRepositoryContext, EFRepositoryContext>();
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
@@ -77,23 +76,19 @@ namespace Foundatio.Skeleton.Domain {
             container.Register<IUserRepository, UserRepository>();
             container.Register<IUserPasswordRepository, UserPasswordRepository>();
             container.Register<ITokenRepository, TokenRepository>();
-            container.Register<IPurchaseCarRepository, PurchaseCarRepository>();
             container.Register<ICarRepository, CarRepository>();
             container.Register<IAttendanceRepository, AttendanceRepository>();
             container.Register<IFarmerRepository, FarmerRepository>();
-            container.Register<ITemplatedSmsService, TemplatedSmsService>();
+            container.Register<IPurchaseCarRepository, PurchaseCarRepository>();
             container.Register<IOrderRepository, OrderRepository>();
-            container.Register<IOrderProcessingService, OrderProcessingService>();
 
             container.RegisterSingleton<AliyunSmsOption>(() => new AliyunSmsOption(accessKeyId: "LTAInWMed2C2HnjD", accessKeySecret: "yjXA5bMaKgSgcotE98oPjCqP9ISmBC", signName: "华宝食品"));
             container.RegisterSingleton<ISmsSender, AliyunSmsSender>();
 
-
-
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.Register<FirstInsatllService>();
-
-            container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
+            container.Register<ITemplatedSmsService, TemplatedSmsService>();
+            container.Register<IOrderProcessingService, OrderProcessingService>();
 
             container.AppendToCollection(typeof(Profile), typeof(DomainMappings));
             container.RegisterSingleton<IMapper>(() => {

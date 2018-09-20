@@ -51,13 +51,15 @@ namespace Foundatio.Skeleton.Repositories {
 
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
+            if (_validator != null)
+                await _validator.ValidateAndThrowAsync(document);
 
             _context.Entry(document).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return document;
         }
-        
+
         public async Task SaveAsync(IEnumerable<T> documents) {
 
             var docs = documents?.ToList();
@@ -66,6 +68,9 @@ namespace Foundatio.Skeleton.Repositories {
 
             if (docs.Count == 0)
                 return;
+            if (_validator != null)
+                foreach (var doc in docs)
+                    await _validator.ValidateAndThrowAsync(doc);
 
             foreach (var doc in docs) {
                 _context.Entry(doc).State = EntityState.Modified;
@@ -94,7 +99,7 @@ namespace Foundatio.Skeleton.Repositories {
                 foreach (var entity in entitys) {
                     _context.Entry(entity).State = EntityState.Deleted;
                 }
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 

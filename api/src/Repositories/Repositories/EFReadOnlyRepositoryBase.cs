@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Repositories {
     public class EFReadOnlyRepositoryBase<T> : IEFReadOnlyRepository<T> where T : class, IIdentity, new() {
@@ -12,8 +13,11 @@ namespace Foundatio.Skeleton.Repositories {
         protected static readonly string EntityTypeName = typeof(T).Name;
         protected readonly DbContext _context;
 
+        private ScopedCacheClient _scopedCacheClient;
+
         public EFReadOnlyRepositoryBase(IEFRepositoryContext eFRepositoryContext) {
             _context = eFRepositoryContext.Context;
+            SetCache(eFRepositoryContext.Cache);
         }
 
         public async Task<IReadOnlyCollection<T>> FindAsync(Expression<Func<T, bool>> specification) {
@@ -44,7 +48,6 @@ namespace Foundatio.Skeleton.Repositories {
             }
             return await query.ToListAsync();
         }
-
 
         public async Task<PagedList<T>> FindAsync(Expression<Func<T, bool>> specification, IPagingOptions paging = null) {
             if (specification == null)
@@ -135,9 +138,11 @@ namespace Foundatio.Skeleton.Repositories {
         public async Task<long> CountAsync() {
             return await this.CountAsync(x => x.Id != null);
         }
+
         public async Task<T> GetByIdAsync(string id) {
             return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
+
         public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {
 
             var idList = ids?.Distinct().Where(i => !String.IsNullOrEmpty(i)).ToList();
@@ -149,11 +154,9 @@ namespace Foundatio.Skeleton.Repositories {
             return result;
         }
 
-
         public async Task<IReadOnlyCollection<T>> GetAllAsync(IPagingOptions paging = null) {
             return await this.FindAsync(x => x.Id != null, paging);
         }
-
 
         public async Task<bool> ExistsAsync(string id) {
             if (String.IsNullOrEmpty(id))
@@ -161,5 +164,19 @@ namespace Foundatio.Skeleton.Repositories {
 
             return await this.ExistsAsync(x => x.Id == id);
         }
+
+        public bool IsCacheEnabled { get; set; }
+        protected ScopedCacheClient Cache => _scopedCacheClient ?? new ScopedCacheClient(new NullCacheClient());
+
+        private void SetCache(ICacheClient cache) {
+            IsCacheEnabled = cache != null;
+            _scopedCacheClient = new ScopedCacheClient(cache ?? new NullCacheClient(), EntityTypeName);
+        }
+
+        protected void DisableCache() {
+            IsCacheEnabled = false;
+            _scopedCacheClient = new ScopedCacheClient(new NullCacheClient(), EntityTypeName);
+        }
+
     }
 }

@@ -1,13 +1,24 @@
 using System.Data.Entity;
+using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryContext : IEFRepositoryContext {
-        // <summary>
-        /// Gets the <see cref="DbContext"/> instance handled by Entity Framework.
-        /// </summary>
+        private readonly ICacheClient _cache;
+        public EFRepositoryContext(ICacheClient cache) {
+            _cache = cache;
+        }
+
         public DbContext Context {
             get {
                 return new EFDbContext();
+            }
+        }
+
+        public ICacheClient Cache {
+            get {
+                if (_cache == null)
+                    return new NullCacheClient();
+                return _cache;
             }
         }
     }

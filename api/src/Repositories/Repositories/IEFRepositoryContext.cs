@@ -1,11 +1,11 @@
-﻿using System.Data.Entity;
+using System.Data.Entity;
+using Foundatio.Caching;
 
 namespace Foundatio.Skeleton.Repositories {
     public interface IEFRepositoryContext {
 
-        /// <summary>
-        /// Gets the <see cref="DbContext"/> instance handled by Entity Framework.
-        /// </summary>
         DbContext Context { get; }
+
+        ICacheClient Cache { get; }
     }
 }
