@@ -35,6 +35,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                     FarmerId = model.FarmerId,
                     Notes = model.Notes,
                     OtherCost = model.OtherCost,
+                    OtherCostNotes = model.OtherCostNotes,
                     PaymentCardNumber = model.PaymentCardNumber,
                     PaymentMethodSystemName = model.PaymentMethodSystemName,
 

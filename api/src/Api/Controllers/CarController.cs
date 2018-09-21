@@ -7,6 +7,7 @@ using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
 using Swashbuckle.Swagger.Annotations;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -32,9 +33,11 @@ namespace Foundatio.Skeleton.Api.Controllers {
             page = GetPage(page);
             limit = GetLimit(limit);
 
-            var organizations = await _repository.FindAsync(x => x.CarNum.Contains(carNum) && x.IsActive, new PagingOptions { Page = page, Limit = limit });
-
-            return OkWithResourceLinks(organizations, organizations.TotalPages > page, page, organizations.TotalCount);
+            var cars = await _repository.FindAsync(x => x.CarNum.Contains(carNum) && x.IsActive, new PagingOptions { Page = page, Limit = limit });
+            var viewCars = cars.Select(async x => {
+                return await Map<ViewCar>(x);
+            }).Select(t => t.Result).ToList();
+            return OkWithResourceLinks(viewCars, cars.TotalPages > page, page, cars.TotalCount);
         }
 
         [HttpGet]

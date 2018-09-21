@@ -8,6 +8,8 @@ namespace Foundatio.Skeleton.Api.Models {
 
         public decimal OtherCost { get; set; }
 
+        public string OtherCostNotes { get; set; }
+
         public string Notes { get; set; }
     }
 }

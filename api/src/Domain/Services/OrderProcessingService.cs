@@ -89,7 +89,7 @@ namespace Foundatio.Skeleton.Domain.Services {
                     CostSystemName = "OtherCost",
                     CreatedUtc = DateTime.UtcNow,
                     EnteredMoney = request.OtherCost,
-                    Notes = "",
+                    Notes = request.OtherCostNotes,
                     OrderId = order.Id,
                     Order = order,
                     UpdatedUtc = DateTime.UtcNow,

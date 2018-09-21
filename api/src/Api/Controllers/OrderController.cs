@@ -5,6 +5,7 @@ using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
 using Foundatio.Skeleton.Domain.Services;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -23,6 +24,26 @@ namespace Foundatio.Skeleton.Api.Controllers {
             : base(loggerFactory, orderRepository, mapper) {
 
             _orderProcessingService = orderProcessingService;
+        }
+
+        [HttpGet]
+        [Route("me")]
+        public async Task<IHttpActionResult> GetForMeAsync(DateTime? date = null, int page = 1, int limit = 10) {
+            if (base.currentUser == null)
+                return base.NotFound();
+
+            page = GetPage(page);
+            limit = GetLimit(limit);
+
+            if (!date.HasValue)
+                date = DateTime.Parse(DateTime.UtcNow.ToShortDateString());
+
+            var orders = await _repository.SearchOrders(currentUser.Id, date, date.Value.AddDays(1), page, limit);
+            var viewOrders = orders.Select(async x => {
+                return await Map<ViewOrder>(x);
+            }).Select(t => t.Result).ToList();
+
+            return OkWithResourceLinks(viewOrders, orders.TotalPages > page, page, orders.TotalCount);
         }
 
         [HttpGet]

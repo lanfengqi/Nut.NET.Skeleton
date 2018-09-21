@@ -47,6 +47,8 @@ namespace Foundatio.Skeleton.Domain.Services {
 
         public decimal OtherCost { get; set; }
 
+        public string OtherCostNotes { get; set; }
+
         public string Notes { get; set; }
     }
 }
