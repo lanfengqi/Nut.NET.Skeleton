@@ -20,8 +20,8 @@ namespace Foundatio.Skeleton.Domain.Repositories {
 
             customOrderNumber = customOrderNumber.ToLower();
 
-            var roles = await this.FindAsync(x => x.CustomOrderNumber == customOrderNumber);
-            return roles.FirstOrDefault();
+            var orders = await this.FindAsync(x => x.CustomOrderNumber == customOrderNumber);
+            return orders.FirstOrDefault();
         }
     }
 }

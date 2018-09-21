@@ -8,6 +8,7 @@ using Foundatio.Skeleton.Api.Utility;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain;
 using Foundatio.Skeleton.Domain.Models;
+using Foundatio.Skeleton.Domain.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using SimpleInjector;
@@ -76,6 +77,8 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Order, ViewOrder>()
                     .ForMember(dest => dest.OrderItems, mo => mo.MapFrom(src => src.OrderItems))
                     .ForMember(dest => dest.OrderCosts, mo => mo.MapFrom(src => src.OrderCosts));
+
+                CreateMap<OrderByUserReportLine, OrderByUserReportLineModel> ();
             }
         }
     }

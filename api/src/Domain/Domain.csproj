@@ -230,9 +230,11 @@
     <Compile Include="Services\FirstInsatllService.cs" />
     <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Services\IOrderProcessingService.cs" />
+    <Compile Include="Services\IOrderReportService.cs" />
     <Compile Include="Services\ITemplatedSmsService.cs" />
     <Compile Include="Services\OrderExtensions.cs" />
     <Compile Include="Services\OrderProcessingService.cs" />
+    <Compile Include="Services\OrderReportService.cs" />
     <Compile Include="Services\TemplatedSmsService.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Validators\EmailValidator.cs" />

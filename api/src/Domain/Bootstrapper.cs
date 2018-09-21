@@ -89,6 +89,7 @@ namespace Foundatio.Skeleton.Domain {
             container.Register<FirstInsatllService>();
             container.Register<ITemplatedSmsService, TemplatedSmsService>();
             container.Register<IOrderProcessingService, OrderProcessingService>();
+            container.Register<IOrderReportService, OrderReportService>();
 
             container.AppendToCollection(typeof(Profile), typeof(DomainMappings));
             container.RegisterSingleton<IMapper>(() => {
