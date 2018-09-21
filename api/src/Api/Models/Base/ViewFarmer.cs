@@ -15,6 +15,10 @@ namespace Foundatio.Skeleton.Api.Models {
 
         public string Contact { get; set; }
 
+        public string ContactIdCardNumber { get; set; }
+
+        public string ContactAddress { get; set; }
+
         public bool Deleted { get; set; }
 
         public string Notes { get; set; }

@@ -228,6 +228,7 @@
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\FarmerController.cs" />
     <Compile Include="Controllers\CarController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PurchaseCarController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
@@ -257,6 +258,9 @@
     <Compile Include="Models\Order\OrderResponseModel.cs" />
     <Compile Include="Models\Order\ProcessOrderModel.cs" />
     <Compile Include="Models\Order\ViewAttendance.cs" />
+    <Compile Include="Models\Order\ViewOrder.cs" />
+    <Compile Include="Models\Order\ViewOrderCost.cs" />
+    <Compile Include="Models\Order\ViewOrderItem.cs" />
     <Compile Include="Models\Order\ViewPurchaseCar.cs" />
     <Compile Include="Models\Organization\NewOrganization.cs" />
     <Compile Include="Models\Organization\ViewOrganization.cs" />

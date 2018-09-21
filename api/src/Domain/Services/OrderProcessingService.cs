@@ -95,7 +95,7 @@ namespace Foundatio.Skeleton.Domain.Services {
                     UpdatedUtc = DateTime.UtcNow,
                     Id = Guid.NewGuid().ToString("N"),
                 });
-                order.OrderPaymentMoney = order.OrderTotal - request.OtherCost;
+                order.OrderPaymentMoney = order.OrderTotal + request.OtherCost;
                 await _orderRepository.SaveAsync(order);
 
                 _templatedSmsService.SendOrderCompletedNotification(order);

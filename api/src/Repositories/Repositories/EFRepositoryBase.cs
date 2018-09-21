@@ -1,4 +1,5 @@
 using FluentValidation;
+using Foundatio.Skeleton.Core.Extensions;
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
@@ -18,16 +19,16 @@ namespace Foundatio.Skeleton.Repositories {
         }
 
 
-        public async Task<T> AddAsync(T document) {
+        public async Task<T> AddAsync(T document, bool addToCache = false, TimeSpan? expiresIn = null) {
             if (document == null)
                 throw new ArgumentNullException(nameof(document));
 
-            await AddAsync(new[] { document });
+            await AddAsync(new[] { document }, addToCache, expiresIn);
 
             return document;
         }
 
-        public async Task AddAsync(IEnumerable<T> documents) {
+        public async Task AddAsync(IEnumerable<T> documents, bool addToCache = false, TimeSpan? expiresIn = null) {
 
             var docs = documents?.ToList();
             if (docs == null || docs.Any(d => d == null))
@@ -43,8 +44,10 @@ namespace Foundatio.Skeleton.Repositories {
                 _context.Set<T>().Add(doc);
             }
 
-
             await _context.SaveChangesAsync();
+
+            if (addToCache)
+                await AddToCacheAsync(docs, expiresIn).AnyContext();
         }
 
         public async Task<T> SaveAsync(T document) {
@@ -56,6 +59,10 @@ namespace Foundatio.Skeleton.Repositories {
 
             _context.Entry(document).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
+
+            if (IsCacheEnabled)
+                await Cache.RemoveAllAsync(new[] { document.Id }).AnyContext();
 
             return document;
         }
@@ -76,6 +83,9 @@ namespace Foundatio.Skeleton.Repositories {
                 _context.Entry(doc).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
+
+            if (IsCacheEnabled)
+                await Cache.RemoveAllAsync(documents.Select(x => x.Id)).AnyContext();
         }
 
         public async Task RemoveAsync(string id) {
@@ -101,6 +111,8 @@ namespace Foundatio.Skeleton.Repositories {
                 }
                 await _context.SaveChangesAsync();
             }
+            if (IsCacheEnabled)
+                await Cache.RemoveAllAsync(ids).AnyContext();
         }
 
         public async Task RemoveAsync(T document) {
@@ -125,7 +137,18 @@ namespace Foundatio.Skeleton.Repositories {
             }
 
             await _context.SaveChangesAsync();
+
+            if (IsCacheEnabled)
+                await Cache.RemoveAllAsync(documents.Select(x => x.Id)).AnyContext();
         }
 
+        protected virtual async Task AddToCacheAsync(ICollection<T> documents, TimeSpan? expirseIn = null) {
+            if (!IsCacheEnabled || Cache == null)
+                return;
+
+            foreach (var doc in documents) {
+                await Cache.SetAsync(doc.Id, doc, expirseIn ?? TimeSpan.FromSeconds(30));
+            }
+        }
     }
 }

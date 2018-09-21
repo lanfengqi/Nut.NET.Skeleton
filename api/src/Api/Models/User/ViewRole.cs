@@ -1,7 +1,7 @@
-﻿using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
 
-namespace Foundatio.Skeleton.Api.Models {
+namespace Foundatio.Skeleton.Api {
     public class ViewRole : IIdentity, IHaveDates {
 
         public string Id { get; set; }

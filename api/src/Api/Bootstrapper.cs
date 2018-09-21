@@ -70,6 +70,12 @@ namespace Foundatio.Skeleton.Api {
                 CreateMap<Farmer, ViewFarmer>();
                 CreateMap<NewFarmer, Farmer>();
                 CreateMap<Farmer, NewFarmer>();
+
+                CreateMap<OrderCost, ViewOrderCost>();
+                CreateMap<OrderItem, ViewOrderItem>();
+                CreateMap<Order, ViewOrder>()
+                    .ForMember(dest => dest.OrderItems, mo => mo.MapFrom(src => src.OrderItems))
+                    .ForMember(dest => dest.OrderCosts, mo => mo.MapFrom(src => src.OrderCosts));
             }
         }
     }

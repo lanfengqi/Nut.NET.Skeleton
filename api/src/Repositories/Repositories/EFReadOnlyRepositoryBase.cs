@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Foundatio.Caching;
+using Foundatio.Skeleton.Core.Extensions;
 
 namespace Foundatio.Skeleton.Repositories {
     public class EFReadOnlyRepositoryBase<T> : IEFReadOnlyRepository<T> where T : class, IIdentity, new() {
@@ -139,19 +140,48 @@ namespace Foundatio.Skeleton.Repositories {
             return await this.CountAsync(x => x.Id != null);
         }
 
-        public async Task<T> GetByIdAsync(string id) {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<T> GetByIdAsync(string id, bool useCache = false, TimeSpan? expiresIn = null) {
+            if (string.IsNullOrEmpty(id))
+                return null;
+
+            T hit = null;
+            if (IsCacheEnabled && useCache)
+                hit = await Cache.GetAsync<T>(id, default(T)).AnyContext();
+
+            if (hit != null) {
+                return hit;
+            }
+
+            hit = await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            if (IsCacheEnabled && hit != null && useCache)
+                await Cache.SetAsync(id, hit, expiresIn ?? TimeSpan.FromSeconds(60)).AnyContext();
+
+            return hit;
         }
 
-        public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids) {
+        public async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<string> ids, bool useCache = false, TimeSpan? expiresIn = null) {
 
             var idList = ids?.Distinct().Where(i => !String.IsNullOrEmpty(i)).ToList();
             if (idList == null || idList.Count == 0)
                 return null;
 
-            var result = await this.FindAsync(x => ids.Contains(x.Id));
+            var hits = new List<T>();
+            if (IsCacheEnabled && useCache) {
+               var  cachehits = await Cache.GetAllAsync<T>(ids).AnyContext();
+                hits.AddRange(cachehits.Where(kvp => kvp.Value.HasValue).Select(kvp => kvp.Value.Value));
+            }
 
-            return result;
+            if (hits.Any()) {
+                return hits;
+            }
+
+            hits = (await this.FindAsync(x => ids.Contains(x.Id))).ToList();
+            if (IsCacheEnabled && hits.Any() && useCache) {
+                foreach(var hit in  hits)
+                    await Cache.SetAsync(hit.Id, hit, expiresIn ?? TimeSpan.FromSeconds(60)).AnyContext();
+            }
+               
+            return hits;
         }
 
         public async Task<IReadOnlyCollection<T>> GetAllAsync(IPagingOptions paging = null) {
