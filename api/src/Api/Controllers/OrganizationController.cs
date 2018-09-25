@@ -58,7 +58,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         [HttpGet]
         [Route("{id:objectid}", Name = "GetOrganizationById")]
         public override async Task<IHttpActionResult> GetByIdAsync(string id) {
-            var organization = await GetModelAsync(id);
+            var organization = await GetModelAsync(id, true);
             if (organization == null)
                 return NotFound();
 

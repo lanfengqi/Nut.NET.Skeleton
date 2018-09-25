@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using Foundatio.Skeleton.Repositories.Model;
@@ -42,29 +42,29 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return Ok(await Map<TViewModel>(model));
         }
 
-        protected virtual async Task<TModel> GetModelAsync(string id) {
+        protected virtual async Task<TModel> GetModelAsync(string id, bool useCache = false) {
             if (String.IsNullOrEmpty(id))
                 return null;
 
-            TModel model = await _repository.GetByIdAsync(id);
+            TModel model = await _repository.GetByIdAsync(id, useCache);
             if (_isOwnedByOrganization && model != null && ((IOwnedByOrganization)model).OrganizationId != GetSelectedOrganizationId())
                 return null;
 
             return model;
         }
 
-        protected virtual async Task<IReadOnlyCollection<TModel>> GetModelsAsync(string[] ids) {
+        protected virtual async Task<IReadOnlyCollection<TModel>> GetModelsAsync(string[] ids, bool useCache = false) {
             if (ids == null || ids.Length == 0)
                 return new List<TModel>();
 
-            IReadOnlyCollection<TModel> models = await _repository.GetByIdsAsync(ids);
+            IReadOnlyCollection<TModel> models = await _repository.GetByIdsAsync(ids, useCache: useCache);
             var selectedOrganizationId = GetSelectedOrganizationId();
             if (_isOwnedByOrganization)
                 models = models?.Where(m => ((IOwnedByOrganization)m).OrganizationId == selectedOrganizationId).ToList();
 
             return models;
         }
-        
+
         #endregion
 
         #region Mapping

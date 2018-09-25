@@ -4,9 +4,6 @@ using Foundatio.Messaging;
 using Foundatio.Skeleton.Api.Extensions;
 using Foundatio.Skeleton.Api.Models;
 using Foundatio.Skeleton.Api.Security;
-using Foundatio.Skeleton.Api.Utility;
-using Foundatio.Skeleton.Core.Collections;
-using Foundatio.Skeleton.Core.JsonPatch;
 using Foundatio.Skeleton.Core.Utility;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Domain.Repositories;
@@ -107,7 +104,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         }
 
         [HttpPost]
-        [Route("{id:objectid}/email-address/{email:minlength(1)}")]
+        [Route("{id:objectid}/phone/{phone:minlength(1)}")]
         [Authorize(Roles = AuthorizationRoles.User)]
         [RequireOrganization]
         public async Task<IHttpActionResult> UpdatePhoneAsync(string id, string phone) {
@@ -248,16 +245,16 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return await _repository.GetByPhoneAsync(phone) == null;
         }
 
-        protected override async Task<User> GetModelAsync(string id) {
+        protected override async Task<User> GetModelAsync(string id, bool useCache = false) {
             if (Request.IsAdmin() || String.Equals(currentUser.Id, id))
-                return await base.GetModelAsync(id);
+                return await base.GetModelAsync(id, useCache: useCache);
 
             return null;
         }
 
-        protected override Task<IReadOnlyCollection<User>> GetModelsAsync(string[] ids) {
+        protected override Task<IReadOnlyCollection<User>> GetModelsAsync(string[] ids, bool useCache = false) {
             if (Request.IsAdmin())
-                return base.GetModelsAsync(ids);
+                return base.GetModelsAsync(ids, useCache: useCache);
 
             return base.GetModelsAsync(ids.Where(id => String.Equals(currentUser.Id, id)).ToArray());
         }

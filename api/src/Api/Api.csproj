@@ -215,6 +215,7 @@
     </Compile>
     <Compile Include="AppBuilder.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\AppApiController.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Models\Base\UpdateCar.cs" />
     <Compile Include="Models\Base\ViewCar.cs" />
     <Compile Include="Models\Base\ViewFarmer.cs" />
+    <Compile Include="Models\Media\FileResponseModel.cs" />
     <Compile Include="Models\Order\NewAttendance.cs" />
     <Compile Include="Models\Order\NewPurchaseCar.cs" />
     <Compile Include="Models\Order\OrderByUserReportLineModel.cs" />

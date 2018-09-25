@@ -141,7 +141,7 @@ namespace Foundatio.Skeleton.Domain {
            
             StripePublishableApiKey = GetString("StripePublishableApiKey");
             StorageFolder = GetString("StorageFolder", "|DataDirectory|\\storage");
-            PublicStorageUrlPrefix = GetString("PublicStorageUrlPrefix", "http://localhost:51000/" + AppScopePrefix + "public");
+            PublicStorageUrlPrefix = GetString("PublicStorageUrlPrefix", "http://localhost:61000/" + AppScopePrefix + "public");
             if (PublicStorageUrlPrefix.EndsWith("/"))
                 PublicStorageUrlPrefix = PublicStorageUrlPrefix.TrimEnd('/');
 

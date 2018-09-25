@@ -27,7 +27,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             return base.GetByIdAsync(id);
         }
 
-        protected override async Task<Domain.Models.Token> GetModelAsync(string id) {
+        protected override async Task<Domain.Models.Token> GetModelAsync(string id, bool useCache = false) {
             if (String.IsNullOrEmpty(id))
                 return null;
 

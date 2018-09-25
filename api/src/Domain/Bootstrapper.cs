@@ -21,7 +21,6 @@ using SimpleInjector;
 using SimpleInjector.Advanced;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Net.Http;
 
