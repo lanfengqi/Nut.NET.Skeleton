@@ -3,6 +3,7 @@ using Foundatio.Skeleton.Domain.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Foundatio.Skeleton.Core.Extensions;
 
 namespace Foundatio.Skeleton.Domain.Services {
     public class FirstInsatllService {
@@ -22,7 +23,7 @@ namespace Foundatio.Skeleton.Domain.Services {
         }
 
         public async Task InstallData() {
-            if (await _userRepository.CountAsync() != 0)
+            if (await _roleRepository.CountAsync() != 0)
                 return;
 
             await CreateRoleAsync();
@@ -30,42 +31,43 @@ namespace Foundatio.Skeleton.Domain.Services {
         }
 
         public async Task CreateRoleAsync() {
-            var roles = new List<Role>();
 
-            roles.Add(new Role() {
+            var globalAdmin = new Role() {
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString("N"),
                 Name = "超级管理员",
                 SystemName = AuthorizationRoles.GlobalAdmin
-            });
+            };
+            await _roleRepository.AddAsync(globalAdmin).AnyContext();
 
-            roles.Add(new Role() {
+            var admin = new Role() {
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString("N"),
                 Name = "管理员",
                 SystemName = AuthorizationRoles.Admin
-            });
+            };
+            await _roleRepository.AddAsync(admin).AnyContext();
 
-            roles.Add(new Role() {
+            var user = new Role() {
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString("N"),
                 Name = "用户",
                 SystemName = AuthorizationRoles.User
-            });
+            };
+            await _roleRepository.AddAsync(user).AnyContext();
 
-            roles.Add(new Role() {
+            var client = new Role() {
                 CreatedUtc = DateTime.UtcNow,
                 UpdatedUtc = DateTime.UtcNow,
                 Id = Guid.NewGuid().ToString("N"),
                 Name = "游客",
                 SystemName = AuthorizationRoles.Client
-            });
+            };
+            await _roleRepository.AddAsync(client).AnyContext();
 
-
-            await _roleRepository.AddAsync(roles);
         }
 
     }

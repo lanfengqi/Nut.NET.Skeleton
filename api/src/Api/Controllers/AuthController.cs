@@ -99,8 +99,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return Ok();
             try {
                 await _tokenRepository.RemoveAsync(id);
-            } catch {
-
+            } catch (Exception ex) {
+                throw ex;
             }
             return Ok();
         }
@@ -138,8 +138,9 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 Phone = model.Phone,
                 IsPhoneVerified = false,
                 PhoneNotificationsEnabled = false,
-                Id = Guid.NewGuid().ToString("N"),
+                Id = Guid.NewGuid().ToString("N")
             };
+
             user.CreateVerifyPhoneToken();
             var userPassword = new UserPassword {
                 Id = Guid.NewGuid().ToString("N"),
@@ -180,8 +181,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
                     user.OrganizationId = organization.Id;
                 }
             }
-            await _userRepository.AddAsync(user);
-            await _userPasswordRepository.AddAsync(userPassword);
+            await _userRepository.AddAsync(user).AnyContext();
+            await _userPasswordRepository.AddAsync(userPassword).AnyContext();
 
             _templatedSmsService.SendPhoneVerifyNotification(user);
             await _metricsClient.CounterAsync("User Sign Up");

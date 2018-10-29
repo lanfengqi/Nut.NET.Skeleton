@@ -24,7 +24,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
         public MediaController(ILoggerFactory loggerFactory, IFileStorage fileStorage, IMetricsClient metricsClient
             , ICacheClient cacheClient) {
-            _logger = loggerFactory?.CreateLogger<AuthController>() ?? NullLogger.Instance;
+            _logger = loggerFactory?.CreateLogger<MediaController>() ?? NullLogger.Instance;
             _fileStorage = fileStorage;
             _metricsClient = metricsClient;
             _cacheClinet = cacheClient;

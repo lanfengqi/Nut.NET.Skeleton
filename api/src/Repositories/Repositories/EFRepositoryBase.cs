@@ -4,7 +4,6 @@ using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,7 +43,7 @@ namespace Foundatio.Skeleton.Repositories {
                 _context.Set<T>().Add(doc);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().AnyContext();
 
             if (addToCache)
                 await AddToCacheAsync(docs, expiresIn).AnyContext();
@@ -82,7 +81,7 @@ namespace Foundatio.Skeleton.Repositories {
             foreach (var doc in docs) {
                 _context.Entry(doc).State = EntityState.Modified;
             }
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().AnyContext();
 
             if (IsCacheEnabled)
                 await Cache.RemoveAllAsync(documents.Select(x => x.Id)).AnyContext();
@@ -109,7 +108,7 @@ namespace Foundatio.Skeleton.Repositories {
                 foreach (var entity in entitys) {
                     _context.Entry(entity).State = EntityState.Deleted;
                 }
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().AnyContext();
             }
             if (IsCacheEnabled)
                 await Cache.RemoveAllAsync(ids).AnyContext();
@@ -136,7 +135,7 @@ namespace Foundatio.Skeleton.Repositories {
                 _context.Entry(doc).State = EntityState.Deleted;
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().AnyContext();
 
             if (IsCacheEnabled)
                 await Cache.RemoveAllAsync(documents.Select(x => x.Id)).AnyContext();

@@ -28,15 +28,15 @@ namespace Foundatio.Skeleton.Domain.Models {
 
         public string OrganizationId { get; set; }
 
-        /// <summary>
-        /// General user role (type of user)
-        /// </summary>
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<Role> Roles {
+            get { return _roles ?? (_roles = new List<Role>()); }
+            protected set { _roles = value; }
+        }
+        private ICollection<Role> _roles;
 
         public User() {
             PhoneNotificationsEnabled = true;
             IsActive = true;
-            Roles = new Collection<Role>();
         }
     }
 
