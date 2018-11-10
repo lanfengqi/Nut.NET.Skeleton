@@ -30,7 +30,7 @@ namespace Foundatio.Skeleton.Api {
             container.RegisterSingleton<ThrottlingHandler>(() => new ThrottlingHandler(container.GetInstance<ICacheClient>(), userIdentifier => Settings.Current.ApiThrottleLimit, TimeSpan.FromMinutes(15)));
             container.RegisterSingleton<XHttpMethodOverrideDelegatingHandler>();
             container.RegisterSingleton<EncodingDelegatingHandler>();
-            //container.RegisterSingleton<AuthMessageHandler>();
+            container.RegisterSingleton<AuthMessageHandler>();
 
             container.AppendToCollection(typeof(Profile), typeof(ApiMappings));
         }

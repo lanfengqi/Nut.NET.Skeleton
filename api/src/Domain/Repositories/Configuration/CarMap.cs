@@ -8,7 +8,8 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.ToTable("Car");
 
             this.HasKey(c => c.Id);
-            this.Property(c => c.OrganizationId).HasMaxLength(50);
+            this.Property(c => c.Id).HasMaxLength(36);
+            this.Property(c => c.OrganizationId).HasMaxLength(36);
             this.Property(c => c.Notes).HasMaxLength(500);
             this.Property(c => c.CarNum).HasMaxLength(20);
             this.Property(c => c.CarType).HasMaxLength(20);

@@ -4,7 +4,7 @@ using Foundatio.Caching;
 namespace Foundatio.Skeleton.Repositories {
     public interface IEFRepositoryContext {
 
-        DbContext Context { get; }
+        IDbContext Context { get; }
 
         ICacheClient Cache { get; }
     }

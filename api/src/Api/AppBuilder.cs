@@ -61,7 +61,7 @@ namespace Foundatio.Skeleton.Api {
 
             config.MessageHandlers.Add(container.GetInstance<XHttpMethodOverrideDelegatingHandler>());
             config.MessageHandlers.Add(container.GetInstance<EncodingDelegatingHandler>());
-            config.MessageHandlers.Add(new AuthMessageHandler(container));
+            config.MessageHandlers.Add(container.GetInstance<AuthMessageHandler>());
 
             // Throttle api calls to X every 15 minutes by IP address.
             config.MessageHandlers.Add(container.GetInstance<ThrottlingHandler>());

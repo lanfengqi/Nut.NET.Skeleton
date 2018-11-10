@@ -43,7 +43,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return base.NotFound();
             var user = base.currentUser;
 
-            attendanceDate = DateTime.Parse(attendanceDate.ToShortDateString());
+            attendanceDate = attendanceDate.Date;
 
             var attendances = await _repository.FindAsync(x => x.UserId == user.Id && x.AttendanceDate == attendanceDate);
             var attendance = attendances.FirstOrDefault();
@@ -85,7 +85,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             value.CreatedUtc = DateTime.UtcNow;
             value.OrganizationId = Request.GetSelectedOrganizationId();
             value.UserId = Request.GetUser().Id;
-            value.AttendanceDate = DateTime.Parse(value.AttendanceDate.ToShortDateString());
+            value.AttendanceDate = value.AttendanceDate.Date;
 
             return base.AddModelAsync(value);
         }

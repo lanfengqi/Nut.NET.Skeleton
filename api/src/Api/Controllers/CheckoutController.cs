@@ -29,7 +29,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (model == null)
                 return BadRequest("Process Order Request is required.");
 
-            string customOrderNumber;
+            string customOrderId;
             try {
                 var request = new ProcessOrderRequest() {
                     FarmerId = model.FarmerId,
@@ -47,14 +47,14 @@ namespace Foundatio.Skeleton.Api.Controllers {
 
                 if (!result.Success)
                     return BadRequest(string.Join(",", result.Errors));
-                customOrderNumber = result.PlacedOrder.CustomOrderNumber;
+                customOrderId = result.PlacedOrder.Id;
 
             } catch (Exception) {
                 return Unauthorized();
             }
 
             await _metricsClient.CounterAsync("Place Order");
-            return Ok(new OrderResponseModel { CustomOrderNumber = customOrderNumber });
+            return Ok(new OrderResponseModel { CustomOrderId = customOrderId });
         }
 
     }

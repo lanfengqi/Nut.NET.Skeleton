@@ -7,7 +7,8 @@ namespace Foundatio.Skeleton.Domain.Repositories.Configuration {
             this.ToTable("OrderCost");
             this.HasKey(a => a.Id);
 
-            this.Property(c => c.OrderId).HasMaxLength(50);
+            this.Property(c => c.Id).HasMaxLength(36);
+            this.Property(c => c.OrderId).HasMaxLength(36);
             this.Property(c => c.Notes).HasMaxLength(500);
             this.Property(c => c.CostSystemName).HasMaxLength(50);
             this.Property(c => c.EnteredMoney).HasPrecision(18, 4);

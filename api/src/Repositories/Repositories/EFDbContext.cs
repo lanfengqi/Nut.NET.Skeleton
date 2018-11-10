@@ -1,11 +1,12 @@
 using Foundatio.Skeleton.Repositories.Configuration;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 
 namespace Foundatio.Skeleton.Repositories {
-    public class EFDbContext : DbContext {
+    public class EFDbContext : DbContext, IDbContext {
 
         public EFDbContext()
             : base("DatabaseConnectionString") {
@@ -37,6 +38,18 @@ namespace Foundatio.Skeleton.Repositories {
 #pragma warning disable 0618
             Database.DefaultConnectionFactory = connectionFactory;
         }
+
+        #region Methods
+
+        /// <summary>
+        /// Get DbSet
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>DbSet</returns>
+        public new IDbSet<TEntity> Set<TEntity>() where TEntity : class, IIdentity, new() {
+            return base.Set<TEntity>();
+        }
+        #endregion
     }
 
 }

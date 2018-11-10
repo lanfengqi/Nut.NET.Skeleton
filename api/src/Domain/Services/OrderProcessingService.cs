@@ -29,7 +29,8 @@ namespace Foundatio.Skeleton.Domain.Services {
         public async Task<PlaceOrderResult> PlaceOrder(ProcessOrderRequest request) {
             var result = new PlaceOrderResult();
 
-            var currentDate = DateTime.Parse(DateTime.UtcNow.ToShortDateString());
+            var currentDate = DateTime.UtcNow.Date;
+
             var userAttendances = await _attendanceRepository.SearchAttendanceAsync(userId: request.UserId, attendanceDate: currentDate);
             if (userAttendances == null || !userAttendances.Any())
                 result.AddError("user attendance is required.");
@@ -52,9 +53,7 @@ namespace Foundatio.Skeleton.Domain.Services {
                     CreatedUtc = DateTime.UtcNow,
                     Deleted = false,
                     OrderStatus = OrderStatus.Complete,
-
                     FarmerId = request.FarmerId,
-                    Farmer = farmer,
                     Notes = request.Notes,
                     OrganizationId = request.OrganizationId,
                     PaymentMethodSystemName = request.PaymentMethodSystemName,

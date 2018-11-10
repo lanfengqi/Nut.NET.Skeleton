@@ -37,7 +37,8 @@ namespace Foundatio.Skeleton.Domain {
 
             container.RegisterSingleton<EFConfiguration>();
             container.AddStartupAction(() => container.GetInstance<EFConfiguration>().ConfigureDatabase());
-            container.Register<IEFRepositoryContext, EFRepositoryContext>();
+            container.RegisterSingleton<IDbContext, EFDbContext>();
+            container.RegisterSingleton<IEFRepositoryContext, EFRepositoryContext>();
 
             container.RegisterSingleton<ICacheClient, InMemoryCacheClient>();
 
@@ -70,25 +71,25 @@ namespace Foundatio.Skeleton.Domain {
 
             container.Register(typeof(IValidator<>), new[] { typeof(Bootstrapper).Assembly }, Lifestyle.Singleton);
 
-            container.Register<IOrganizationRepository, OrganizationRepository>();
-            container.Register<IRoleRepository, RoleRepository>();
-            container.Register<IUserRepository, UserRepository>();
-            container.Register<IUserPasswordRepository, UserPasswordRepository>();
-            container.Register<ITokenRepository, TokenRepository>();
-            container.Register<ICarRepository, CarRepository>();
-            container.Register<IAttendanceRepository, AttendanceRepository>();
-            container.Register<IFarmerRepository, FarmerRepository>();
-            container.Register<IPurchaseCarRepository, PurchaseCarRepository>();
-            container.Register<IOrderRepository, OrderRepository>();
+            container.RegisterSingleton<IOrganizationRepository, OrganizationRepository>();
+            container.RegisterSingleton<IRoleRepository, RoleRepository>();
+            container.RegisterSingleton<IUserRepository, UserRepository>();
+            container.RegisterSingleton<IUserPasswordRepository, UserPasswordRepository>();
+            container.RegisterSingleton<ITokenRepository, TokenRepository>();
+            container.RegisterSingleton<ICarRepository, CarRepository>();
+            container.RegisterSingleton<IAttendanceRepository, AttendanceRepository>();
+            container.RegisterSingleton<IFarmerRepository, FarmerRepository>();
+            container.RegisterSingleton<IPurchaseCarRepository, PurchaseCarRepository>();
+            container.RegisterSingleton<IOrderRepository, OrderRepository>();
 
             container.RegisterSingleton<AliyunSmsOption>(() => new AliyunSmsOption(accessKeyId: "LTAInWMed2C2HnjD", accessKeySecret: "yjXA5bMaKgSgcotE98oPjCqP9ISmBC", signName: "华宝食品"));
             container.RegisterSingleton<ISmsSender, AliyunSmsSender>();
 
             container.RegisterSingleton<ILockProvider, CacheLockProvider>();
             container.Register<FirstInsatllService>();
-            container.Register<ITemplatedSmsService, TemplatedSmsService>();
-            container.Register<IOrderProcessingService, OrderProcessingService>();
-            container.Register<IOrderReportService, OrderReportService>();
+            container.RegisterSingleton<ITemplatedSmsService, TemplatedSmsService>();
+            container.RegisterSingleton<IOrderProcessingService, OrderProcessingService>();
+            container.RegisterSingleton<IOrderReportService, OrderReportService>();
 
             container.AppendToCollection(typeof(Profile), typeof(DomainMappings));
             container.RegisterSingleton<IMapper>(() => {

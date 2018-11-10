@@ -1,7 +1,6 @@
 using Foundatio.Skeleton.Repositories.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public class User : IIdentity, IHaveDates {

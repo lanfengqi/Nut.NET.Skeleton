@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Foundatio.Skeleton.Domain.Models;
 using Foundatio.Skeleton.Repositories;
 using System;

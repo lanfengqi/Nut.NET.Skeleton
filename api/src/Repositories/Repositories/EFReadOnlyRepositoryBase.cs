@@ -12,7 +12,8 @@ namespace Foundatio.Skeleton.Repositories {
     public class EFReadOnlyRepositoryBase<T> : IEFReadOnlyRepository<T> where T : class, IIdentity, new() {
         protected static readonly bool HasIdentity = typeof(IIdentity).IsAssignableFrom(typeof(T));
         protected static readonly string EntityTypeName = typeof(T).Name;
-        protected readonly DbContext _context;
+        protected readonly IDbContext _context;
+        private IDbSet<T> _entities;
 
         private ScopedCacheClient _scopedCacheClient;
 
@@ -25,7 +26,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.Where(specification);
 
             return await query.ToListAsync();
         }
@@ -34,7 +35,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.Where(specification);
             if (orderByExpression != null) {
                 switch (sortOrder) {
                     case SortOrder.Ascending:
@@ -54,7 +55,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.AsQueryable().Where(specification);
 
             var result = new PagedList<T>();
 
@@ -82,7 +83,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.Where(specification);
 
             var result = new PagedList<T>();
 
@@ -122,7 +123,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 return false;
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.Where(specification);
             var result = await query.CountAsync();
 
             return result > 0 ? true : false;
@@ -132,7 +133,7 @@ namespace Foundatio.Skeleton.Repositories {
             if (specification == null)
                 throw new ArgumentNullException("specification");
 
-            var query = _context.Set<T>().Where(specification).AsNoTracking();
+            var query = Table.Where(specification);
             return await query.CountAsync();
         }
 
@@ -152,7 +153,8 @@ namespace Foundatio.Skeleton.Repositories {
                 return hit;
             }
 
-            hit = await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            //hit = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+            hit = Entities.Find(id);
             if (IsCacheEnabled && hit != null && useCache)
                 await Cache.SetAsync(id, hit, expiresIn ?? TimeSpan.FromSeconds(60)).AnyContext();
 
@@ -167,7 +169,7 @@ namespace Foundatio.Skeleton.Repositories {
 
             var hits = new List<T>();
             if (IsCacheEnabled && useCache) {
-               var  cachehits = await Cache.GetAllAsync<T>(ids).AnyContext();
+                var cachehits = await Cache.GetAllAsync<T>(ids).AnyContext();
                 hits.AddRange(cachehits.Where(kvp => kvp.Value.HasValue).Select(kvp => kvp.Value.Value));
             }
 
@@ -177,10 +179,10 @@ namespace Foundatio.Skeleton.Repositories {
 
             hits = (await this.FindAsync(x => ids.Contains(x.Id))).ToList();
             if (IsCacheEnabled && hits.Any() && useCache) {
-                foreach(var hit in  hits)
+                foreach (var hit in hits)
                     await Cache.SetAsync(hit.Id, hit, expiresIn ?? TimeSpan.FromSeconds(60)).AnyContext();
             }
-               
+
             return hits;
         }
 
@@ -208,5 +210,16 @@ namespace Foundatio.Skeleton.Repositories {
             _scopedCacheClient = new ScopedCacheClient(new NullCacheClient(), EntityTypeName);
         }
 
+        public IQueryable<T> Table { get { return Entities; } }
+
+        public IQueryable<T> TableNoTracking { get { return Entities.AsNoTracking(); } }
+
+        protected virtual IDbSet<T> Entities {
+            get {
+                if (_entities == null)
+                    _entities = _context.Set<T>();
+                return _entities;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
-﻿using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Model;
 using System;
+using System.Collections.Generic;
 
 namespace Foundatio.Skeleton.Domain.Models {
     public class Role : IIdentity, IHaveDates {
@@ -12,5 +13,11 @@ namespace Foundatio.Skeleton.Domain.Models {
         public DateTime CreatedUtc { get; set; }
 
         public DateTime UpdatedUtc { get; set; }
+
+        public virtual ICollection<User> Users {
+            get { return _users ?? (_users = new List<User>()); }
+            protected set { _users = value; }
+        }
+        private ICollection<User> _users;
     }
 }

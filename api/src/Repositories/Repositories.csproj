@@ -105,6 +105,7 @@
     <Compile Include="Repositories\EFReadOnlyRepositoryBase.cs" />
     <Compile Include="Repositories\EFRepositoryBase.cs" />
     <Compile Include="Repositories\EFRepositoryContext.cs" />
+    <Compile Include="Repositories\IDbContext.cs" />
     <Compile Include="Repositories\IEFReadOnlyRepository.cs" />
     <Compile Include="Repositories\IEFRepository.cs" />
     <Compile Include="Repositories\IEFRepositoryContext.cs" />

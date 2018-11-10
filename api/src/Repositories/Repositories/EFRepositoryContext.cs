@@ -4,13 +4,17 @@ using Foundatio.Caching;
 namespace Foundatio.Skeleton.Repositories {
     public class EFRepositoryContext : IEFRepositoryContext {
         private readonly ICacheClient _cache;
-        public EFRepositoryContext(ICacheClient cache) {
+        private readonly IDbContext _dbContext;
+        public EFRepositoryContext(IDbContext dbContext, ICacheClient cache) {
             _cache = cache;
+            _dbContext = dbContext;
         }
 
-        public DbContext Context {
+        public IDbContext Context {
             get {
-                return new EFDbContext();
+                if (_dbContext == null)
+                    return new EFDbContext();
+                return _dbContext;
             }
         }
 

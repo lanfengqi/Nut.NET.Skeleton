@@ -147,9 +147,8 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 CreatedUtc = DateTime.UtcNow,
                 UserId = user.Id
             };
-            userPassword.ResetPasswordResetToken();
 
-            await AddGlobaAdminRoleIfFirstUser(user);
+            userPassword.ResetPasswordResetToken();
 
             if (!IsValidPassword(model.Password))
                 return BadRequest(_invalidPasswordMessage);
@@ -184,7 +183,10 @@ namespace Foundatio.Skeleton.Api.Controllers {
             await _userRepository.AddAsync(user).AnyContext();
             await _userPasswordRepository.AddAsync(userPassword).AnyContext();
 
-            _templatedSmsService.SendPhoneVerifyNotification(user);
+            await AddGlobaAdminRoleIfFirstUser(user);
+            await _userRepository.SaveAsync(user).AnyContext();
+
+            //_templatedSmsService.SendPhoneVerifyNotification(user);
             await _metricsClient.CounterAsync("User Sign Up");
             return Ok(new TokenResponseModel { Token = await GetToken(user) });
         }
@@ -280,7 +282,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
             if (_isFirstUserChecked)
                 return;
 
-            bool isFirstUser = await _userRepository.CountAsync() == 0;
+            bool isFirstUser = await _userRepository.CountAsync() == 1;
             if (isFirstUser)
                 await user.AddedGlobalAdminRole(_roleRepository);
 

@@ -40,7 +40,7 @@ namespace Foundatio.Skeleton.Repositories {
                     await _validator.ValidateAndThrowAsync(doc);
 
             foreach (var doc in docs) {
-                _context.Set<T>().Add(doc);
+                Entities.Add(doc);
             }
 
             await _context.SaveChangesAsync().AnyContext();
@@ -56,7 +56,8 @@ namespace Foundatio.Skeleton.Repositories {
             if (_validator != null)
                 await _validator.ValidateAndThrowAsync(document);
 
-            _context.Entry(document).State = EntityState.Modified;
+            //_context.Entry(document).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
 
@@ -78,9 +79,9 @@ namespace Foundatio.Skeleton.Repositories {
                 foreach (var doc in docs)
                     await _validator.ValidateAndThrowAsync(doc);
 
-            foreach (var doc in docs) {
-                _context.Entry(doc).State = EntityState.Modified;
-            }
+            //foreach (var doc in docs) {
+            //    // _context.Entry(doc).State = EntityState.Modified;
+            //}
             await _context.SaveChangesAsync().AnyContext();
 
             if (IsCacheEnabled)
@@ -106,7 +107,7 @@ namespace Foundatio.Skeleton.Repositories {
             var entitys = await GetByIdsAsync(ids);
             if (entitys != null && entitys.Any()) {
                 foreach (var entity in entitys) {
-                    _context.Entry(entity).State = EntityState.Deleted;
+                    Entities.Remove(entity);
                 }
                 await _context.SaveChangesAsync().AnyContext();
             }
@@ -132,7 +133,7 @@ namespace Foundatio.Skeleton.Repositories {
                 return;
 
             foreach (var doc in docs) {
-                _context.Entry(doc).State = EntityState.Deleted;
+                _context.Set<T>().Remove(doc);
             }
 
             await _context.SaveChangesAsync().AnyContext();

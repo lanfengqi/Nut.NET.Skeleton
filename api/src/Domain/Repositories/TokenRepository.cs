@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace Foundatio.Skeleton.Domain.Repositories {
     public class TokenRepository : EFRepositoryBase<Token>, ITokenRepository {
-
-        public TokenRepository(IEFRepositoryContext efRepositoryContext, IValidator<Token> validators)
+        private readonly IUserRepository _userRepository;
+        public TokenRepository(IUserRepository userRepository,
+            IEFRepositoryContext efRepositoryContext, IValidator<Token> validators)
             : base(efRepositoryContext, validators) {
+            _userRepository = userRepository;
         }
 
 
@@ -34,6 +36,10 @@ namespace Foundatio.Skeleton.Domain.Repositories {
 
         public async Task<Token> GetOrCreateUserToken(string userId, string organizationId) {
 
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new ArgumentNullException("user");
+
             var currentDateTime = DateTime.UtcNow;
 
             var existingToken = (await GetByUserIdAsync(userId))?.FirstOrDefault();
@@ -44,7 +50,7 @@ namespace Foundatio.Skeleton.Domain.Repositories {
                 Id = StringUtils.GetNewToken(),
                 UserId = userId,
                 OrganizationId = organizationId,
-                CreatedBy = userId,
+                CreatedBy = user.FullName,
                 CreatedUtc = currentDateTime,
                 UpdatedUtc = currentDateTime,
                 Type = TokenType.Access,

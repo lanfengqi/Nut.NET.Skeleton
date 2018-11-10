@@ -24,11 +24,12 @@ namespace Foundatio.Skeleton.Api.Security {
         private readonly IUserPasswordRepository _userPasswordRepository;
         private readonly IOrganizationRepository _organizationRepository;
 
-        public AuthMessageHandler(Container container) {
-            _tokenRepository = container.GetInstance<ITokenRepository>();
-            _userRepository = container.GetInstance<IUserRepository>();
-            _userPasswordRepository = container.GetInstance<IUserPasswordRepository>();
-            _organizationRepository = container.GetInstance<IOrganizationRepository>();
+        public AuthMessageHandler(ITokenRepository tokenRepository, IUserRepository userRepository,
+            IUserPasswordRepository userPasswordRepository, IOrganizationRepository organizationRepository) {
+            _tokenRepository = tokenRepository;
+            _userRepository = userRepository;
+            _userPasswordRepository = userPasswordRepository;
+            _organizationRepository = organizationRepository;
         }
 
         protected virtual Task<HttpResponseMessage> BaseSendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {

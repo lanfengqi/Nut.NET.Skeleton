@@ -15,8 +15,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
         private readonly IOrderReportService _orderReportService;
 
         public OrderReportController(IOrderReportService orderReportService) {
-
-            _orderReportService = orderReportService;
+            this._orderReportService = orderReportService;
         }
 
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(OrderByUserReportLineModel))]
@@ -30,10 +29,7 @@ namespace Foundatio.Skeleton.Api.Controllers {
                 return base.NotFound();
 
             try {
-
                 var result = await _orderReportService.GetOrderUserReportLine(currentUser.Id, reportDate, reportDate.Value.AddDays(1));
-
-                
                 return Ok(new OrderByUserReportLineModel {
                     AvgEnteredPrice = result.AvgEnteredPrice,
                     OrderItemQuantity = result.OrderItemQuantity,
