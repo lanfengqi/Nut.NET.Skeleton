@@ -1,5 +1,6 @@
 using Foundatio.Skeleton.Repositories.Configuration;
 using Foundatio.Skeleton.Repositories.Model;
+using Foundatio.Skeleton.Repositories.Repositories;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -34,7 +35,8 @@ namespace Foundatio.Skeleton.Repositories {
         }
 
         public static void Init() {
-            var connectionFactory = new MySqlConnectionFactory();
+            var connectionFactory = new OracleConnectionFactory();
+            //var connectionFactory = new MySqlConnectionFactory();
 #pragma warning disable 0618
             Database.DefaultConnectionFactory = connectionFactory;
         }

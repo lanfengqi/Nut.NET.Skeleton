@@ -43,10 +43,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="aliyun-net-sdk-core">
-      <HintPath>..\..\..\..\FoodTrace\packages\aliyun-net-sdk-core.dll</HintPath>
+      <HintPath>..\..\..\lib\net\msg_sdk\dll\aliyun-net-sdk-core.dll</HintPath>
     </Reference>
     <Reference Include="aliyun-net-sdk-dysmsapi">
-      <HintPath>..\..\..\..\FoodTrace\packages\aliyun-net-sdk-dysmsapi.dll</HintPath>
+      <HintPath>..\..\..\lib\net\msg_sdk\dll\aliyun-net-sdk-dysmsapi.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>

@@ -1,7 +1,7 @@
-using System.Data.Entity;
 using Foundatio.Caching;
 
-namespace Foundatio.Skeleton.Repositories {
+namespace Foundatio.Skeleton.Repositories
+{
     public class EFRepositoryContext : IEFRepositoryContext {
         private readonly ICacheClient _cache;
         private readonly IDbContext _dbContext;
